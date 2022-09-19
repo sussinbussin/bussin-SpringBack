@@ -1,0 +1,16 @@
+type Query {
+    allUsers: [User]
+}
+
+scalar Date
+
+type User {
+    uuid: ID!
+    nric: String!
+    name: String!
+    address: String
+    dob: Date
+    mobile: String
+    email: String
+    isDriver: Boolean
+}

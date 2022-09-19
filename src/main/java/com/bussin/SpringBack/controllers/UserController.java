@@ -1,42 +1,36 @@
 package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.bussin.SpringBack.repositories.UserRepository;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
-import javax.validation.Valid;
-import java.util.List;
-
-@RestController
-@RequestMapping(path = "api/v1/user")
+@Controller
 public class UserController {
-    private UserRepository users;
+    private UserRepository userRepository;
 
-    @Autowired
-    public UserController(UserRepository users) {
-        this.users = users;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
-     * Gets all users.
-     * 
-     * @return List of all users.
+     * GraphQL query to return all users.
+     * @return An Iterable containing all users.
      */
-    @GetMapping
-    public List<User> getAllUsers() {
-        return users.findAll();
+    @QueryMapping
+    public Iterable<User> allUsers() {
+        return userRepository.findAll();
     }
 
     /**
-     * Add new user object.
-     * 
-     * @param user User object to add.
-     * @return A user that was added.
+     * GraphQL mutation to add a user.
+     * @param user The User object to add
+     * @return The added User object
      */
-    @PostMapping
-    public User addNewUser(@Valid @RequestBody User user) {
-        return users.save(user);
+    @MutationMapping
+    public User addUser(@Argument User user) {
+        return userRepository.save(user);
     }
 }

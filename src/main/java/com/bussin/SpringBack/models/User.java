@@ -1,17 +1,17 @@
 package com.bussin.SpringBack.models;
 
-import java.util.*;
-// import java.util.UUID;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.*;
+import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "user")
 @Table(name = "user", uniqueConstraints = {
@@ -23,7 +23,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Builder
 public class User {
     @Id
@@ -65,4 +64,20 @@ public class User {
         this.isDriver = false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        User user = (User) o;
+        return uuid != null && Objects.equals(uuid, user.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
