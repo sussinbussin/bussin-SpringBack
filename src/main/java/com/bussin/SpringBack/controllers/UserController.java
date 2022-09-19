@@ -13,19 +13,30 @@ import java.util.List;
 @RequestMapping(path = "api/v1/user")
 public class UserController {
     private UserRepository users;
-    
+
     @Autowired
     public UserController(UserRepository users) {
         this.users = users;
     }
 
+    /**
+     * Gets all users.
+     * 
+     * @return List of all users.
+     */
     @GetMapping
     public List<User> getAllUsers() {
         return users.findAll();
     }
 
+    /**
+     * Add new user object.
+     * 
+     * @param user User object to add.
+     * @return A user that was added.
+     */
     @PostMapping
-    public User addNewUser(@Valid @RequestBody User user){
+    public User addNewUser(@Valid @RequestBody User user) {
         return users.save(user);
     }
 }
