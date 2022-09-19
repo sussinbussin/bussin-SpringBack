@@ -55,7 +55,11 @@ public class User {
 
     private Boolean isDriver;
 
-    public User(String nric, String name, String address, Date dob, Long mobile, String email) {
+    @OneToOne(mappedBy = "user",
+                cascade = CascadeType.ALL)
+    private Driver driver;
+
+    public User(String nric, String name, String address, Date dob, String mobile, String email) {
         this.nric = nric;
         this.name = name;
         this.address = address;
