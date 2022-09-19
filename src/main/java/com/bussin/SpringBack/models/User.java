@@ -55,7 +55,7 @@ public class User {
 
     private Boolean isDriver;
 
-    public User(String nric, String name, String address, Date dob, Long mobile, String email) {
+    public User(String nric, String name, String address, Date dob, String mobile, String email) {
         this.nric = nric;
         this.name = name;
         this.address = address;
