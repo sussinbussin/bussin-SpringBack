@@ -34,7 +34,7 @@ public class Driver implements Serializable {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    
     @OneToMany(mappedBy = "driver", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<PlannedRoute> plannedRoutes;
 }
