@@ -1,7 +1,6 @@
 package com.bussin.SpringBack.models;
 
 import java.util.*;
-// import java.util.UUID;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -28,7 +27,7 @@ import lombok.*;
 public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
-    private UUID uuid;
+    private UUID id;
 
     @NotNull(message = "NRIC should not be empty")
     @Pattern(regexp = "^[a-zA-Z][0-9]{7}[a-zA-Z]$", message = "Nric must be in this format: T6969696A")
@@ -56,8 +55,13 @@ public class User {
     private Boolean isDriver;
 
     @OneToOne(mappedBy = "user",
-                cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL,
+            optional = true)
     private Driver driver;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Ride> rides;
+
     public User(String nric, String name, String address, Date dob, String mobile, String email) {
         this.nric = nric;
         this.name = name;

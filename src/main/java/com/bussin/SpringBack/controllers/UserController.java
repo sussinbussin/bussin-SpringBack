@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/v1/user")
 public class UserController {
-    private UserRepository users;
+    private final UserRepository users;
 
     @Autowired
     public UserController(UserRepository users) {
