@@ -5,6 +5,9 @@ import javax.validation.constraints.*;
 
 import lombok.*;
 
+import java.io.Serializable;
+import java.util.Set;
+
 @Entity(name = "driver")
 @Getter
 @Setter
@@ -12,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class Driver {
+public class Driver implements Serializable {
     @Id
     @NotNull(message = "Car Plate should not be empty")
     private String carPlate;
@@ -31,4 +34,7 @@ public class Driver {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    
+    @OneToMany(mappedBy = "driver", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<PlannedRoute> plannedRoutes;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/v1/driver")
 public class DriverController {
-    private DriverRepository drivers;
+    private final DriverRepository drivers;
 
     public DriverController(DriverRepository drivers) {
         this.drivers = drivers;
