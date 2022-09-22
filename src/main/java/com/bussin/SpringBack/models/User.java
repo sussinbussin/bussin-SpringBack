@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.*;
@@ -27,6 +28,7 @@ import lombok.*;
 public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @NotNull(message = "NRIC should not be empty")

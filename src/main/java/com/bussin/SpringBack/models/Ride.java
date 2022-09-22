@@ -4,12 +4,13 @@ import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
-public class Ride {
+public class Ride implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
     private UUID id;
