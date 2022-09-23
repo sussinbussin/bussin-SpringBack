@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/planned")
 public class PlannedRouteController {
-    private PlannedRouteService plannedRouteService;
+    private final PlannedRouteService plannedRouteService;
 
     @Autowired
     public PlannedRouteController(PlannedRouteService plannedRouteService) {
@@ -27,7 +27,7 @@ public class PlannedRouteController {
     }
 
     @GetMapping("/{uuid}")
-    public PlannedRoute getPlannedRouteById(@PathVariable UUID uuid) {
+    public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID uuid) {
         return plannedRouteService.getPlannedRouteById(uuid).orElse(null);
     }
 
@@ -43,15 +43,15 @@ public class PlannedRouteController {
     @Transactional
     @PutMapping("/{uuid}")
     public PlannedRoute updatePlannedRouteById
-            (@PathVariable UUID uuid,
-             @RequestBody PlannedRouteDTO plannedRouteDTO) {
+            (@Valid @PathVariable UUID uuid,
+             @Valid @RequestBody PlannedRouteDTO plannedRouteDTO) {
         return plannedRouteService.updatePlannedRouteById(uuid,
                 plannedRouteDTO);
     }
 
     @Transactional
     @DeleteMapping("/{uuid}")
-    public PlannedRoute deletePlannedrouteById(@PathVariable UUID uuid) {
+    public PlannedRoute deletePlannedrouteById(@Valid @PathVariable UUID uuid) {
         return plannedRouteService.deletePlannedRouteByID(uuid);
     }
 }

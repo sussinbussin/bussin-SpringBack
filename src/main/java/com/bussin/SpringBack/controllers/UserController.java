@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,7 +62,11 @@ public class UserController {
      * @return The user with the specified email
      */
     @GetMapping("/byEmail/{email}")
+<<<<<<< HEAD
     public UserDTO getUserByEmail(@Valid @PathVariable String email) {
+=======
+    public UserDTO getUserByEmail(@Email @PathVariable String email) {
+>>>>>>> 5d3406053c542bf510b1cc3cdac3842dab10b29a
 
         return userService.getUserByEmail(email).orElse(null);
     }
@@ -88,7 +93,7 @@ public class UserController {
      */
     @PutMapping("/{uuid}")
     public User updateUserById(@Valid @PathVariable UUID uuid,
-                               @RequestBody UserDTO userDTO) {
+                               @Valid @RequestBody UserDTO userDTO) {
         return userService.updateUser(uuid, userDTO);
     }
 

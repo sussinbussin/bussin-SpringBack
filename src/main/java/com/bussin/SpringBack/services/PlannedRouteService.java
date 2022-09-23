@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,6 +38,7 @@ public class PlannedRouteService {
         return plannedRoutesRepository.findById(uuid);
     }
 
+    @Transactional
     public PlannedRoute createNewPlannedRoute(PlannedRouteDTO plannedRouteDTO,
                                               String carPlate) {
         plannedRouteDTO.validate();
@@ -49,6 +51,7 @@ public class PlannedRouteService {
                 "plate " + carPlate));
     }
 
+    @Transactional
     public PlannedRoute updatePlannedRouteById(UUID uuid,
                                                PlannedRouteDTO plannedRouteDTO) {
         plannedRouteDTO.setId(uuid);
@@ -60,6 +63,7 @@ public class PlannedRouteService {
                 "planned route with ID " + uuid));
     }
 
+    @Transactional
     public PlannedRoute deletePlannedRouteByID(UUID uuid) {
         return plannedRoutesRepository.findById(uuid).map(found -> {
             plannedRoutesRepository.deleteById(uuid);
