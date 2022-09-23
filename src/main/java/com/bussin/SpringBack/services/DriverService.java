@@ -22,6 +22,7 @@ public class DriverService {
         return driverRepository.findAll();
     }
 
+    @Transactional
     public Driver addNewDriver(Driver driver) {
         return driverRepository.save(driver);
     }
@@ -30,6 +31,7 @@ public class DriverService {
         return driverRepository.findDriverByCarPlate(carPlate);
     }
 
+    @Transactional
     public Driver updateDriver(String carPlate, Driver driver) {
         return driverRepository.findDriverByCarPlate(carPlate).map( found -> {
             driver.setCarPlate(carPlate);
@@ -37,6 +39,7 @@ public class DriverService {
         }).orElseThrow(() -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
 
+    @Transactional
     public Driver deleteDriver(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate).map( found -> {
             driverRepository.deleteByCarPlate(carPlate);

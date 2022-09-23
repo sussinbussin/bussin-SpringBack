@@ -38,7 +38,7 @@ public class UserController {
      * @return The user DTO if found, else null
      */
     @GetMapping("/{uuid}")
-    public UserDTO getUserById(@PathVariable UUID uuid) {
+    public UserDTO getUserById(@Valid @PathVariable UUID uuid) {
         return userService.getUserById(uuid).orElse(null);
     }
 
@@ -49,7 +49,7 @@ public class UserController {
      * @return The full user if found, else null
      */
     @GetMapping("/full/{uuid}")
-    public User getFullUserById(@PathVariable UUID uuid) {
+    public User getFullUserById(@Valid @PathVariable UUID uuid) {
 
         return userService.getFullUserById(uuid).orElse(null);
     }
@@ -61,7 +61,7 @@ public class UserController {
      * @return The user with the specified email
      */
     @GetMapping("/byEmail/{email}")
-    public UserDTO getUserByEmail(@PathVariable String email) {
+    public UserDTO getUserByEmail(@Valid @PathVariable String email) {
 
         return userService.getUserByEmail(email).orElse(null);
     }
@@ -87,7 +87,7 @@ public class UserController {
      * @return Full user with the updated fields
      */
     @PutMapping("/{uuid}")
-    public User updateUserById(@PathVariable UUID uuid,
+    public User updateUserById(@Valid @PathVariable UUID uuid,
                                @RequestBody UserDTO userDTO) {
         return userService.updateUser(uuid, userDTO);
     }
@@ -99,7 +99,7 @@ public class UserController {
      * @return Full deleted user
      */
     @DeleteMapping("/{uuid}")
-    public User deleteUserById(@PathVariable UUID uuid) {
+    public User deleteUserById(@Valid @PathVariable UUID uuid) {
 
         return userService.deleteUser(uuid);
     }

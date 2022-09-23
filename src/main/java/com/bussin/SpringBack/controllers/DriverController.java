@@ -55,6 +55,7 @@ public class DriverController {
      * @return A driver that was added.
      */
     @PostMapping
+    @Transaction
     public Driver addNewDriver(@Valid @RequestBody Driver driver) {
         return driverService.addNewDriver(driver);
     }
