@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 public class PlannedRouteService {
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     private final PlannedRoutesRepository plannedRoutesRepository;
     private final DriverRepository driverRepository;
 
@@ -62,7 +62,7 @@ public class PlannedRouteService {
 
     public PlannedRoute deletePlannedRouteByID(UUID uuid) {
         return plannedRoutesRepository.findById(uuid).map(found -> {
-            plannedRoutesRepository.delete(found);
+            plannedRoutesRepository.deleteById(uuid);
             return found;
         }).orElseThrow(() -> new PlannedRouteNotFoundException("No " +
                 "planned route with ID " + uuid));

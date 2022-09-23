@@ -10,6 +10,7 @@ import com.bussin.SpringBack.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,7 @@ public class UserServiceTests {
 
     private ModelMapper modelMapper;
 
+    @InjectMocks
     private UserService userService;
 
     @BeforeEach
@@ -52,7 +54,7 @@ public class UserServiceTests {
     public void getAllUsers_noUsers_success() {
         when(userRepository.findAll()).thenReturn(new ArrayList<>());
 
-        assert (userService.getAllUsers().equals(new ArrayList<>()));
+        assertEquals(userService.getAllUsers(), new ArrayList<>());
 
         verify(userRepository, times(1)).findAll();
     }
@@ -73,7 +75,7 @@ public class UserServiceTests {
 
         when(userRepository.findAll()).thenReturn(users);
 
-        assert (userService.getAllUsers().equals(users));
+        assertEquals(userService.getAllUsers(), users);
 
         verify(userRepository, times(1)).findAll();
     }
