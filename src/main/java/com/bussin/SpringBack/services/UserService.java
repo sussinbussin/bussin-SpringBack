@@ -7,14 +7,15 @@ import com.bussin.SpringBack.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
-
     private ModelMapper modelMapper;
 
     private final UserRepository userRepository;
@@ -29,7 +30,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public User createNewUser(UserDTO userDTO) {
+        userDTO.validate();
         return userRepository.save(modelMapper.map(userDTO, User.class));
     }
 
@@ -45,13 +48,16 @@ public class UserService {
         return userRepository.findUserByEmail(email);
     }
 
+    @Transactional
     public User updateUser(UUID uuid, UserDTO userDTO) {
+        userDTO.validate();
         return userRepository.findById(uuid).map(found -> {
-            found.updateUserfromDTO(userDTO);
+            found.updateUserFromDTO(userDTO);
             return userRepository.save(found);
         }).orElseThrow(() -> new UserNotFoundException("No user with id " + uuid));
     }
 
+    @Transactional
     public User deleteUser(UUID uuid) {
         return userRepository.findById(uuid).map(found -> {
             userRepository.deleteById(uuid);

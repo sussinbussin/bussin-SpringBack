@@ -27,6 +27,7 @@ public class UserController {
      */
     @GetMapping
     public List<User> getAllUsers() {
+
         return userService.getAllUsers();
     }
 
@@ -49,6 +50,7 @@ public class UserController {
      */
     @GetMapping("/full/{uuid}")
     public User getFullUserById(@PathVariable UUID uuid) {
+
         return userService.getFullUserById(uuid).orElse(null);
     }
 
@@ -60,6 +62,7 @@ public class UserController {
      */
     @GetMapping("/byEmail/{email}")
     public UserDTO getUserByEmail(@PathVariable String email) {
+
         return userService.getUserByEmail(email).orElse(null);
     }
 
@@ -71,6 +74,7 @@ public class UserController {
      */
     @PostMapping
     public User createNewUser(@Valid @RequestBody UserDTO userDTO) {
+
         return userService.createNewUser(userDTO);
     }
 
@@ -83,7 +87,8 @@ public class UserController {
      * @return Full user with the updated fields
      */
     @PutMapping("/{uuid}")
-    public User updateUserById(@PathVariable UUID uuid, @RequestBody UserDTO userDTO) {
+    public User updateUserById(@PathVariable UUID uuid,
+                               @RequestBody UserDTO userDTO) {
         return userService.updateUser(uuid, userDTO);
     }
 
@@ -95,6 +100,7 @@ public class UserController {
      */
     @DeleteMapping("/{uuid}")
     public User deleteUserById(@PathVariable UUID uuid) {
+
         return userService.deleteUser(uuid);
     }
 }

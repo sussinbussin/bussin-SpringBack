@@ -26,6 +26,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
+@ToString
 public class User implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -75,10 +76,9 @@ public class User implements Serializable {
         this.isDriver = false;
     }
 
-    public void updateUserfromDTO(UserDTO userDTO) {
+    public void updateUserFromDTO(UserDTO userDTO) {
         this.nric = userDTO.getNric();
         this.name = userDTO.getName();
-        ;
         this.address = userDTO.getAddress();
         this.dob = userDTO.getDob();
         this.mobile = userDTO.getMobile();

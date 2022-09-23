@@ -12,7 +12,7 @@ public class ModelMapperConfig {
     /**
      * Creates a model mapper instance to map DTOs.
      *
-     * @return
+     * @return configured model mapper
      */
     @Bean
     public ModelMapper modelMapper() {

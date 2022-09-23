@@ -6,12 +6,17 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -19,6 +24,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Table(uniqueConstraints = {
@@ -60,6 +66,16 @@ public class UserDTO implements Serializable {
     private String email;
 
     private Boolean isDriver;
+
+    public void validate(){
+        Validator validator =
+                Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<UserDTO>> violations =
+                validator.validate(this);
+        if(violations.size()>0){
+            throw new ConstraintViolationException(violations);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
