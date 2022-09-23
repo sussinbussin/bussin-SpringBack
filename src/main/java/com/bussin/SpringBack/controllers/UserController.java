@@ -62,12 +62,7 @@ public class UserController {
      * @return The user with the specified email
      */
     @GetMapping("/byEmail/{email}")
-<<<<<<< HEAD
-    public UserDTO getUserByEmail(@Valid @PathVariable String email) {
-=======
     public UserDTO getUserByEmail(@Email @PathVariable String email) {
->>>>>>> 5d3406053c542bf510b1cc3cdac3842dab10b29a
-
         return userService.getUserByEmail(email).orElse(null);
     }
 
