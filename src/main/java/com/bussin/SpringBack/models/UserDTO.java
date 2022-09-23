@@ -1,33 +1,42 @@
 package com.bussin.SpringBack.models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "user")
-@Table(name = "user", uniqueConstraints = {
+@Table(uniqueConstraints = {
         @UniqueConstraint(name = "user_email_unique", columnNames = "email"),
         @UniqueConstraint(name = "mobile_unique", columnNames = "mobile"),
         @UniqueConstraint(name = "nric_unique", columnNames = "nric")
 })
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Builder
-@ToString
-public class User implements Serializable {
+public class UserDTO implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -58,31 +67,30 @@ public class User implements Serializable {
 
     private Boolean isDriver;
 
-    @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            optional = true)
-    private Driver driver;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Ride> rides;
-
-    public User(String nric, String name, String address, Date dob, String mobile, String email) {
-        this.nric = nric;
-        this.name = name;
-        this.address = address;
-        this.dob = dob;
-        this.mobile = mobile;
-        this.email = email;
-        this.isDriver = false;
+    public void validate(){
+        Validator validator =
+                Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<UserDTO>> violations =
+                validator.validate(this);
+        if(violations.size()>0){
+            throw new ConstraintViolationException(violations);
+        }
     }
 
-    public void updateUserFromDTO(UserDTO userDTO) {
-        this.nric = userDTO.getNric();
-        this.name = userDTO.getName();
-        this.address = userDTO.getAddress();
-        this.dob = userDTO.getDob();
-        this.mobile = userDTO.getMobile();
-        this.email = userDTO.getEmail();
-        this.isDriver = userDTO.getIsDriver();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        UserDTO userDTO = (UserDTO) o;
+        return id != null && Objects.equals(id, userDTO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
