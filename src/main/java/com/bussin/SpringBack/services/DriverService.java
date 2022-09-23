@@ -11,7 +11,6 @@ import java.util.*;
 import javax.transaction.Transactional;
 
 @Service
-@Transactional
 public class DriverService {
     private final DriverRepository driverRepository;
     @Autowired
