@@ -76,7 +76,7 @@ public class User implements Serializable {
         this.isDriver = false;
     }
 
-    public void updateUserFromDTO(UserDTO userDTO) {
+    public void updateFromDTO(UserDTO userDTO) {
         this.nric = userDTO.getNric();
         this.name = userDTO.getName();
         this.address = userDTO.getAddress();

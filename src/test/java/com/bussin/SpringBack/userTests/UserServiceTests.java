@@ -10,6 +10,7 @@ import com.bussin.SpringBack.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,7 @@ public class UserServiceTests {
 
     private ModelMapper modelMapper;
 
+    @InjectMocks
     private UserService userService;
 
     @BeforeEach
@@ -49,16 +51,16 @@ public class UserServiceTests {
     }
 
     @Test
-    public void getAllUsers_noUsers_success(){
+    public void getAllUsers_noUsers_success() {
         when(userRepository.findAll()).thenReturn(new ArrayList<>());
 
-        assert(userService.getAllUsers().equals(new ArrayList<>()));
+        assertEquals(userService.getAllUsers(), new ArrayList<>());
 
         verify(userRepository, times(1)).findAll();
     }
 
     @Test
-    public void getAllUsers_success(){
+    public void getAllUsers_success() {
         ArrayList<User> users = new ArrayList<>();
         User user = User.builder()
                 .nric("S1234567A")
@@ -73,13 +75,13 @@ public class UserServiceTests {
 
         when(userRepository.findAll()).thenReturn(users);
 
-        assert(userService.getAllUsers().equals(users));
+        assertEquals(userService.getAllUsers(), users);
 
         verify(userRepository, times(1)).findAll();
     }
 
     @Test
-    public void createNewUser_success(){
+    public void createNewUser_success() {
         UserDTO userDTO = UserDTO.builder()
                 .nric("S1234567A")
                 .name("Test Guy")
@@ -99,7 +101,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void createNewUser_invalidParams_exception(){
+    public void createNewUser_invalidParams_exception() {
         UserDTO userDTO = UserDTO.builder()
                 .nric("S1234567")
                 .name("Test Guy")
@@ -111,13 +113,13 @@ public class UserServiceTests {
                 .build();
 
         assertThrows(ConstraintViolationException.class,
-                ()-> userService.createNewUser(userDTO));
+                () -> userService.createNewUser(userDTO));
 
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
-    public void createNewUser_alreadyExists_exception(){
+    public void createNewUser_alreadyExists_exception() {
         UserDTO userDTO = UserDTO.builder()
                 .nric("S1234567A")
                 .name("Test Guy")
@@ -133,12 +135,12 @@ public class UserServiceTests {
                 .thenThrow(new DataIntegrityViolationException("Test"));
 
         assertThrows(DataIntegrityViolationException.class,
-                ()-> userService.createNewUser(userDTO));
+                () -> userService.createNewUser(userDTO));
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
-    public void updateUser_success(){
+    public void updateUser_success() {
         UserDTO userDTO = UserDTO.builder()
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
                 .nric("S1234567A")
@@ -176,7 +178,7 @@ public class UserServiceTests {
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
                 .plannedFrom("Start")
                 .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022,6,6,6,6))
+                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
                 .capacity(1)
                 .build();
 
@@ -209,7 +211,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void updateUser_doesntExist_exception(){
+    public void updateUser_doesntExist_exception() {
         UserDTO userDTO = UserDTO.builder()
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
                 .nric("S1234567A")
@@ -225,7 +227,7 @@ public class UserServiceTests {
                 .thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
-                ()-> userService.updateUser(userDTO.getId(), userDTO));
+                () -> userService.updateUser(userDTO.getId(), userDTO));
 
         verify(userRepository, times(1))
                 .findById(any(UUID.class));
@@ -234,7 +236,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void updateUser_invalidParams_exception(){
+    public void updateUser_invalidParams_exception() {
         UserDTO userDTO = UserDTO.builder()
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
                 .nric("S1234567A")
@@ -246,7 +248,7 @@ public class UserServiceTests {
                 .build();
 
         assertThrows(ConstraintViolationException.class,
-                ()-> userService.updateUser(userDTO.getId(), userDTO));
+                () -> userService.updateUser(userDTO.getId(), userDTO));
 
         verify(userRepository, never()).findById(any(UUID.class));
 
@@ -254,7 +256,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void updateUser_nonUniqueParams_exception(){
+    public void updateUser_nonUniqueParams_exception() {
         UserDTO userDTO = UserDTO.builder()
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
                 .nric("S1234567A")
@@ -292,7 +294,7 @@ public class UserServiceTests {
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
                 .plannedFrom("Start")
                 .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022,6,6,6,6))
+                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
                 .capacity(1)
                 .build();
 
@@ -326,7 +328,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void deleteUser_success(){
+    public void deleteUser_success() {
         User user = User.builder()
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
                 .nric("S1234567A")
@@ -350,13 +352,13 @@ public class UserServiceTests {
     }
 
     @Test
-    public void deleteUser_doesntExist_exception(){
+    public void deleteUser_doesntExist_exception() {
         UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
         when(userRepository.findById(uuid))
                 .thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
-                ()-> userService.deleteUser(uuid));
+                () -> userService.deleteUser(uuid));
 
         verify(userRepository, times(1)).findById(uuid);
         verify(userRepository, never()).deleteById(uuid);
