@@ -7,7 +7,6 @@ import com.bussin.SpringBack.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -50,9 +49,10 @@ public class UserService {
 
     @Transactional
     public User updateUser(UUID uuid, UserDTO userDTO) {
+        userDTO.setId(uuid);
         userDTO.validate();
         return userRepository.findById(uuid).map(found -> {
-            found.updateUserFromDTO(userDTO);
+            found.updateFromDTO(userDTO);
             return userRepository.save(found);
         }).orElseThrow(() -> new UserNotFoundException("No user with id " + uuid));
     }

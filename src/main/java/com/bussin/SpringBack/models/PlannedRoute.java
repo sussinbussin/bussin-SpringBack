@@ -23,10 +23,6 @@ public class PlannedRoute implements Serializable {
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "car_plate")
-    private Driver driver;
-
     @NotNull(message = "Please set a starting point")
     private String plannedFrom;
 
@@ -43,10 +39,16 @@ public class PlannedRoute implements Serializable {
     @OneToMany(mappedBy = "plannedRoute")
     private Set<Ride> rides;
 
-    public PlannedRoute(String plannedFrom, String plannedTo, LocalDateTime dateTime) {
-        this.plannedFrom = plannedFrom;
-        this.plannedTo = plannedTo;
-        this.dateTime = dateTime;
+    @ManyToOne
+    @JoinColumn(name = "car_plate")
+    private Driver driver;
+
+    public void updateFromDTO(PlannedRouteDTO plannedRouteDTO) {
+        this.id = plannedRouteDTO.getId();
+        this.plannedFrom = plannedRouteDTO.getPlannedFrom();
+        this.plannedTo = plannedRouteDTO.getPlannedTo();
+        this.dateTime = plannedRouteDTO.getDateTime();
+        this.capacity = plannedRouteDTO.getCapacity();
     }
 
     @Override
