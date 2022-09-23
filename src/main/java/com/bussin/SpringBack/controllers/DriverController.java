@@ -45,7 +45,7 @@ public class DriverController {
      * @return The driver if found, else null
      */
     @GetMapping("/{carPlate}")
-    public Driver getDriverByCarPlate(@PathVariable String carPlate) {
+    public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate) {
         return driverService.getDriverByCarPlate(carPlate).orElse(null);
     }
     
@@ -61,12 +61,12 @@ public class DriverController {
     }
 
     @PutMapping("/{carPlate}")
-    public Driver getDriverByCarPlate(@PathVariable String carPlate, @RequestBody Driver driver) {
+    public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate, @RequestBody Driver driver) {
         return driverService.updateDriver(carPlate, driver);
     }
 
     @DeleteMapping("/{carPlate}")
-    public Driver deleteDriverByCarPlate(@PathVariable String carPlate) {
+    public Driver deleteDriverByCarPlate(@Valid @PathVariable String carPlate) {
         return driverService.deleteDriver(carPlate);
     }
 }
