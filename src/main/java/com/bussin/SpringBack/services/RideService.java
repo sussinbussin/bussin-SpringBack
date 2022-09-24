@@ -52,10 +52,22 @@ public class RideService {
         }).orElseThrow(() -> new UserNotFoundException(("No user with id " + userId)));
     }
 
-    // @Transactional
-    // public Ride updateRideById(UUID rideId,
-    //         Ride ride) {
-        
-    // }
+    @Transactional
+    public Ride updateRideById(UUID rideId, RideDTO rideDTO) {
+        rideDTO.setId(rideId);
+        rideDTO.validate();
+        return rideRepository.findById(rideId).map(found -> {
+            found.updateFromDTO(rideDTO);
+            return rideRepository.save(found);
+        }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId));
+    }
+
+    @Transactional
+    public Ride deleteRideById(UUID rideId) {
+        return rideRepository.findById(rideId).map(found -> {
+            rideRepository.deleteById(rideId);
+            return found;
+        }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId));
+    }
 
 }
