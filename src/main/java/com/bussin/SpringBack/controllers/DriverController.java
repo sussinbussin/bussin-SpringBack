@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.Driver;
+import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.services.DriverService;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -48,22 +50,30 @@ public class DriverController {
     public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate) {
         return driverService.getDriverByCarPlate(carPlate).orElse(null);
     }
-    
-    /**
-     * Add new driver object
-     * @param driver Driver object to add
-     * @return A driver that was added.
-     */
+
     @PostMapping
-    public Driver addNewDriver(@Valid @RequestBody Driver driver) {
-        return driverService.addNewDriver(driver);
+    public Driver addNewDriver(@Valid UUID userUUID,
+                               @Valid @RequestBody DriverDTO driverDTO) {
+        return driverService.addNewDriver(userUUID, driverDTO);
     }
 
+    /**
+     * Update a Driver Object.
+     * @param carPlate Car plate of the Driver to update
+     * @param driverDTO DriverDTO with the information to update
+     * @return Updated Driver
+     */
     @PutMapping("/{carPlate}")
-    public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate, @RequestBody Driver driver) {
-        return driverService.updateDriver(carPlate, driver);
+    public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate,
+                                      @Valid @RequestBody DriverDTO driverDTO) {
+        return driverService.updateDriver(carPlate, driverDTO);
     }
 
+    /**
+     * Delete a Driver and amend the User.
+     * @param carPlate Car plate number of the Driver to delete
+     * @return Deleted Driver
+     */
     @DeleteMapping("/{carPlate}")
     public Driver deleteDriverByCarPlate(@Valid @PathVariable String carPlate) {
         return driverService.deleteDriver(carPlate);

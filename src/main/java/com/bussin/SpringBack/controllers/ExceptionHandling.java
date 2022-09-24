@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.controllers;
 
+import com.bussin.SpringBack.exception.DriverNotFoundException;
+import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -41,9 +43,33 @@ public class ExceptionHandling {
      * @return Response entity with HTTP code 404
      */
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Void> handleUserNotFoundException(
+    public ResponseEntity<String> handleUserNotFoundException(
             final UserNotFoundException e) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles DriverNotFoundException.
+     *
+     * @param e DriverNotFoundException
+     * @return Response entity with HTTP code 404
+     */
+    @ExceptionHandler(DriverNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(
+            final DriverNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles DriverNotFoundException.
+     *
+     * @param e DriverNotFoundException
+     * @return Response entity with HTTP code 404
+     */
+    @ExceptionHandler(PlannedRouteNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(
+            final PlannedRouteNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     /**

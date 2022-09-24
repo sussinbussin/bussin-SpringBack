@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.models;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "driver")
@@ -15,7 +17,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Builder
 public class Driver implements Serializable {
     @Id
@@ -36,7 +37,29 @@ public class Driver implements Serializable {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
+
     @OneToMany(mappedBy = "driver", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<PlannedRoute> plannedRoutes;
+
+    public Driver updateFromDTO(DriverDTO driverDTO) {
+        this.carPlate = driverDTO.getCarPlate();
+        this.modelAndColour = driverDTO.getModelAndColour();
+        this.capacity = driverDTO.getCapacity();
+        this.fuelType = driverDTO.getFuelType();
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        Driver driver = (Driver) o;
+        return carPlate != null && Objects.equals(carPlate, driver.carPlate);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
