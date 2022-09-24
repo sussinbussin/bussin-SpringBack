@@ -3,6 +3,7 @@ package com.bussin.SpringBack.controllers;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class UserController {
      * @return List of all users.
      */
     @GetMapping
+    @Operation(summary = "Gets all users")
     public List<User> getAllUsers() {
 
         return userService.getAllUsers();
@@ -39,6 +41,7 @@ public class UserController {
      * @return The user DTO if found, else null
      */
     @GetMapping("/{uuid}")
+    @Operation(summary = "Gets a user by their ID")
     public UserDTO getUserById(@Valid @PathVariable UUID uuid) {
         return userService.getUserById(uuid).orElse(null);
     }
@@ -49,6 +52,7 @@ public class UserController {
      * @param uuid The UUID
      * @return The full user if found, else null
      */
+    @Operation(summary = "Gets a user and all their related info by their ID")
     @GetMapping("/full/{uuid}")
     public User getFullUserById(@Valid @PathVariable UUID uuid) {
 
@@ -61,6 +65,7 @@ public class UserController {
      * @param email The email of the user to return
      * @return The user with the specified email
      */
+    @Operation(summary = "Gets a user by their email")
     @GetMapping("/byEmail/{email}")
     public UserDTO getUserByEmail(@Email @PathVariable String email) {
         return userService.getUserByEmail(email).orElse(null);
@@ -72,6 +77,7 @@ public class UserController {
      * @param userDTO User object to add.
      * @return A user that was added.
      */
+    @Operation(summary = "Creates a new user")
     @PostMapping
     public User createNewUser(@Valid @RequestBody UserDTO userDTO) {
 
@@ -86,6 +92,7 @@ public class UserController {
      * @param userDTO Object with the fields to update
      * @return Full user with the updated fields
      */
+    @Operation(summary = "Updates a user")
     @PutMapping("/{uuid}")
     public User updateUserById(@Valid @PathVariable UUID uuid,
                                @Valid @RequestBody UserDTO userDTO) {
@@ -98,6 +105,7 @@ public class UserController {
      * @param uuid UUID of the user to delete
      * @return Full deleted user
      */
+    @Operation(summary = "Deletes a user by their ID")
     @DeleteMapping("/{uuid}")
     public User deleteUserById(@Valid @PathVariable UUID uuid) {
 
