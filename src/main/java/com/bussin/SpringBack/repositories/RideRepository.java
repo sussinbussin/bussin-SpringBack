@@ -8,4 +8,5 @@ import java.util.*;
 
 @Repository
 public interface RideRepository extends JpaRepository<Ride, UUID> {
+    Optional<RideDTO> findRideById(UUID uuid);
 }

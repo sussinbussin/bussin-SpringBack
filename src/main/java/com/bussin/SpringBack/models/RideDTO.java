@@ -5,7 +5,7 @@ import javax.validation.*;
 import javax.validation.constraints.*;
 
 import java.math.*;
-import java.security.*;
+import java.sql.*;
 import java.util.*;
 
 import lombok.*;
@@ -21,11 +21,11 @@ public class RideDTO {
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
-    @NotNull(message = "How many passengers can this ride accommodate?")
     private Timestamp timestamp;
 
     @NotNull
     @Min(1)
+    @NotNull(message = "How many passengers can this ride accommodate?")
     private Integer passengers;
 
     @NotNull

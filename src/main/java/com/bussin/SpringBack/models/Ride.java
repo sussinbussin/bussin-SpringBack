@@ -1,19 +1,15 @@
 package com.bussin.SpringBack.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.UUID;
+import javax.validation.*;
+import javax.validation.constraints.*;
+
+import java.io.*;
+import java.math.*;
+import java.sql.*;
+import java.util.*;
+
+import lombok.*;
 
 @Entity
 @Builder
@@ -21,16 +17,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Ride implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
-    @NotNull(message = "How many passengers can this ride accommodate?")
     private Timestamp timestamp;
 
     @NotNull
     @Min(1)
+    @NotNull(message = "How many passengers can this ride accommodate?")
     private Integer passengers;
 
     @NotNull
@@ -44,4 +41,11 @@ public class Ride implements Serializable {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void updateFromDTO(RideDTO rideDTO) {
+        this.id = rideDTO.getId();
+        this.timestamp = rideDTO.getTimestamp();
+        this.passengers = rideDTO.getPassengers();
+        this.cost = rideDTO.getCost();
+    }
 }
