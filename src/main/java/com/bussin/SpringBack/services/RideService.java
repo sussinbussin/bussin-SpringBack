@@ -16,17 +16,14 @@ public class RideService {
     private final ModelMapper modelMapper;
     private final RideRepository rideRepository;
     private final PlannedRoutesRepository plannedRoutesRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     @Autowired
     public RideService(ModelMapper modelMapper, RideRepository rideRepository,
-            PlannedRoutesRepository plannedRoutesRepository,
-            UserRepository userRepository, UserService userService) {
+            PlannedRoutesRepository plannedRoutesRepository, UserService userService) {
         this.modelMapper = modelMapper;
         this.rideRepository = rideRepository;
         this.plannedRoutesRepository = plannedRoutesRepository;
-        this.userRepository = userRepository;
         this.userService = userService;
     }
 
@@ -34,8 +31,9 @@ public class RideService {
         return rideRepository.findAll();
     }
 
-    public Optional<Ride> getRideById(UUID uuid) {
-        return rideRepository.findById(uuid);
+    public Ride getRideById(UUID uuid) {
+        return rideRepository.findById(uuid).orElseThrow(() ->
+                new RideNotFoundException("No ride with id " + uuid));
     }
 
     @Transactional
@@ -44,11 +42,12 @@ public class RideService {
         return userService.getFullUserById(userId).map(found -> {
             Ride ride = modelMapper.map(rideDTO, Ride.class);
             ride.setUser(found);
-            PlannedRoute plannedRoute = plannedRoutesRepository.findPlannedRouteById(plannedRouteId)
-                .map(plannedRouteFound -> {
-                    return plannedRouteFound;
-                }).orElseThrow(() -> new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
+            PlannedRoute plannedRoute = plannedRoutesRepository
+                    .findPlannedRouteById(plannedRouteId)
+                    .orElseThrow(() ->
+                            new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
             ride.setPlannedRoute(plannedRoute);
+
             return rideRepository.save(ride);
         }).orElseThrow(() -> new UserNotFoundException(("No user with id " + userId)));
     }
