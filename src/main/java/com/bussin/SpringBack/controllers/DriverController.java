@@ -51,7 +51,7 @@ public class DriverController {
     @Operation(summary = "Gets a Driver by their Car Plate")
     @GetMapping("/{carPlate}")
     public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate) {
-        return driverService.getDriverByCarPlate(carPlate).orElse(null);
+        return driverService.getDriverByCarPlate(carPlate);
     }
 
     @Operation(summary = "Converts a User to Driver")

@@ -7,6 +7,7 @@ import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
+import com.bussin.SpringBack.repositories.UserRepository;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,11 @@ public class DriverService {
                 " " + uuid));
     }
 
-    public Optional<Driver> getDriverByCarPlate(String carPlate) {
-        return driverRepository.findDriverByCarPlate(carPlate);
+    public Driver getDriverByCarPlate(String carPlate) {
+        return driverRepository.findDriverByCarPlate(carPlate)
+                .orElseThrow(() ->
+                        new UserNotFoundException("No driver found with car " +
+                                "plate " + carPlate));
     }
 
     @Transactional

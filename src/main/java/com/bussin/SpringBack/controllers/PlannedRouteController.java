@@ -31,7 +31,7 @@ public class PlannedRouteController {
     @Operation(summary = "Gets planned route by ID")
     @GetMapping("/{uuid}")
     public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID uuid) {
-        return plannedRouteService.getPlannedRouteById(uuid).orElse(null);
+        return plannedRouteService.getPlannedRouteById(uuid);
     }
 
     @Operation(summary = "Creates a planned route for a Driver")
