@@ -5,6 +5,7 @@ import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.services.DriverService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class DriverController {
      * 
      * @return List of all drivers.
      */
+    @Operation(summary = "Gets all drivers")
     @GetMapping
     public List<Driver> getAllDrivers() {
         return driverService.getAllDrivers();
@@ -46,11 +48,13 @@ public class DriverController {
      * @param carPlate The String
      * @return The driver if found, else null
      */
+    @Operation(summary = "Gets a Driver by their Car Plate")
     @GetMapping("/{carPlate}")
     public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate) {
         return driverService.getDriverByCarPlate(carPlate).orElse(null);
     }
 
+    @Operation(summary = "Converts a User to Driver")
     @PostMapping
     public Driver addNewDriver(@Valid UUID userUUID,
                                @Valid @RequestBody DriverDTO driverDTO) {
@@ -63,6 +67,7 @@ public class DriverController {
      * @param driverDTO DriverDTO with the information to update
      * @return Updated Driver
      */
+    @Operation(summary = "Updates a Driver")
     @PutMapping("/{carPlate}")
     public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate,
                                       @Valid @RequestBody DriverDTO driverDTO) {
@@ -74,6 +79,7 @@ public class DriverController {
      * @param carPlate Car plate number of the Driver to delete
      * @return Deleted Driver
      */
+    @Operation(summary = "Converts a Driver into User")
     @DeleteMapping("/{carPlate}")
     public Driver deleteDriverByCarPlate(@Valid @PathVariable String carPlate) {
         return driverService.deleteDriver(carPlate);
