@@ -38,9 +38,9 @@ public class UserController {
      * @param uuid The UUID
      * @return The user DTO if found, else null
      */
-    @GetMapping("/{uuid}")
-    public UserDTO getUserById(@Valid @PathVariable UUID uuid) {
-        return userService.getUserById(uuid).orElse(null);
+    @GetMapping("/{userId}")
+    public UserDTO getUserById(@Valid @PathVariable UUID userId) {
+        return userService.getUserById(userId).orElse(null);
     }
 
     /**
@@ -49,10 +49,10 @@ public class UserController {
      * @param uuid The UUID
      * @return The full user if found, else null
      */
-    @GetMapping("/full/{uuid}")
-    public User getFullUserById(@Valid @PathVariable UUID uuid) {
+    @GetMapping("/full/{userId}")
+    public User getFullUserById(@Valid @PathVariable UUID userId) {
 
-        return userService.getFullUserById(uuid).orElse(null);
+        return userService.getFullUserById(userId).orElse(null);
     }
 
     /**
@@ -86,10 +86,10 @@ public class UserController {
      * @param userDTO Object with the fields to update
      * @return Full user with the updated fields
      */
-    @PutMapping("/{uuid}")
-    public User updateUserById(@Valid @PathVariable UUID uuid,
+    @PutMapping("/{userId}")
+    public User updateUserById(@Valid @PathVariable UUID userId,
                                @Valid @RequestBody UserDTO userDTO) {
-        return userService.updateUser(uuid, userDTO);
+        return userService.updateUser(userId, userDTO);
     }
 
     /**
@@ -98,9 +98,9 @@ public class UserController {
      * @param uuid UUID of the user to delete
      * @return Full deleted user
      */
-    @DeleteMapping("/{uuid}")
-    public User deleteUserById(@Valid @PathVariable UUID uuid) {
+    @DeleteMapping("/{userId}")
+    public User deleteUserById(@Valid @PathVariable UUID userId) {
 
-        return userService.deleteUser(uuid);
+        return userService.deleteUser(userId);
     }
 }

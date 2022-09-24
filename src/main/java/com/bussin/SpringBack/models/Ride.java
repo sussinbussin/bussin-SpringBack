@@ -2,7 +2,9 @@ package com.bussin.SpringBack.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -17,6 +19,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Ride implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")

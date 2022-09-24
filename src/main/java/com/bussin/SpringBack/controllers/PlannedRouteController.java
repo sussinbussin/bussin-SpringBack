@@ -26,9 +26,9 @@ public class PlannedRouteController {
         return plannedRouteService.getAllPlannedRoutes();
     }
 
-    @GetMapping("/{uuid}")
-    public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID uuid) {
-        return plannedRouteService.getPlannedRouteById(uuid).orElse(null);
+    @GetMapping("/{routeId}")
+    public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID routeId) {
+        return plannedRouteService.getPlannedRouteById(routeId).orElse(null);
     }
 
     @Transactional
@@ -41,17 +41,17 @@ public class PlannedRouteController {
     }
 
     @Transactional
-    @PutMapping("/{uuid}")
+    @PutMapping("/{routeId}")
     public PlannedRoute updatePlannedRouteById
-            (@Valid @PathVariable UUID uuid,
+            (@Valid @PathVariable UUID routeId,
              @Valid @RequestBody PlannedRouteDTO plannedRouteDTO) {
-        return plannedRouteService.updatePlannedRouteById(uuid,
+        return plannedRouteService.updatePlannedRouteById(routeId,
                 plannedRouteDTO);
     }
 
     @Transactional
-    @DeleteMapping("/{uuid}")
-    public PlannedRoute deletePlannedrouteById(@Valid @PathVariable UUID uuid) {
-        return plannedRouteService.deletePlannedRouteByID(uuid);
+    @DeleteMapping("/{routeId}")
+    public PlannedRoute deletePlannedrouteById(@Valid @PathVariable UUID routeId) {
+        return plannedRouteService.deletePlannedRouteByID(routeId);
     }
 }
