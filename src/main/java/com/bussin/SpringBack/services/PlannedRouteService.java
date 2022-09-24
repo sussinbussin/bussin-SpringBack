@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,8 +33,10 @@ public class PlannedRouteService {
         return plannedRoutesRepository.findAll();
     }
 
-    public Optional<PlannedRoute> getPlannedRouteById(UUID uuid) {
-        return plannedRoutesRepository.findById(uuid);
+    public PlannedRoute getPlannedRouteById(UUID uuid) {
+        return plannedRoutesRepository.findById(uuid)
+                .orElseThrow(() -> new PlannedRouteNotFoundException("No " +
+                        "planned route with ID " + uuid));
     }
 
     @Transactional

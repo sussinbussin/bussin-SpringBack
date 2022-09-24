@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.controllers;
 
+import com.bussin.SpringBack.exception.DriverNotFoundException;
+import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -7,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ExceptionHandling {
@@ -16,6 +19,7 @@ public class ExceptionHandling {
      * @param e DataIntegrityViolationException
      * @return Response entity with HTTP code 400
      */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Void> handleDataIntegrityViolationException(
             final DataIntegrityViolationException e) {
@@ -28,6 +32,7 @@ public class ExceptionHandling {
      * @param e HttpMessageNotReadableException
      * @return Response entity with HTTP code 400
      */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Void> handleHttpMessageNotReadableException(
             final HttpMessageNotReadableException e) {
@@ -40,10 +45,37 @@ public class ExceptionHandling {
      * @param e UserNotFoundException
      * @return Response entity with HTTP code 404
      */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Void> handleUserNotFoundException(
+    public ResponseEntity<String> handleUserNotFoundException(
             final UserNotFoundException e) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles DriverNotFoundException.
+     *
+     * @param e DriverNotFoundException
+     * @return Response entity with HTTP code 404
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(DriverNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(
+            final DriverNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles DriverNotFoundException.
+     *
+     * @param e DriverNotFoundException
+     * @return Response entity with HTTP code 404
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PlannedRouteNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(
+            final PlannedRouteNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -52,6 +84,7 @@ public class ExceptionHandling {
      * @param e Generic exception
      * @return Response entity with HTTP code 500
      */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Error> handleException(final Exception e) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
