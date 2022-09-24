@@ -3,6 +3,7 @@ package com.bussin.SpringBack.controllers;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,21 +27,23 @@ public class RideController {
         this.rideService = rideService;
     }
 
+    @Operation(summary = "Gets the details of all rides")
     @GetMapping
     public List<Ride> getAllRides() {
         return rideService.getAllRides();
     }
 
+    @Operation(summary = "Gets a ride by its ID")
     @GetMapping("/{rideId}")
     public Ride getRideById(@Valid @PathVariable UUID rideId) {
-        return rideService.getRideById(rideId).orElse(null);
+        return rideService.getRideById(rideId);
     }
 
+    @Operation(summary = "Creates a new ride")
     @Transactional
-    @PostMapping("/{userId}/{plannedRouteId}")
-    public Ride createNewRide(@RequestBody RideDTO rideDTO,
-            @Valid @PathVariable UUID userId,
-            @Valid @PathVariable UUID plannedRouteId) {
-        return rideService.createNewRide(rideDTO, userId, plannedRouteId);
+    @PostMapping
+    public Ride createNewRide(@Valid @RequestBody RideCreationDTO creationDTO) {
+        return rideService.createNewRide(creationDTO.getRideDTO(),
+                creationDTO.getUserUUID(), creationDTO.getPlannedRouteUUID());
     }
 }
