@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/planned")
+@RequestMapping("/planned")
 public class PlannedRouteController {
     private final PlannedRouteService plannedRouteService;
 
