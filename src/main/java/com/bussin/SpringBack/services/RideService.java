@@ -39,17 +39,17 @@ public class RideService {
     @Transactional
     public Ride createNewRide(RideDTO rideDTO, UUID userId, UUID plannedRouteId) {
         rideDTO.validate();
-        return userService.getFullUserById(userId).map(found -> {
-            Ride ride = modelMapper.map(rideDTO, Ride.class);
-            ride.setUser(found);
-            PlannedRoute plannedRoute = plannedRoutesRepository
-                    .findPlannedRouteById(plannedRouteId)
-                    .orElseThrow(() ->
-                            new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
-            ride.setPlannedRoute(plannedRoute);
+        User found =  userService.getFullUserById(userId);
+        Ride ride = modelMapper.map(rideDTO, Ride.class);
+        ride.setUser(found);
+        PlannedRoute plannedRoute = plannedRoutesRepository
+                .findPlannedRouteById(plannedRouteId)
+                .orElseThrow(() ->
+                        new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
+        ride.setPlannedRoute(plannedRoute);
 
-            return rideRepository.save(ride);
-        }).orElseThrow(() -> new UserNotFoundException(("No user with id " + userId)));
+        return rideRepository.save(ride);
+
     }
 
     @Transactional

@@ -14,7 +14,7 @@ import com.bussin.SpringBack.models.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/v1/ride")
+@RequestMapping("/ride")
 public class RideController {
     private final RideService rideService;
 

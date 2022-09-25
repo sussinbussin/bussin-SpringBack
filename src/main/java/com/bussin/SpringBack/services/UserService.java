@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,16 +34,19 @@ public class UserService {
         return userRepository.save(modelMapper.map(userDTO, User.class));
     }
 
-    public Optional<User> getFullUserById(UUID uuid) {
-        return userRepository.findById(uuid);
+    public User getFullUserById(UUID uuid) {
+        return userRepository.findById(uuid).orElseThrow(()
+                -> new UserNotFoundException("No user with id " + uuid));
     }
 
-    public Optional<UserDTO> getUserById(UUID uuid) {
-        return userRepository.findUserById(uuid);
+    public UserDTO getUserById(UUID uuid) {
+        return userRepository.findUserById(uuid).orElseThrow(()
+                -> new UserNotFoundException("No user with id " + uuid));
     }
 
-    public Optional<UserDTO> getUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+    public UserDTO getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(()
+                -> new UserNotFoundException("No user with email " + email));
     }
 
     @Transactional
@@ -58,8 +60,8 @@ public class UserService {
     }
 
     @Transactional
-    public User deleteUser(UUID uuid) {
-        return userRepository.findById(uuid).map(found -> {
+    public UserDTO deleteUser(UUID uuid) {
+        return userRepository.findUserById(uuid).map(found -> {
             userRepository.deleteById(uuid);
             return found;
         }).orElseThrow(() -> new UserNotFoundException("No user with id " + uuid));

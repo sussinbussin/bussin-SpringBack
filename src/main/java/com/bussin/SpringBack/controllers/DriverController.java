@@ -23,7 +23,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(path = "api/v1/driver")
+@RequestMapping(path = "/driver")
 public class DriverController {
     private final DriverService driverService;
 

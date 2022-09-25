@@ -329,10 +329,10 @@ public class UserServiceTests {
 
     @Test
     public void deleteUser_success() {
-        User user = User.builder()
+        UserDTO userDTO = UserDTO.builder()
                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
                 .nric("S1234567A")
-                .name("Test Guy")
+                .name("Test Guy2")
                 .address("444333")
                 .dob(new Date(900000000))
                 .mobile("90009000")
@@ -340,27 +340,27 @@ public class UserServiceTests {
                 .isDriver(false)
                 .build();
 
-        when(userRepository.findById(user.getId()))
-                .thenReturn(Optional.of(user));
+        when(userRepository.findUserById(userDTO.getId()))
+                .thenReturn(Optional.of(userDTO));
 
-        assertEquals(user, userService.deleteUser(user.getId()));
+        assertEquals(userDTO, userService.deleteUser(userDTO.getId()));
 
         verify(userRepository, times(1))
-                .findById(user.getId());
+                .findUserById(userDTO.getId());
         verify(userRepository, times(1))
-                .deleteById(user.getId());
+                .deleteById(userDTO.getId());
     }
 
     @Test
     public void deleteUser_doesntExist_exception() {
         UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
-        when(userRepository.findById(uuid))
+        when(userRepository.findUserById(uuid))
                 .thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
                 () -> userService.deleteUser(uuid));
 
-        verify(userRepository, times(1)).findById(uuid);
+        verify(userRepository, times(1)).findUserById(uuid);
         verify(userRepository, never()).deleteById(uuid);
     }
 }
