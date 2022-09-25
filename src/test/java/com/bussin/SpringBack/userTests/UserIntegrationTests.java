@@ -70,7 +70,7 @@ public class UserIntegrationTests {
                 .mobile("90009000")
                 .isDriver(false).build();
 
-        userService.createNewUser(userDTO);
+        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users");
 
         CloseableHttpResponse httpResponse =
@@ -83,7 +83,7 @@ public class UserIntegrationTests {
                         });
 
         //Because ID will change
-        userDTO.setId(users.get(0).getId());
+        userDTO.setId(user.getId());
 
         UserDTO dest = UserDTO.builder().build();
         modelMapper.map(users.get(0), dest);
