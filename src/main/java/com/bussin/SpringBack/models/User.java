@@ -14,8 +14,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "user")
-@Table(name = "user", uniqueConstraints = {
+@Entity(name = "bussinuser")
+@Table(name = "bussinuser", uniqueConstraints = {
         @UniqueConstraint(name = "user_email_unique", columnNames = "email"),
         @UniqueConstraint(name = "mobile_unique", columnNames = "mobile"),
         @UniqueConstraint(name = "nric_unique", columnNames = "nric")
