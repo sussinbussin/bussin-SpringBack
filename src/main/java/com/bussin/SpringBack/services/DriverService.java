@@ -22,8 +22,12 @@ import java.util.UUID;
 public class DriverService {
     private ModelMapper modelMapper;
 
-    @Setter
     private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     private final DriverRepository driverRepository;
 
@@ -44,19 +48,18 @@ public class DriverService {
         UserDTO foundUser =  userService.getUserById(uuid);
 
         foundUser.setIsDriver(true);
-        Driver driver = modelMapper.map(driverDTO,
-                Driver.class);
-        User user = userService.updateUser(uuid, foundUser);
-        user.setDriver(driver);
-        driver.setUser(user);
+
+        Driver driver = modelMapper.map(driverDTO, Driver.class);
+        driver.setUser(userService.updateUser(uuid, foundUser));
+
         return driverRepository.save(driver);
     }
 
     public Driver getDriverByCarPlate(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate)
                 .orElseThrow(() ->
-                        new UserNotFoundException("No driver found with car " +
-                                "plate " + carPlate));
+                        new DriverNotFoundException(
+                                "No driver found with car plate " + carPlate));
     }
 
     @Transactional
