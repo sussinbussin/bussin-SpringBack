@@ -67,7 +67,7 @@ public class UserController {
      */
     @Operation(summary = "Gets a user by their email")
     @GetMapping("/byEmail/{email}")
-    public UserDTO getUserByEmail(@Email @PathVariable String email) {
+    public UserDTO getUserByEmail(@Valid @Email @PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 
@@ -107,7 +107,7 @@ public class UserController {
      */
     @Operation(summary = "Deletes a user by their ID")
     @DeleteMapping("/{userId}")
-    public User deleteUserById(@Valid @PathVariable UUID userId) {
+    public UserDTO deleteUserById(@Valid @PathVariable UUID userId) {
 
         return userService.deleteUser(userId);
     }

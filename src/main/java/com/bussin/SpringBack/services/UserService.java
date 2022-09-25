@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -61,8 +60,8 @@ public class UserService {
     }
 
     @Transactional
-    public User deleteUser(UUID uuid) {
-        return userRepository.findById(uuid).map(found -> {
+    public UserDTO deleteUser(UUID uuid) {
+        return userRepository.findUserById(uuid).map(found -> {
             userRepository.deleteById(uuid);
             return found;
         }).orElseThrow(() -> new UserNotFoundException("No user with id " + uuid));
