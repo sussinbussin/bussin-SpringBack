@@ -38,7 +38,7 @@ public class Driver implements Serializable {
 
     private String fuelType;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "user_id")
     private User user;
 

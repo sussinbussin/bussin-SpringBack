@@ -10,8 +10,7 @@ import com.bussin.SpringBack.testConfig.H2JpaConfig;
 import com.bussin.SpringBack.testConfig.TestContextConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.io.entity.StringEntity;
@@ -95,7 +94,8 @@ public class DriverIntegrationTests {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Driver> drivers =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        new TypeReference<>() {});
+                        new TypeReference<>() {
+                        });
 
         DriverDTO dest = DriverDTO.builder().build();
         modelMapper.map(drivers.get(0), dest);
@@ -147,6 +147,288 @@ public class DriverIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals( 404, httpResponse.getCode());
+        assertEquals(404, httpResponse.getCode());
+    }
+
+    @Test
+    public void addNewDriver_success() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S9999999Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .address("123123")
+                .email("Robert@gmail.com")
+                .mobile("90009000")
+                .isDriver(false)
+                .build();
+
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2)
+                .fuelType("Premium")
+                .build();
+
+        User user = userService.createNewUser(userDTO);
+        HttpUriRequest request = new HttpPost(baseUrl + port
+                + "/api/v1/driver/" + user.getId());
+
+        StringEntity entity =
+                new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        Driver driver = new ObjectMapper()
+                .readValue(httpResponse.getEntity().getContent(), Driver.class);
+
+        DriverDTO dest = DriverDTO.builder().build();
+        modelMapper.map(driver, dest);
+
+        assertEquals(dest, driverDTO);
+        assertEquals(driver.getUser().getId(), user.getId());
+    }
+
+    @Test
+    public void addNewDriver_noUser_404() throws IOException {
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2)
+                .fuelType("Premium")
+                .build();
+
+        HttpUriRequest request = new HttpPost(baseUrl + port
+                + "/api/v1/driver/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+
+        StringEntity entity =
+                new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(httpResponse.getCode(), 404);
+    }
+
+    @Test
+    public void addNewDriver_badParams_400() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S9999999Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .address("123123")
+                .email("Robert@gmail.com")
+                .mobile("90009000")
+                .isDriver(false)
+                .build();
+
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2000)
+                .fuelType("Premium")
+                .build();
+
+        User user = userService.createNewUser(userDTO);
+        HttpUriRequest request = new HttpPost(baseUrl + port
+                + "/api/v1/driver/" + user.getId());
+
+        StringEntity entity =
+                new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(httpResponse.getCode(), 400);
+    }
+
+    @Test
+    public void updateDriver_success() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S9999999Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .address("123123")
+                .email("Robert@gmail.com")
+                .mobile("90009000")
+                .isDriver(false)
+                .build();
+
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2)
+                .fuelType("Premium")
+                .build();
+
+        DriverDTO updatedDriverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Clown Car")
+                .capacity(12)
+                .fuelType("Premium")
+                .build();
+
+        User user = userService.createNewUser(userDTO);
+        Driver driver = driverService.addNewDriver(user.getId(), driverDTO);
+
+        HttpUriRequest request = new HttpPut(baseUrl + port
+                + "/api/v1/driver/" + driverDTO.getCarPlate());
+
+        StringEntity entity = new StringEntity(new ObjectMapper()
+                .writeValueAsString(updatedDriverDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        Driver driverResult = new ObjectMapper()
+                .readValue(httpResponse.getEntity().getContent(), Driver.class);
+
+        DriverDTO dest = DriverDTO.builder().build();
+        modelMapper.map(driverResult, dest);
+
+        assertEquals(dest, updatedDriverDTO);
+        assertEquals(driver.getUser().getId(), user.getId());
+    }
+
+    @Test
+    public void updateDriver_noDriver_404() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S9999999Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .address("123123")
+                .email("Robert@gmail.com")
+                .mobile("90009000")
+                .isDriver(false)
+                .build();
+
+        DriverDTO updatedDriverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Clown Car")
+                .capacity(12)
+                .fuelType("Premium")
+                .build();
+
+        userService.createNewUser(userDTO);
+
+        HttpUriRequest request = new HttpPut(baseUrl + port
+                + "/api/v1/driver/" + updatedDriverDTO.getCarPlate());
+
+        StringEntity entity = new StringEntity(new ObjectMapper()
+                .writeValueAsString(updatedDriverDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(404, httpResponse.getCode());
+    }
+
+    @Test
+    public void updateDriver_badParams_400() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S9999999Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .address("123123")
+                .email("Robert@gmail.com")
+                .mobile("90009000")
+                .isDriver(false)
+                .build();
+
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2)
+                .fuelType("Premium")
+                .build();
+
+        DriverDTO updatedDriverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Actual Clown Car")
+                .capacity(12000)
+                .fuelType("Premium")
+                .build();
+
+        User user = userService.createNewUser(userDTO);
+        driverService.addNewDriver(user.getId(), driverDTO);
+
+        HttpUriRequest request = new HttpPut(baseUrl + port
+                + "/api/v1/driver/" + driverDTO.getCarPlate());
+
+        StringEntity entity = new StringEntity(new ObjectMapper()
+                .writeValueAsString(updatedDriverDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(400, httpResponse.getCode());
+    }
+
+    @Test
+    public void deleteDriver_success() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S9999999Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .address("123123")
+                .email("Robert@gmail.com")
+                .mobile("90009000")
+                .isDriver(false)
+                .build();
+
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345B")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2)
+                .fuelType("Premium")
+                .build();
+
+        User user = userService.createNewUser(userDTO);
+        Driver driver = driverService.addNewDriver(user.getId(), driverDTO);
+
+        HttpUriRequest request = new HttpDelete(baseUrl + port
+                + "/api/v1/driver/" + driverDTO.getCarPlate());
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        Driver driverResult = new ObjectMapper()
+                .readValue(httpResponse.getEntity().getContent(), Driver.class);
+
+        DriverDTO dest = DriverDTO.builder().build();
+        modelMapper.map(driverResult, dest);
+
+        assertEquals(dest, driverDTO);
+        assertEquals(driver.getUser().getId(), user.getId());
+        assert (!userService.getUserById(user.getId()).getIsDriver());
+    }
+
+    @Test
+    public void deleteDriver_noDriver_404() throws IOException {
+        HttpUriRequest request = new HttpDelete(baseUrl + port
+                + "/api/v1/driver/" + "SSS13370Z");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(404, httpResponse.getCode());
     }
 }

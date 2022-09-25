@@ -2,7 +2,6 @@ package com.bussin.SpringBack.models;
 
 import lombok.*;
 
-import javax.persistence.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
@@ -12,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -20,6 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@ToString
 public class DriverDTO implements Serializable {
     @NotNull(message = "Car Plate should not be empty")
     private String carPlate;
@@ -35,12 +34,12 @@ public class DriverDTO implements Serializable {
 
     private String fuelType;
 
-    public void validate(){
+    public void validate() {
         Validator validator =
                 Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<DriverDTO>> violations =
                 validator.validate(this);
-        if(violations.size()>0){
+        if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
     }
