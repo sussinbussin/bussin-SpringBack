@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("/{userId}")
     @Operation(summary = "Gets a user by their ID")
     public UserDTO getUserById(@Valid @PathVariable UUID userId) {
-        return userService.getUserById(userId).orElse(null);
+        return userService.getUserById(userId);
     }
 
     /**
@@ -56,7 +56,7 @@ public class UserController {
     @GetMapping("/full/{userId}")
     public User getFullUserById(@Valid @PathVariable UUID userId) {
 
-        return userService.getFullUserById(userId).orElse(null);
+        return userService.getFullUserById(userId);
     }
 
     /**
@@ -68,7 +68,7 @@ public class UserController {
     @Operation(summary = "Gets a user by their email")
     @GetMapping("/byEmail/{email}")
     public UserDTO getUserByEmail(@Email @PathVariable String email) {
-        return userService.getUserByEmail(email).orElse(null);
+        return userService.getUserByEmail(email);
     }
 
     /**
@@ -102,7 +102,7 @@ public class UserController {
     /**
      * Deletes a user.
      *
-     * @param uuid UUID of the user to delete
+     * @param userId UUID of the user to delete
      * @return Full deleted user
      */
     @Operation(summary = "Deletes a user by their ID")

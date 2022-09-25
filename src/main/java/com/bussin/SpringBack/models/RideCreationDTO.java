@@ -8,7 +8,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class RideCreationDTO implements Serializable {
     private UUID userUUID;

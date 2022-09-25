@@ -31,7 +31,6 @@ import java.util.UUID;
 })
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserDTO implements Serializable {

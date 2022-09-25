@@ -1,8 +1,8 @@
 package com.bussin.SpringBack.testConfig;
 
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Configuration;
 
-@TestConfiguration
+@Configuration
 public class TestContextConfig {
 
 }

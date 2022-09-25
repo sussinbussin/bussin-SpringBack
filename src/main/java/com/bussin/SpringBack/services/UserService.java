@@ -35,16 +35,19 @@ public class UserService {
         return userRepository.save(modelMapper.map(userDTO, User.class));
     }
 
-    public Optional<User> getFullUserById(UUID uuid) {
-        return userRepository.findById(uuid);
+    public User getFullUserById(UUID uuid) {
+        return userRepository.findById(uuid).orElseThrow(()
+                -> new UserNotFoundException("No user with id " + uuid));
     }
 
-    public Optional<UserDTO> getUserById(UUID uuid) {
-        return userRepository.findUserById(uuid);
+    public UserDTO getUserById(UUID uuid) {
+        return userRepository.findUserById(uuid).orElseThrow(()
+                -> new UserNotFoundException("No user with id " + uuid));
     }
 
-    public Optional<UserDTO> getUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+    public UserDTO getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(()
+                -> new UserNotFoundException("No user with email " + email));
     }
 
     @Transactional

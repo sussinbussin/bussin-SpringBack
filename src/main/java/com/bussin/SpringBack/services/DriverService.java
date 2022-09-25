@@ -41,16 +41,15 @@ public class DriverService {
     @Transactional
     public Driver addNewDriver(UUID uuid, DriverDTO driverDTO) {
         driverDTO.validate();
-        return userService.getUserById(uuid).map(foundUser -> {
-            foundUser.setIsDriver(true);
-            Driver driver = modelMapper.map(driverDTO,
-                    Driver.class);
-            User user = userService.updateUser(uuid, foundUser);
-            user.setDriver(driver);
-            driver.setUser(user);
-            return driverRepository.save(driver);
-        }).orElseThrow(() -> new UserNotFoundException("No user found with id" +
-                " " + uuid));
+        UserDTO foundUser =  userService.getUserById(uuid);
+
+        foundUser.setIsDriver(true);
+        Driver driver = modelMapper.map(driverDTO,
+                Driver.class);
+        User user = userService.updateUser(uuid, foundUser);
+        user.setDriver(driver);
+        driver.setUser(user);
+        return driverRepository.save(driver);
     }
 
     public Driver getDriverByCarPlate(String carPlate) {
@@ -80,9 +79,10 @@ public class DriverService {
     public Driver deleteDriver(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
             driverRepository.deleteByCarPlate(carPlate);
-            UserDTO toUpdate =
-                    modelMapper.map(found.getUser(), UserDTO.class);
+            UserDTO toUpdate = UserDTO.builder().build();
+            modelMapper.map(found.getUser(), toUpdate);
             toUpdate.setIsDriver(false);
+
             userService.updateUser(found.getUser().getId(), toUpdate);
             return found;
         }).orElseThrow(() -> new DriverNotFoundException(
