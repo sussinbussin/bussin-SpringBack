@@ -4,21 +4,19 @@ import javax.persistence.*;
 import javax.validation.*;
 import javax.validation.constraints.*;
 
-import java.io.*;
 import java.math.*;
 import java.sql.*;
 import java.util.*;
 
 import lombok.*;
 
-@Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString
-public class Ride implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode
+public class RideDTO {
     @Id
     @GeneratedValue(generator = "uuid2")
     private UUID id;
@@ -33,19 +31,12 @@ public class Ride implements Serializable {
     @NotNull
     @DecimalMin("0")
     private BigDecimal cost;
-
-    @ManyToOne
-    @JoinColumn(name = "planned_route_id")
-    private PlannedRoute plannedRoute;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public void updateFromDTO(RideDTO rideDTO) {
-        this.id = rideDTO.getId();
-        this.timestamp = rideDTO.getTimestamp();
-        this.passengers = rideDTO.getPassengers();
-        this.cost = rideDTO.getCost();
+    
+    public void validate() {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<RideDTO>> violations = validator.validate(this);
+        if (violations.size() > 0) {
+            throw new ConstraintViolationException(violations);
+        }
     }
 }

@@ -93,7 +93,7 @@ public class DriverServiceTests {
                 .build();
 
         when(userService.getUserById(uuid))
-                .thenReturn(Optional.of(userDTO));
+                .thenReturn(userDTO);
         when(userService.updateUser(uuid, userDTO))
                 .thenAnswer(invocationOnMock ->
                     ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?

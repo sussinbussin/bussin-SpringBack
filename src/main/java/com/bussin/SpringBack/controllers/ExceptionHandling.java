@@ -7,9 +7,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class ExceptionHandling {
@@ -36,6 +38,32 @@ public class ExceptionHandling {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Void> handleHttpMessageNotReadableException(
             final HttpMessageNotReadableException e) {
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles MethodArgumentTypeMismatchException.
+     *
+     * @param e MethodArgumentTypeMismatchException
+     * @return Response entity with HTTP code 400
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Void> handleMethodArgumentTypeMismatchException(
+            final MethodArgumentTypeMismatchException e) {
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles MethodArgumentNotValidException.
+     *
+     * @param e MethodArgumentNotValidException
+     * @return Response entity with HTTP code 400
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Void> handleMethodArgumentNotValidException(
+            final MethodArgumentNotValidException e) {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
@@ -87,6 +115,7 @@ public class ExceptionHandling {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Error> handleException(final Exception e) {
+        System.out.println(e);
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

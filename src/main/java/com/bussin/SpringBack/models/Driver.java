@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -18,6 +20,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "carPlate")
 public class Driver implements Serializable {
     @Id
     @NotNull(message = "Car Plate should not be empty")
@@ -34,7 +38,7 @@ public class Driver implements Serializable {
 
     private String fuelType;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "user_id")
     private User user;
 

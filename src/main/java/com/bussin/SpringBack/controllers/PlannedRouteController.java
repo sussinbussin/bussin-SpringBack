@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/planned")
+@RequestMapping("/planned")
 public class PlannedRouteController {
     private final PlannedRouteService plannedRouteService;
 
@@ -29,9 +29,9 @@ public class PlannedRouteController {
     }
 
     @Operation(summary = "Gets planned route by ID")
-    @GetMapping("/{uuid}")
-    public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID uuid) {
-        return plannedRouteService.getPlannedRouteById(uuid);
+    @GetMapping("/{routeId}")
+    public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID routeId) {
+        return plannedRouteService.getPlannedRouteById(routeId);
     }
 
     @Operation(summary = "Creates a planned route for a Driver")
@@ -46,18 +46,18 @@ public class PlannedRouteController {
 
     @Operation(summary = "Updates a planned route")
     @Transactional
-    @PutMapping("/{uuid}")
+    @PutMapping("/{routeId}")
     public PlannedRoute updatePlannedRouteById
-            (@Valid @PathVariable UUID uuid,
+            (@Valid @PathVariable UUID routeId,
              @Valid @RequestBody PlannedRouteDTO plannedRouteDTO) {
-        return plannedRouteService.updatePlannedRouteById(uuid,
+        return plannedRouteService.updatePlannedRouteById(routeId,
                 plannedRouteDTO);
     }
 
     @Operation(summary = "Deletes a planned route by ID")
     @Transactional
-    @DeleteMapping("/{uuid}")
-    public PlannedRoute deletePlannedrouteById(@Valid @PathVariable UUID uuid) {
-        return plannedRouteService.deletePlannedRouteByID(uuid);
+    @DeleteMapping("/{routeId}")
+    public PlannedRoute deletePlannedrouteById(@Valid @PathVariable UUID routeId) {
+        return plannedRouteService.deletePlannedRouteByID(routeId);
     }
 }

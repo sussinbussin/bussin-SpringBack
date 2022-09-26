@@ -1,9 +1,11 @@
 package com.bussin.SpringBack.models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;
@@ -31,7 +33,6 @@ import java.util.UUID;
 })
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserDTO implements Serializable {
@@ -65,12 +66,12 @@ public class UserDTO implements Serializable {
 
     private Boolean isDriver;
 
-    public void validate(){
+    public void validate() {
         Validator validator =
                 Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<UserDTO>> violations =
                 validator.validate(this);
-        if(violations.size()>0){
+        if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
     }

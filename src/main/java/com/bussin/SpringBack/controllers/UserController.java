@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/v1/users")
+@RequestMapping(path = "/users")
 public class UserController {
     private final UserService userService;
 
@@ -37,26 +37,26 @@ public class UserController {
     /**
      * Gets a user DTO by their UUID.
      *
-     * @param uuid The UUID
+     * @param userId The UUID
      * @return The user DTO if found, else null
      */
-    @GetMapping("/{uuid}")
+    @GetMapping("/{userId}")
     @Operation(summary = "Gets a user by their ID")
-    public UserDTO getUserById(@Valid @PathVariable UUID uuid) {
-        return userService.getUserById(uuid).orElse(null);
+    public UserDTO getUserById(@Valid @PathVariable UUID userId) {
+        return userService.getUserById(userId);
     }
 
     /**
      * Gets a full user by their UUID.
      *
-     * @param uuid The UUID
+     * @param userId The UUID
      * @return The full user if found, else null
      */
     @Operation(summary = "Gets a user and all their related info by their ID")
-    @GetMapping("/full/{uuid}")
-    public User getFullUserById(@Valid @PathVariable UUID uuid) {
+    @GetMapping("/full/{userId}")
+    public User getFullUserById(@Valid @PathVariable UUID userId) {
 
-        return userService.getFullUserById(uuid).orElse(null);
+        return userService.getFullUserById(userId);
     }
 
     /**
@@ -67,8 +67,8 @@ public class UserController {
      */
     @Operation(summary = "Gets a user by their email")
     @GetMapping("/byEmail/{email}")
-    public UserDTO getUserByEmail(@Email @PathVariable String email) {
-        return userService.getUserByEmail(email).orElse(null);
+    public UserDTO getUserByEmail(@Valid @Email @PathVariable String email) {
+        return userService.getUserByEmail(email);
     }
 
     /**
@@ -88,27 +88,27 @@ public class UserController {
     /**
      * Updates a user.
      *
-     * @param uuid    UUID of the user to update
+     * @param userId    UUID of the user to update
      * @param userDTO Object with the fields to update
      * @return Full user with the updated fields
      */
     @Operation(summary = "Updates a user")
-    @PutMapping("/{uuid}")
-    public User updateUserById(@Valid @PathVariable UUID uuid,
+    @PutMapping("/{userId}")
+    public User updateUserById(@Valid @PathVariable UUID userId,
                                @Valid @RequestBody UserDTO userDTO) {
-        return userService.updateUser(uuid, userDTO);
+        return userService.updateUser(userId, userDTO);
     }
 
     /**
      * Deletes a user.
      *
-     * @param uuid UUID of the user to delete
+     * @param userId UUID of the user to delete
      * @return Full deleted user
      */
     @Operation(summary = "Deletes a user by their ID")
-    @DeleteMapping("/{uuid}")
-    public User deleteUserById(@Valid @PathVariable UUID uuid) {
+    @DeleteMapping("/{userId}")
+    public UserDTO deleteUserById(@Valid @PathVariable UUID userId) {
 
-        return userService.deleteUser(uuid);
+        return userService.deleteUser(userId);
     }
 }

@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,8 +16,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "user")
-@Table(name = "user", uniqueConstraints = {
+@Entity(name = "bussinuser")
+@Table(name = "bussinuser", uniqueConstraints = {
         @UniqueConstraint(name = "user_email_unique", columnNames = "email"),
         @UniqueConstraint(name = "mobile_unique", columnNames = "mobile"),
         @UniqueConstraint(name = "nric_unique", columnNames = "nric")
@@ -26,7 +28,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Builder
-@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
