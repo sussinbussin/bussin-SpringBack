@@ -2,8 +2,20 @@ package com.bussin.SpringBack.models;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -20,6 +32,7 @@ import java.util.UUID;
 @Builder
 public class PlannedRoute implements Serializable {
     @Id
+    @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
@@ -32,6 +45,7 @@ public class PlannedRoute implements Serializable {
     @NotNull(message = "Date and time should not be empty")
     private LocalDateTime dateTime;
 
+    @Max(11)
     @Min(1)
     @NotNull(message = "How many passengers?")
     private Integer capacity;
@@ -39,8 +53,10 @@ public class PlannedRoute implements Serializable {
     @OneToMany(mappedBy = "plannedRoute")
     private Set<Ride> rides;
 
-    @ManyToOne
-    @JoinColumn(name = "car_plate")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
+    @Cascade({ CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DELETE })
+    @JoinColumn(name = "carPlate")
     private Driver driver;
 
     public void updateFromDTO(PlannedRouteDTO plannedRouteDTO) {
