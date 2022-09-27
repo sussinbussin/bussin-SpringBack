@@ -2,6 +2,7 @@ package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
+import com.bussin.SpringBack.exception.RideNotFoundException;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class ExceptionHandling {
@@ -68,6 +71,19 @@ public class ExceptionHandling {
     }
 
     /**
+     * Handles ConstraintViolationException.
+     *
+     * @param e ConstraintViolationException
+     * @return Response entity with HTTP code 400
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Void> handleConstraintViolationException(
+            final ConstraintViolationException e) {
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * Handles UserNotFoundException.
      *
      * @param e UserNotFoundException
@@ -103,6 +119,19 @@ public class ExceptionHandling {
     @ExceptionHandler(PlannedRouteNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(
             final PlannedRouteNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles RideNotFoundException.
+     *
+     * @param e RideNotFoundException
+     * @return Response entity with HTTP code 404
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(RideNotFoundException.class)
+    public ResponseEntity<String> handleRideNotFoundException(
+            final RideNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
