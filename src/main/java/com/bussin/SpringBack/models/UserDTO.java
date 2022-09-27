@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +35,6 @@ import java.util.UUID;
 })
 @Getter
 @Setter
-@AllArgsConstructor
 @Builder
 public class UserDTO implements Serializable {
     @Id
@@ -91,5 +92,24 @@ public class UserDTO implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @JsonCreator
+    public UserDTO(@JsonProperty("id") UUID id,
+                   @JsonProperty("nric") String nric,
+                   @JsonProperty("name") String name,
+                   @JsonProperty("address") String address,
+                   @JsonProperty("dob") Date dob,
+                   @JsonProperty("mobile") String mobile,
+                   @JsonProperty("email") String email,
+                   @JsonProperty("isDriver") Boolean isDriver) {
+        this.id = id;
+        this.nric = nric;
+        this.name = name;
+        this.address = address;
+        this.dob = dob;
+        this.mobile = mobile;
+        this.email = email;
+        this.isDriver = isDriver;
     }
 }

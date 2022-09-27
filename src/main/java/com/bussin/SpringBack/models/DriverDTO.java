@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.ConstraintViolation;
@@ -15,10 +17,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-@ToString
 public class DriverDTO implements Serializable {
     @NotNull(message = "Car Plate should not be empty")
     private String carPlate;
@@ -42,5 +42,16 @@ public class DriverDTO implements Serializable {
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
+    }
+
+    @JsonCreator
+    public DriverDTO(@JsonProperty("carPlate") String carPlate,
+                     @JsonProperty("modelAndColour") String modelAndColour,
+                     @JsonProperty("capacity") Integer capacity,
+                     @JsonProperty("fuelType") String fuelType) {
+        this.carPlate = carPlate;
+        this.modelAndColour = modelAndColour;
+        this.capacity = capacity;
+        this.fuelType = fuelType;
     }
 }

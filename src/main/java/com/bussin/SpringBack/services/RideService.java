@@ -17,14 +17,17 @@ public class RideService {
     private final RideRepository rideRepository;
     private final PlannedRoutesRepository plannedRoutesRepository;
     private final UserService userService;
+    private final PriceService priceService;
 
     @Autowired
     public RideService(ModelMapper modelMapper, RideRepository rideRepository,
-            PlannedRoutesRepository plannedRoutesRepository, UserService userService) {
+            PlannedRoutesRepository plannedRoutesRepository,
+                       UserService userService, PriceService priceService) {
         this.modelMapper = modelMapper;
         this.rideRepository = rideRepository;
         this.plannedRoutesRepository = plannedRoutesRepository;
         this.userService = userService;
+        this.priceService = priceService;
     }
 
     public List<Ride> getAllRides() {
@@ -41,7 +44,11 @@ public class RideService {
         rideDTO.validate();
         User found =  userService.getFullUserById(userId);
         Ride ride = modelMapper.map(rideDTO, Ride.class);
+        ride.setCost(priceService.getGasPrice());
         ride.setUser(found);
+
+        //TODO: Check that passengers does not exceed capacity
+
         PlannedRoute plannedRoute = plannedRoutesRepository
                 .findPlannedRouteById(plannedRouteId)
                 .orElseThrow(() ->

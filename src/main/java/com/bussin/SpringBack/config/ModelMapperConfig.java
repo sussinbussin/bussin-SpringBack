@@ -2,6 +2,8 @@ package com.bussin.SpringBack.config;
 
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.context.annotation.Bean;
@@ -27,5 +29,13 @@ public class ModelMapperConfig {
         });
 
         return modelMapper;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper;
     }
 }
