@@ -34,10 +34,10 @@ public class RideTests {
         private PlannedRoutesRepository plannedRoutesRepository;
 
         @Mock
-        private PlannedRouteService plannedRouteService;
+        private UserService userService;
 
         @Mock
-        private UserService userService;
+        private PriceService priceService;
 
         private ModelMapper modelMapper;
 
@@ -54,7 +54,8 @@ public class RideTests {
                         }
                 });
                 rideService = new RideService(modelMapper, rideRepository,
-                                plannedRoutesRepository, userService, plannedRouteService);
+                                plannedRoutesRepository, userService,
+                        priceService);
         }
 
         @Test
@@ -75,6 +76,7 @@ public class RideTests {
                                 .passengers(1)
                                 .cost(new BigDecimal(6.90))
                                 .build();
+                rides.add(ride);
 
                 when(rideRepository.findAll()).thenReturn(rides);
 
@@ -85,18 +87,9 @@ public class RideTests {
 
         @Test
         public void createNewRide_invalidParams_exception() {
-                // No cost
                 RideDTO rideDTO = RideDTO.builder()
                                 .timestamp(new Timestamp(System.currentTimeMillis()))
-                                .passengers(1)
-                                .build();
-
-                PlannedRoute plannedRoute = PlannedRoute.builder()
-                                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                                .plannedFrom("Start")
-                                .plannedTo("To")
-                                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                                .capacity(1)
+                                .passengers(1000)
                                 .build();
 
                 User user = User.builder()
@@ -109,8 +102,17 @@ public class RideTests {
                                 .isDriver(false)
                                 .build();
 
+                PlannedRoute plannedRoute = PlannedRoute.builder()
+                        .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+                        .plannedFrom("Start")
+                        .plannedTo("To")
+                        .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
+                        .capacity(1)
+                        .build();
+
                 assertThrows(ConstraintViolationException.class,
-                                () -> rideService.createNewRide(rideDTO, user.getId(), plannedRoute.getId()));
+                                () -> rideService.createNewRide(rideDTO,
+                                        user.getId(), plannedRoute.getId()));
 
                 verify(rideRepository, never()).save(any(Ride.class));
         }
@@ -219,7 +221,6 @@ public class RideTests {
                                 .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
                                 .timestamp(new Timestamp(System.currentTimeMillis()))
                                 .passengers(3)
-                                .cost(new BigDecimal(6.90))
                                 .build();
 
                 when(rideRepository.findById(
