@@ -17,6 +17,7 @@ import java.util.Date;
 import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.repositories.*;
 import com.bussin.SpringBack.services.*;
+import com.bussin.SpringBack.exception.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,7 +56,7 @@ public class RideTests {
                 });
                 rideService = new RideService(modelMapper, rideRepository,
                                 plannedRoutesRepository, userService,
-                        priceService);
+								priceService);
         }
 
         @Test
@@ -117,55 +118,61 @@ public class RideTests {
                 verify(rideRepository, never()).save(any(Ride.class));
         }
 
-        // @Test
-        // public void createNewRide_alreadyExists_exception() {
-        // RideDTO rideDTO = RideDTO.builder()
-        // .timestamp(new Timestamp(System.currentTimeMillis()))
-        // .passengers(1)
-        // .cost(new BigDecimal(6.90))
-        // .build();
+        @Test
+		public void createNewRide_alreadyExists_exception() {
+			RideDTO rideDTO = RideDTO.builder()
+					.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+					.timestamp(new Timestamp(System.currentTimeMillis()))
+                    .passengers(1)
+                    .build();
 
-        // PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-        // .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-        // .plannedFrom("Start")
-        // .plannedTo("To")
-        // .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-        // .capacity(1)
-        // .build();
+			Driver driver = Driver.builder()
+					.carPlate("SAA1234A")
+					.modelAndColour("Yellow Submarine")
+					.capacity(4)
+					.fuelType("Premium")
+					.build();
 
-        // User user = User.builder()
-        // .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-        // .nric("S1234567A")
-        // .name("Test Guy")
-        // .address("444333")
-        // .dob(new Date(System.currentTimeMillis()))
-        // .mobile("90009000")
-        // .email("testguy@test.com")
-        // .isDriver(false)
-        // .build();
+			PlannedRoute plannedRoute = PlannedRoute.builder()
+					.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+					.plannedFrom("Start")
+					.plannedTo("To")
+					.dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
+					.capacity(1)
+					.driver(driver)
+					.build();
 
-        // Ride ride = modelMapper.map(rideDTO, Ride.class);
 
-        // PlannedRoute plannedRoute = modelMapper.map(plannedRouteDTO,
-        // PlannedRoute.class);
-        // ride.setPlannedRoute(plannedRoute);
-        // ride.setUser(user);
+			UserDTO userDTO = UserDTO.builder()
+					.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
+					.nric("S1234567A")
+					.name("Test Guy")
+					.address("444333")
+					.dob(new Date(System.currentTimeMillis()))
+					.mobile("90009000")
+					.email("testguy@test.com")
+					.isDriver(false)
+					.build();
 
-        // when(rideRepository.save(ride))
-        // .thenThrow(new DataIntegrityViolationException("Test"));
+            User user = modelMapper.map(userDTO, User.class);
 
-        // when(plannedRoutesRepository.findPlannedRouteById(plannedRouteDTO.getId()))
-        // .thenReturn(Optional.of(plannedRouteDTO));
+			Ride ride = modelMapper.map(rideDTO, Ride.class);
 
-        // when(userService.getFullUserById(user.getId())).thenReturn(Optional.of(user));
+			when(rideRepository.save(ride))
+				.thenThrow(new DataIntegrityViolationException("Test"));
+			
+			when(userService.getFullUserById(user.getId()))
+				.thenReturn(user);
 
-        // assertThrows(DataIntegrityViolationException.class,
-        // () -> rideService
-        // .createNewRide(rideDTO, user.getId(), plannedRouteDTO.getId()));
+			when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId()))
+				.thenReturn(Optional.of(plannedRoute));
 
-        // verify(rideRepository, times(1)).save(any(Ride.class));
+			assertThrows(DataIntegrityViolationException.class,
+				() -> rideService
+						.createNewRide(rideDTO, user.getId(), plannedRoute.getId()));
 
-        // }
+			verify(rideRepository, times(1)).save(any(Ride.class));
+		}
 
         @Test
         public void updateRide_success() {
@@ -234,4 +241,107 @@ public class RideTests {
                 verify(rideRepository, times(1)).findById(rideDTO.getId());
                 verify(rideRepository, times(1)).save(any(Ride.class));
         }
+
+		@Test
+		public void updateRide_doesntExist_exception() {
+			RideDTO rideDTO = RideDTO.builder()
+				.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+				.timestamp(new Timestamp(System.currentTimeMillis()))
+				.passengers(3)
+				.build();
+
+			when(rideRepository.findById(rideDTO.getId()))
+				.thenReturn(Optional.empty());
+
+			assertThrows(RideNotFoundException.class,
+				() -> rideService.updateRideById(
+					rideDTO.getId(), rideDTO));
+
+			verify(rideRepository, times(1))
+					.findById(any(UUID.class));
+
+			verify(rideRepository, never()).save(any(Ride.class));
+		}
+
+		@Test
+		public void updateRide_invalidParams_exception() {
+			RideDTO rideDTO = RideDTO.builder()
+				.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+				.timestamp(new Timestamp(System.currentTimeMillis()))
+				.build();
+
+			assertThrows(ConstraintViolationException.class,
+					() -> rideService.updateRideById(rideDTO.getId(), rideDTO));
+			
+			verify(rideRepository, never()).findById(any(UUID.class));
+
+			verify(rideRepository, never()).save(any(Ride.class));
+		}
+
+		@Test
+		public void updateUser_nonUniqueParams_exception() {
+			RideDTO rideDTO = RideDTO.builder()
+				.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+				.timestamp(new Timestamp(System.currentTimeMillis()))
+				.passengers(11)
+				.build();
+
+			Ride ride = Ride.builder()
+				.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+				.timestamp(new Timestamp(System.currentTimeMillis()))
+				.passengers(1)
+				.build();
+
+			when(rideRepository.findById(rideDTO.getId()))
+				.thenReturn(Optional.of(ride));
+
+			when(rideRepository.save(ride))
+				.thenThrow(ConstraintViolationException.class);
+
+			assertThrows((ConstraintViolationException.class),
+				() -> rideService.updateRideById
+						(rideDTO.getId(), rideDTO));
+
+			verify(rideRepository, times(1))
+				.findById(any(UUID.class));
+
+			verify(rideRepository, times(1))
+				.save(any(Ride.class));
+				
+		}
+
+		@Test
+		public void deleteRide_success() {
+			Ride ride = Ride.builder()
+				.id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+				.timestamp(new Timestamp(System.currentTimeMillis()))
+				.passengers(1)
+				.build();
+
+			when(rideRepository.findById(ride.getId()))
+				.thenReturn(Optional.of(ride));
+
+			assertEquals(ride, rideService
+							.deleteRideById(ride.getId()));
+
+			verify(rideRepository, times(1))
+				.findById(ride.getId());
+
+			verify(rideRepository, times(1))
+				.deleteById(ride.getId());
+		}
+		
+
+		@Test
+		public void deleteRide_doesntExist_exception() {
+			UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555");
+			when(rideRepository.findById(uuid))
+				.thenReturn(Optional.empty());
+
+			assertThrows(RideNotFoundException.class,
+				() -> rideService.deleteRideById(uuid));
+
+			verify(rideRepository, times(1)).findById(uuid);
+			verify(rideRepository, never()).deleteById(uuid);
+		}
 }
