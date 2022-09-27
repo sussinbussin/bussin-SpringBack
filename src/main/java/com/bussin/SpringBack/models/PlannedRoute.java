@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cascade;
@@ -30,6 +32,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class PlannedRoute implements Serializable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
