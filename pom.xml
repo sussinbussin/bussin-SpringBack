@@ -10,11 +10,14 @@
 	</parent>
 	<groupId>com.bussin</groupId>
 	<artifactId>SpringBack</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>SpringBack</name>
 	<description>Spring Backend for Bussin</description>
 	<properties>
 		<java.version>17</java.version>
+		<spring-boot.build-image.imageName>
+			springback
+		</spring-boot.build-image.imageName>
 	</properties>
 	<dependencies>
 		<dependency>
