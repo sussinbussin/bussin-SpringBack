@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.bussin</groupId>
-	<artifactId>SpringBack</artifactId>
+	<artifactId>springback</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SpringBack</name>
 	<description>Spring Backend for Bussin</description>
