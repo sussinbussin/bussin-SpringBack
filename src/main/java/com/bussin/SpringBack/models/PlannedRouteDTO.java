@@ -2,6 +2,9 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -23,7 +26,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @EqualsAndHashCode
-public class PlannedRouteDTO implements Serializable {
+public class PlannedRouteDTO implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
@@ -64,5 +67,18 @@ public class PlannedRouteDTO implements Serializable {
         this.plannedTo = plannedTo;
         this.dateTime = dateTime;
         this.capacity = capacity;
+    }
+
+    @Override
+    public PlannedRouteDTO clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), PlannedRouteDTO.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -56,6 +56,13 @@ public class PlannedRouteIntegrationTests {
     @Autowired
     private PlannedRouteService plannedRouteService;
 
+    static final PlannedRouteDTO PLANNED_ROUTE_DTO = PlannedRouteDTO.builder()
+            .plannedFrom("111111")
+            .plannedTo("222222")
+            .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
+            .capacity(3)
+            .build();
+
     @Test
     public void getAllRoutes_noRoutes_Success() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
@@ -91,12 +98,7 @@ public class PlannedRouteIntegrationTests {
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
@@ -152,12 +154,7 @@ public class PlannedRouteIntegrationTests {
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/planned/" + driverDTO.getCarPlate());
@@ -204,11 +201,8 @@ public class PlannedRouteIntegrationTests {
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3000)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        plannedRouteDTO.setCapacity(3000);
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/planned/" + driverDTO.getCarPlate());
@@ -227,12 +221,7 @@ public class PlannedRouteIntegrationTests {
 
     @Test
     public void createPlannedRoute_noDriver_404() throws IOException {
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/planned/" + "SAA1345A");
@@ -271,23 +260,16 @@ public class PlannedRouteIntegrationTests {
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        PlannedRouteDTO updatedPlannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("222222")
-                .plannedTo("333333")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(6)
-                .build();
+        PlannedRouteDTO updatedPlannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        updatedPlannedRouteDTO.setPlannedFrom("222222");
+        updatedPlannedRouteDTO.setPlannedTo("333333");
+        updatedPlannedRouteDTO.setCapacity(6);
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/planned/" + plannedRoute.getId());
@@ -334,23 +316,14 @@ public class PlannedRouteIntegrationTests {
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        PlannedRouteDTO updatedPlannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("222222")
-                .plannedTo("333333")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3000)
-                .build();
+        PlannedRouteDTO updatedPlannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        updatedPlannedRouteDTO.setCapacity(3000);
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/planned/" + plannedRoute.getId());
@@ -370,12 +343,7 @@ public class PlannedRouteIntegrationTests {
 
     @Test
     public void updatePlannedRoute_noRoute_404() throws IOException {
-        PlannedRouteDTO updatedPlannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("222222")
-                .plannedTo("333333")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO updatedPlannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/planned/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
@@ -415,12 +383,7 @@ public class PlannedRouteIntegrationTests {
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,

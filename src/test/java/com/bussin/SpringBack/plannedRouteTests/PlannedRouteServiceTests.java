@@ -38,6 +38,21 @@ public class PlannedRouteServiceTests {
     @InjectMocks
     private PlannedRouteService plannedRouteService;
 
+    static final PlannedRoute PLANNED_ROUTE = PlannedRoute.builder()
+            .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+            .plannedFrom("Start")
+            .plannedTo("To")
+            .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
+            .capacity(1)
+            .build();
+
+    static final PlannedRouteDTO PLANNED_ROUTE_DTO = PlannedRouteDTO.builder()
+            .plannedFrom("Start")
+            .plannedTo("To")
+            .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
+            .capacity(1)
+            .build();
+
     @BeforeEach
     private void setUp() {
         modelMapper = new ModelMapper();
@@ -66,13 +81,8 @@ public class PlannedRouteServiceTests {
     @Test
     public void getAllPlannedRoutes_success() {
         ArrayList<PlannedRoute> plannedRoutes = new ArrayList<>();
-        PlannedRoute plannedRoute = PlannedRoute.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(1)
-                .build();
+
+        plannedRoutes.add(PLANNED_ROUTE.clone());
 
         when(plannedRoutesRepository.findAll()).thenReturn(plannedRoutes);
 
@@ -84,11 +94,8 @@ public class PlannedRouteServiceTests {
     @Test
     public void createNewPlannedRoute_invalidParams_exception() {
         //No capacity
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        plannedRouteDTO.setCapacity(-1);
 
         Driver driver = Driver.builder()
                 .carPlate("SAA1234A")
@@ -104,13 +111,7 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void createNewPlannedRoute_alreadyExists_exception() {
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(1)
-                .build();
-
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
         Driver driver = Driver.builder()
                 .carPlate("SAA1234A")
                 .modelAndColour("Yellow Submarine")
@@ -141,32 +142,14 @@ public class PlannedRouteServiceTests {
                 .fuelType("Premium")
                 .build();
 
-        PlannedRoute plannedRoute = PlannedRoute.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(1)
-                .driver(driver)
-                .build();
+        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+        plannedRoute.setDriver(driver);
 
         //Changed capacity
-        PlannedRoute plannedRouteResult = PlannedRoute.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .driver(driver)
-                .build();
+        PlannedRoute plannedRouteResult = PLANNED_ROUTE.clone();
+        plannedRouteResult.setCapacity(3);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
         when(plannedRoutesRepository.findById(
                 UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555")))
@@ -175,7 +158,7 @@ public class PlannedRouteServiceTests {
                 .thenReturn(plannedRouteResult);
 
         assertEquals(plannedRouteService
-                .updatePlannedRouteById(plannedRouteDTO.getId(),
+                .updatePlannedRouteById(plannedRoute.getId(),
                         plannedRouteDTO), plannedRouteResult);
 
         verify(plannedRoutesRepository, times(1))
@@ -186,21 +169,16 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void updatePlannedRoute_doesntExist_exception() {
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
-        when(plannedRoutesRepository.findById(plannedRouteDTO.getId()))
+        when(plannedRoutesRepository.findById(PLANNED_ROUTE.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(PlannedRouteNotFoundException.class,
-                () -> plannedRouteService
-                        .updatePlannedRouteById(
-                                plannedRouteDTO.getId(), plannedRouteDTO));
+                () -> plannedRouteService.updatePlannedRouteById(
+                                UUID.fromString(
+                                        "a6bb7dc3-5cbb-4408-a749-514e0b4a0555"),
+                        plannedRouteDTO));
 
         verify(plannedRoutesRepository, times(1))
                 .findById(any(UUID.class));
@@ -209,23 +187,11 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void updatePlannedRoute_nonUniqueParams_exception() {
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
 
-        PlannedRoute plannedRoute = PlannedRoute.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
 
-        when(plannedRoutesRepository.findById(plannedRouteDTO.getId()))
+        when(plannedRoutesRepository.findById(plannedRoute.getId()))
                 .thenReturn(Optional.of(plannedRoute));
 
         when(plannedRoutesRepository.save(plannedRoute))
@@ -233,7 +199,7 @@ public class PlannedRouteServiceTests {
 
         assertThrows(ConstraintViolationException.class,
                 () -> plannedRouteService.updatePlannedRouteById
-                        (plannedRouteDTO.getId(), plannedRouteDTO));
+                        (plannedRoute.getId(), plannedRouteDTO));
 
         verify(plannedRoutesRepository, times(1))
                 .findById(any(UUID.class));
@@ -243,13 +209,7 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void deletePlannedRoute_success() {
-        PlannedRoute plannedRoute = PlannedRoute.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
 
         when(plannedRoutesRepository.findById(plannedRoute.getId()))
                 .thenReturn(Optional.of(plannedRoute));
