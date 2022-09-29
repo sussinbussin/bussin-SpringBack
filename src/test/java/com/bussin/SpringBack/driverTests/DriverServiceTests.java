@@ -130,7 +130,24 @@ public class DriverServiceTests {
 
     @Test
     public void addNewDriver_userNotFound_exception(){
-        //TODO: Write test
+        UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345A")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2)
+                .fuelType("Premium")
+                .build();
+
+        Driver driver = modelMapper.map(driverDTO, Driver.class);
+
+        when(userService.getUserById(uuid)).thenThrow(UserNotFoundException.class);
+        // when(driverRepository.save(driver)).thenReturn(any(Driver.class));
+
+        assertThrows(UserNotFoundException.class,
+                () -> driverService.addNewDriver(uuid, driverDTO));
+
+        verify(driverRepository, never()).save(any(Driver.class));
     }
 
     @Test
