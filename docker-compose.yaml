@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  springback:
+    ports:
+      - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
+    image: springback
+    user: 1009:1009
+    environment:
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      SPRING_DATASOURCE_URL : ${SPRING_DATASOURCE_URL:-jdbc:mysql://172.17.0.1:3306/bussin}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    env_file:
+      - .env
+volumes:
+  db-mysql:
+    driver: local

@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.controllers;
 
+import com.bussin.SpringBack.exception.CannotConnectToDistanceServerException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.exception.RideNotFoundException;
@@ -133,6 +134,20 @@ public class ExceptionHandling {
     public ResponseEntity<String> handleRideNotFoundException(
             final RideNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles CannotConnectToDistanceServerException.
+     *
+     * @param e CannotConnectToDistanceServerException
+     * @return Response entity with HTTP code 500
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(CannotConnectToDistanceServerException.class)
+    public ResponseEntity<String> handleCannotConnectToDistanceServerException(
+            final CannotConnectToDistanceServerException e) {
+        return new ResponseEntity<>(e.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
