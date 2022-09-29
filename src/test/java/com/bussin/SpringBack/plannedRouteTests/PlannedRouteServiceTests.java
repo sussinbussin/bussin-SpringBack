@@ -16,11 +16,17 @@ import org.modelmapper.PropertyMap;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolationException;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -107,6 +113,83 @@ public class PlannedRouteServiceTests {
         assertThrows(ConstraintViolationException.class,
                 () -> plannedRouteService.createNewPlannedRoute(plannedRouteDTO, driver.getCarPlate()));
         verify(plannedRoutesRepository, never()).save(any(PlannedRoute.class));
+    }
+
+    @Test
+    public void getPassengersOnRoute_success() {
+        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+        HashSet<Ride> rides = new HashSet<>();
+
+        User user1 = User.builder()
+                .id(UUID.randomUUID())
+                .nric("S1234567A")
+                .name("Test Guy")
+                .address("444333")
+                .dob(new Date(900000000))
+                .mobile("90009000")
+                .email("testguy2@test.com")
+                .isDriver(false)
+                .build();
+
+        Ride ride1 = Ride.builder()
+            .id(UUID.randomUUID())
+            .passengers(1)
+            .plannedRoute(plannedRoute)
+            .cost(BigDecimal.TEN)
+            .timestamp(new Timestamp(System.currentTimeMillis()))
+            .user(user1)
+            .build();
+
+        User user2 = User.builder()
+                .id(UUID.randomUUID())
+                .nric("S1234567A")
+                .name("Test Guy")
+                .address("444333")
+                .dob(new Date(900000000))
+                .mobile("90009000")
+                .email("testguy2@test.com")
+                .isDriver(false)
+                .build();
+
+        Ride ride2 = Ride.builder()
+                .id(UUID.randomUUID())
+                .passengers(1)
+                .plannedRoute(plannedRoute)
+                .cost(BigDecimal.TEN)
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .user(user2)
+                .build();
+
+        rides.add(ride1);
+        rides.add(ride2);
+        plannedRoute.setRides(rides);
+
+        when(plannedRoutesRepository.findById(plannedRoute.getId()))
+                .thenReturn(Optional.of(plannedRoute));
+
+        List<UserPublicDTO> result = new ArrayList<>();
+        result.add(modelMapper.map(user1, UserPublicDTO.class));
+        result.add(modelMapper.map(user2, UserPublicDTO.class));
+
+        assertThat(plannedRouteService.getPassengersOnRoute(plannedRoute.getId()))
+                .hasSameElementsAs(result);
+
+        verify(plannedRoutesRepository, times(1))
+                .findById(plannedRoute.getId());
+    }
+
+    @Test
+    public void getPassengersOnRoute_noRoute_failure() {
+        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+
+        when(plannedRoutesRepository.findById(plannedRoute.getId()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(PlannedRouteNotFoundException.class,
+                () -> plannedRouteService.getPassengersOnRoute(plannedRoute.getId()));
+
+        verify(plannedRoutesRepository, times(1))
+                .findById(plannedRoute.getId());
     }
 
     @Test
