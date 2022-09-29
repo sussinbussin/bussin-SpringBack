@@ -155,6 +155,7 @@
 				<configuration>
 					<outputFileName>openapi.json</outputFileName>
 					<outputDir>/openApi</outputDir>
+					<apiDocsUrl>http://localhost:8080/api/v1/v3/api-docs</apiDocsUrl>
 					<skip>false</skip>
 				</configuration>
 			</plugin>

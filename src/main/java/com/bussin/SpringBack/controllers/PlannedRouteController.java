@@ -2,6 +2,7 @@ package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.PlannedRouteDTO;
+import com.bussin.SpringBack.models.UserPublicDTO;
 import com.bussin.SpringBack.services.PlannedRouteService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,13 @@ public class PlannedRouteController {
     @GetMapping("/{routeId}")
     public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID routeId) {
         return plannedRouteService.getPlannedRouteById(routeId);
+    }
+
+    @Operation(summary = "Gets passengers on planned route")
+    @GetMapping("/{routeId}/passengers")
+    public List<UserPublicDTO> getPassengersOnRoute(@Valid @PathVariable UUID
+                                                    routeId) {
+        return plannedRouteService.getPassengersOnRoute(routeId);
     }
 
     @Operation(summary = "Creates a planned route for a Driver")

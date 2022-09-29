@@ -4,6 +4,7 @@ import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.PlannedRouteDTO;
+import com.bussin.SpringBack.models.UserPublicDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +39,17 @@ public class PlannedRouteService {
         return plannedRoutesRepository.findById(uuid)
                 .orElseThrow(() -> new PlannedRouteNotFoundException("No " +
                         "planned route with ID " + uuid));
+    }
+
+    public List<UserPublicDTO> getPassengersOnRoute(UUID plannedRouteUUID) {
+        return plannedRoutesRepository.findById(plannedRouteUUID).map(found -> {
+            List<UserPublicDTO> users = new ArrayList<>();
+            found.getRides().forEach(ride -> {
+                users.add(modelMapper.map(ride.getUser(),UserPublicDTO.class));
+            });
+            return users;
+        }).orElseThrow(() -> new PlannedRouteNotFoundException("No " +
+                "planned route with ID " + plannedRouteUUID));
     }
 
     @Transactional
