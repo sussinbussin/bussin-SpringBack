@@ -99,7 +99,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -158,7 +158,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -228,7 +228,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -297,7 +297,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -358,7 +358,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -419,7 +419,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -479,7 +479,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -550,7 +550,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -613,7 +613,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -667,7 +667,7 @@ public class RideIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);

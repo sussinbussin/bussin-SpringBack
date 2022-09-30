@@ -81,7 +81,7 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User user = userService.createNewUser(userDTO);
@@ -118,7 +118,7 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User user = userService.createNewUser(userDTO);
@@ -166,7 +166,7 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User user = userService.createNewUser(userDTO);
@@ -198,7 +198,7 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
@@ -232,7 +232,7 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2000)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User user = userService.createNewUser(userDTO);
@@ -267,14 +267,14 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         DriverDTO updatedDriverDTO = DriverDTO.builder()
                 .carPlate("SAA12345B")
                 .modelAndColour("Clown Car")
                 .capacity(12)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User user = userService.createNewUser(userDTO);
@@ -318,7 +318,7 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Clown Car")
                 .capacity(12)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         userService.createNewUser(userDTO);
@@ -354,14 +354,14 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         DriverDTO updatedDriverDTO = DriverDTO.builder()
                 .carPlate("SAA12345B")
                 .modelAndColour("Actual Clown Car")
                 .capacity(12000)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User user = userService.createNewUser(userDTO);
@@ -398,7 +398,7 @@ public class DriverIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User user = userService.createNewUser(userDTO);

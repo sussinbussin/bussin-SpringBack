@@ -27,7 +27,7 @@ import java.time.*;
 import javax.validation.ConstraintViolationException;
 
 @ExtendWith(MockitoExtension.class)
-public class RideTests {
+public class RideServiceTests {
         @Mock
         private RideRepository rideRepository;
 
@@ -38,7 +38,7 @@ public class RideTests {
         private UserService userService;
 
         @Mock
-        private PriceService priceService;
+        private GasPriceService gasPriceService;
 
         private ModelMapper modelMapper;
 
@@ -56,7 +56,7 @@ public class RideTests {
                 });
                 rideService = new RideService(modelMapper, rideRepository,
                                 plannedRoutesRepository, userService,
-								priceService);
+						gasPriceService);
         }
 
         @Test
@@ -130,7 +130,7 @@ public class RideTests {
 					.carPlate("SAA1234A")
 					.modelAndColour("Yellow Submarine")
 					.capacity(4)
-					.fuelType("Premium")
+					.fuelType("TypePremium")
 					.build();
 
 			PlannedRoute plannedRoute = PlannedRoute.builder()
@@ -151,10 +151,11 @@ public class RideTests {
 					.dob(new Date(System.currentTimeMillis()))
 					.mobile("90009000")
 					.email("testguy@test.com")
-					.isDriver(false)
+					.isDriver(true)
 					.build();
 
             User user = modelMapper.map(userDTO, User.class);
+			user.setDriver(driver);
 
 			Ride ride = modelMapper.map(rideDTO, Ride.class);
 
@@ -166,6 +167,9 @@ public class RideTests {
 
 			when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId()))
 				.thenReturn(Optional.of(plannedRoute));
+
+			when(gasPriceService.getAvgGasPriceByType(GasPriceKey.GasType.TypePremium))
+					.thenReturn(BigDecimal.ONE);
 
 			assertThrows(DataIntegrityViolationException.class,
 				() -> rideService
@@ -193,7 +197,7 @@ public class RideTests {
                                 .carPlate("SAA1234A")
                                 .modelAndColour("Yellow Submarine")
                                 .capacity(4)
-                                .fuelType("Premium")
+                                .fuelType("TypePremium")
                                 .build();
 
                 PlannedRoute plannedRoute = PlannedRoute.builder()

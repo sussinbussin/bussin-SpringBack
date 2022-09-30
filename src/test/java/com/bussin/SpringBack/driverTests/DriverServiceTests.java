@@ -59,7 +59,7 @@ public class DriverServiceTests {
                 .carPlate("SAA12345A")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         UserDTO userDTO = UserDTO.builder()
@@ -88,7 +88,7 @@ public class DriverServiceTests {
                 .carPlate("SAA12345A")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .user(userResult)
                 .build();
 
@@ -119,7 +119,7 @@ public class DriverServiceTests {
                 .modelAndColour("Flamingo MrBean Car")
                 //Bad capacity
                 .capacity(1)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         assertThrows(ConstraintViolationException.class,
@@ -142,7 +142,7 @@ public class DriverServiceTests {
                 //Modified model and colour
                 .modelAndColour("Mystery Machine")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         User userResult = User.builder()
@@ -160,7 +160,7 @@ public class DriverServiceTests {
                 .carPlate("SAA12345A")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .user(userResult)
                 .build();
 
@@ -168,7 +168,7 @@ public class DriverServiceTests {
                 .carPlate("SAA12345A")
                 .modelAndColour("Mystery Machine")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .user(userResult)
                 .build();
 
@@ -194,7 +194,7 @@ public class DriverServiceTests {
                 .carPlate("SAA12345A")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         UserDTO userDTO = UserDTO.builder()
@@ -234,7 +234,7 @@ public class DriverServiceTests {
                 .carPlate("SAA12345A")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .user(userResult)
                 .build();
 

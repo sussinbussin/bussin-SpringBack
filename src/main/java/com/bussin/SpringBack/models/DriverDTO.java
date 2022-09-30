@@ -32,6 +32,7 @@ public class DriverDTO implements Serializable {
     @NotNull(message = "Capacity should not be empty")
     private Integer capacity;
 
+    @NotNull
     private String fuelType;
 
     public void validate() {
