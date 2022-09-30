@@ -140,10 +140,7 @@ public class DriverServiceTests {
                 .fuelType("Premium")
                 .build();
 
-        Driver driver = modelMapper.map(driverDTO, Driver.class);
-
         when(userService.getUserById(uuid)).thenThrow(UserNotFoundException.class);
-        // when(driverRepository.save(driver)).thenReturn(any(Driver.class));
 
         assertThrows(UserNotFoundException.class,
                 () -> driverService.addNewDriver(uuid, driverDTO));
