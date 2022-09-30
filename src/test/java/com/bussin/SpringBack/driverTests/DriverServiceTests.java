@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.driverTests;
 
+import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
@@ -7,7 +8,6 @@ import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.UserService;
-import com.bussin.SpringBack.exception.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -4,8 +4,6 @@ import javax.persistence.*;
 import javax.validation.*;
 import javax.validation.constraints.*;
 
-import org.hibernate.Hibernate;
-
 import java.sql.*;
 import java.util.*;
 
