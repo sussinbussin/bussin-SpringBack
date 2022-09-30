@@ -10,7 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.math.BigDecimal;
+import java.math.*;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -117,55 +117,55 @@ public class RideTests {
                 verify(rideRepository, never()).save(any(Ride.class));
         }
 
-        // @Test
-        // public void createNewRide_alreadyExists_exception() {
-        // RideDTO rideDTO = RideDTO.builder()
-        // .timestamp(new Timestamp(System.currentTimeMillis()))
-        // .passengers(1)
-        // .cost(new BigDecimal(6.90))
-        // .build();
+        @Test
+        public void createNewRide_alreadyExists_exception() {
+        RideDTO rideDTO = RideDTO.builder()
+        .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+        .timestamp(new Timestamp(System.currentTimeMillis()))
+        .passengers(1)
+        .build();
 
-        // PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-        // .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-        // .plannedFrom("Start")
-        // .plannedTo("To")
-        // .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-        // .capacity(1)
-        // .build();
+        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
+        .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
+        .plannedFrom("Start")
+        .plannedTo("To")
+        .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
+        .capacity(1)
+        .build();
 
-        // User user = User.builder()
-        // .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-        // .nric("S1234567A")
-        // .name("Test Guy")
-        // .address("444333")
-        // .dob(new Date(System.currentTimeMillis()))
-        // .mobile("90009000")
-        // .email("testguy@test.com")
-        // .isDriver(false)
-        // .build();
+        User user = User.builder()
+        .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
+        .nric("S1234567A")
+        .name("Test Guy")
+        .address("444333")
+        .dob(new Date(System.currentTimeMillis()))
+        .mobile("90009000")
+        .email("testguy@test.com")
+        .isDriver(false)
+        .build();
 
-        // Ride ride = modelMapper.map(rideDTO, Ride.class);
+        Ride ride = modelMapper.map(rideDTO, Ride.class);
 
-        // PlannedRoute plannedRoute = modelMapper.map(plannedRouteDTO,
-        // PlannedRoute.class);
-        // ride.setPlannedRoute(plannedRoute);
-        // ride.setUser(user);
+        PlannedRoute plannedRoute = modelMapper.map(plannedRouteDTO,
+        PlannedRoute.class);
+        ride.setPlannedRoute(plannedRoute);
+        ride.setUser(user);
 
-        // when(rideRepository.save(ride))
-        // .thenThrow(new DataIntegrityViolationException("Test"));
+        when(rideRepository.save(ride))
+        .thenThrow(new DataIntegrityViolationException("Test"));
 
-        // when(plannedRoutesRepository.findPlannedRouteById(plannedRouteDTO.getId()))
-        // .thenReturn(Optional.of(plannedRouteDTO));
+        when(plannedRoutesRepository.findPlannedRouteById(plannedRouteDTO.getId()))
+        .thenReturn(Optional.of(plannedRoute));
 
-        // when(userService.getFullUserById(user.getId())).thenReturn(Optional.of(user));
+        when(userService.getFullUserById(user.getId())).thenReturn(user);
 
-        // assertThrows(DataIntegrityViolationException.class,
-        // () -> rideService
-        // .createNewRide(rideDTO, user.getId(), plannedRouteDTO.getId()));
+        assertThrows(DataIntegrityViolationException.class,
+        () -> rideService
+        .createNewRide(rideDTO, user.getId(), plannedRouteDTO.getId()));
 
-        // verify(rideRepository, times(1)).save(any(Ride.class));
+        verify(rideRepository, times(1)).save(any(Ride.class));
 
-        // }
+        }
 
         @Test
         public void updateRide_success() {
