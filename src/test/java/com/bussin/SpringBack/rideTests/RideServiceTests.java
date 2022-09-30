@@ -130,7 +130,7 @@ public class RideServiceTests {
 					.carPlate("SAA1234A")
 					.modelAndColour("Yellow Submarine")
 					.capacity(4)
-					.fuelType("Premium")
+					.fuelType("TypePremium")
 					.build();
 
 			PlannedRoute plannedRoute = PlannedRoute.builder()
@@ -197,7 +197,7 @@ public class RideServiceTests {
                                 .carPlate("SAA1234A")
                                 .modelAndColour("Yellow Submarine")
                                 .capacity(4)
-                                .fuelType("Premium")
+                                .fuelType("TypePremium")
                                 .build();
 
                 PlannedRoute plannedRoute = PlannedRoute.builder()

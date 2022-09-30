@@ -44,16 +44,17 @@ public class RideService {
         rideDTO.validate();
         User found =  userService.getFullUserById(userId);
         Ride ride = modelMapper.map(rideDTO, Ride.class);
-        ride.setCost(gasPriceService.getAvgGasPriceByType(
-                GasPriceKey.GasType.valueOf("Type" + found.getDriver().getFuelType())));
-        ride.setUser(found);
-
-        //TODO: Check that passengers does not exceed capacity
-
         PlannedRoute plannedRoute = plannedRoutesRepository
                 .findPlannedRouteById(plannedRouteId)
                 .orElseThrow(() ->
                         new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
+
+        ride.setCost(gasPriceService.getAvgGasPriceByType(
+                GasPriceKey.GasType.valueOf(plannedRoute.getDriver().getFuelType())));
+        ride.setUser(found);
+
+        //TODO: Check that passengers does not exceed capacity
+
         ride.setPlannedRoute(plannedRoute);
         return rideRepository.save(ride);
 

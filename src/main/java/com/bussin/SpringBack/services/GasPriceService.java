@@ -25,6 +25,9 @@ public class GasPriceService {
     public BigDecimal getAvgGasPriceByType(GasPriceKey.GasType gasType) {
         List<GasPrice> gasPrices = gasPriceRepository
                 .findAvgGasPriceByType(gasType.name());
+        if(gasPrices.isEmpty()) {
+            return BigDecimal.ONE;
+        }
         return gasPrices.stream()
                 .map(GasPrice::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
