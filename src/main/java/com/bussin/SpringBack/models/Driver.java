@@ -36,6 +36,8 @@ public class Driver implements Serializable {
     @NotNull(message = "Capacity should not be empty")
     private Integer capacity;
 
+    //TODO: Limit values to GasTypeEnumValues
+    @NotNull
     private String fuelType;
 
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
