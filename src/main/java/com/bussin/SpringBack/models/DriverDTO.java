@@ -2,6 +2,8 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 
 import javax.validation.ConstraintViolation;
@@ -54,5 +56,16 @@ public class DriverDTO implements Serializable {
         this.modelAndColour = modelAndColour;
         this.capacity = capacity;
         this.fuelType = fuelType;
+    }
+
+    @Override
+    public DriverDTO clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), DriverDTO.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,7 +32,7 @@ import java.util.UUID;
 @Builder
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class User implements Serializable {
+public class User implements Serializable, Cloneable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -87,5 +89,16 @@ public class User implements Serializable {
         this.mobile = userDTO.getMobile();
         this.email = userDTO.getEmail();
         this.isDriver = userDTO.getIsDriver();
+    }
+
+    @Override
+    public User clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), User.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }

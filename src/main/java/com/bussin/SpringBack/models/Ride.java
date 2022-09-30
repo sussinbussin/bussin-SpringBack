@@ -2,6 +2,8 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +35,7 @@ import java.util.UUID;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id")
-public class Ride implements Serializable {
+public class Ride implements Serializable, Cloneable{
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
@@ -77,5 +79,16 @@ public class Ride implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public Ride clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), Ride.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }

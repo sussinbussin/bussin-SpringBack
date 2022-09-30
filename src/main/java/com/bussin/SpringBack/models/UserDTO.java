@@ -2,6 +2,8 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -111,5 +113,16 @@ public class UserDTO implements Serializable {
         this.mobile = mobile;
         this.email = email;
         this.isDriver = isDriver;
+    }
+
+    @Override
+    public UserDTO clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), UserDTO.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }
