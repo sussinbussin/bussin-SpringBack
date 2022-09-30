@@ -107,7 +107,7 @@ public class PlannedRouteServiceTests {
                 .carPlate("SAA1234A")
                 .modelAndColour("Yellow Submarine")
                 .capacity(4)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         assertThrows(ConstraintViolationException.class,
@@ -199,7 +199,7 @@ public class PlannedRouteServiceTests {
                 .carPlate("SAA1234A")
                 .modelAndColour("Yellow Submarine")
                 .capacity(4)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         PlannedRoute plannedRoute = modelMapper.map(plannedRouteDTO,
@@ -222,7 +222,7 @@ public class PlannedRouteServiceTests {
                 .carPlate("SAA1234A")
                 .modelAndColour("Yellow Submarine")
                 .capacity(4)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         PlannedRoute plannedRoute = PLANNED_ROUTE.clone();

@@ -104,7 +104,7 @@ public class PlannedRouteIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -163,7 +163,7 @@ public class PlannedRouteIntegrationTests {
                 .address("123124")
                 .email("Robert1@gmail.com")
                 .mobile("90009001")
-                .isDriver(false)
+                .isDriver(true)
                 .build();
 
         User passenger = userService.createNewUser(passengerDTO);
@@ -172,7 +172,7 @@ public class PlannedRouteIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -236,7 +236,7 @@ public class PlannedRouteIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -283,7 +283,7 @@ public class PlannedRouteIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -342,7 +342,7 @@ public class PlannedRouteIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -398,7 +398,7 @@ public class PlannedRouteIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -465,7 +465,7 @@ public class PlannedRouteIntegrationTests {
                 .carPlate("SAA12345B")
                 .modelAndColour("Flamingo MrBean Car")
                 .capacity(2)
-                .fuelType("Premium")
+                .fuelType("TypePremium")
                 .build();
 
         driverService.addNewDriver(user.getId(), driverDTO);
