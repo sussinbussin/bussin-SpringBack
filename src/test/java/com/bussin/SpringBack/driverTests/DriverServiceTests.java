@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.driverTests;
 
+import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
@@ -130,7 +131,21 @@ public class DriverServiceTests {
 
     @Test
     public void addNewDriver_userNotFound_exception(){
-        //TODO: Write test
+        UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+
+        DriverDTO driverDTO = DriverDTO.builder()
+                .carPlate("SAA12345A")
+                .modelAndColour("Flamingo MrBean Car")
+                .capacity(2)
+                .fuelType("Premium")
+                .build();
+
+        when(userService.getUserById(uuid)).thenThrow(UserNotFoundException.class);
+
+        assertThrows(UserNotFoundException.class,
+                () -> driverService.addNewDriver(uuid, driverDTO));
+
+        verify(driverRepository, never()).save(any(Driver.class));
     }
 
     @Test
