@@ -32,7 +32,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 public class User implements Serializable, Cloneable {
@@ -94,19 +93,19 @@ public class User implements Serializable, Cloneable {
         this.isDriver = userDTO.getIsDriver();
     }
 
-    // @Override
-    // public boolean equals(Object o) {
-    //     if (this == o) return true;
-    //     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-    //         return false;
-    //     User user = (User) o;
-    //     return id != null && Objects.equals(id, user.id);
-    // }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
 
-    // @Override
-    // public int hashCode() {
-    //     return getClass().hashCode();
-    // }
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 
     @Override
     public User clone() {

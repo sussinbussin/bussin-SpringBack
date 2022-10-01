@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -38,6 +39,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode
 public class UserDTO implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -77,23 +79,6 @@ public class UserDTO implements Serializable {
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-            return false;
-        }
-        UserDTO userDTO = (UserDTO) o;
-        return id != null && Objects.equals(id, userDTO.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 
     @JsonCreator
