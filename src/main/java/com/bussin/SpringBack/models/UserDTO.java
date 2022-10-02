@@ -66,10 +66,9 @@ public class UserDTO implements Serializable {
     private String mobile;
 
     @NotNull(message = "Email should not be empty")
-    @Email(message = "Email should be valid format: johnsus@email.xyz")
-    // TODO: Email Regex Pattern
-    private String email;
-
+    @Email(regexp = "^[A-Z0-9._-]+@[A-Z0-9]+.[A-Z]{2,6}$", 
+            flags = Pattern.Flag.CASE_INSENSITIVE, 
+            message = "Email should be valid format: johnsus@email.xyz")private String email;
     private Boolean isDriver;
 
     public void validate() {
