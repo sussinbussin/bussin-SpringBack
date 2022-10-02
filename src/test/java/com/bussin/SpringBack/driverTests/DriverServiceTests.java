@@ -192,4 +192,11 @@ public class DriverServiceTests {
         verify(userService, times(1))
                 .updateUser(userDTO.getId(), userDTO);
     }
+
+    /**
+     * @yaolongt TODO:
+     * - delete Driver ID not found test
+     * - update Driver Non-unique params exception test
+     * - add new Driver already exists test
+     */
 }
