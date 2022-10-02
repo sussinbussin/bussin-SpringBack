@@ -2,6 +2,8 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -22,7 +24,7 @@ import java.util.Set;
 @Builder
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "carPlate")
-public class Driver implements Serializable {
+public class Driver implements Serializable, Cloneable {
     @Id
     @NotNull(message = "Car Plate should not be empty")
     private String carPlate;
@@ -67,5 +69,16 @@ public class Driver implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public Driver clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), Driver.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }

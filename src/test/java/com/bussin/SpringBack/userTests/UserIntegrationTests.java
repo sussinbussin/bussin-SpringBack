@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.userTests;
 
+import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.services.UserService;
@@ -24,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,6 +51,8 @@ public class UserIntegrationTests {
     @Autowired
     private UserService userService;
 
+    UserDTO userDTO = TestObjects.USER_DTO.clone();
+
     @Test
     public void getAllUsers_noUsers_success() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users");
@@ -61,14 +65,8 @@ public class UserIntegrationTests {
 
     @Test
     public void getAllUsers_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users");
@@ -92,14 +90,8 @@ public class UserIntegrationTests {
 
     @Test
     public void getFullUserById_userExists_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users"
@@ -117,14 +109,8 @@ public class UserIntegrationTests {
 
     @Test
     public void getUserById_userExists_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users/"
@@ -143,7 +129,7 @@ public class UserIntegrationTests {
     public void getUserById_userDoesntExist_404() throws IOException {
         HttpUriRequest request =
                 new HttpGet(baseUrl + port
-                        + "/api/v1/users/a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+                        + "/api/v1/users/" + UUID.randomUUID());
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -164,14 +150,8 @@ public class UserIntegrationTests {
 
     @Test
     public void getUserByEmail_userExists_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
@@ -190,7 +170,7 @@ public class UserIntegrationTests {
     @Test
     public void getUserByEmail_userDoesntExist_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
-                "/byEmail/Robert%40gmail.com");
+                "/byEmail/Robert@gmail.com");
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -198,16 +178,13 @@ public class UserIntegrationTests {
         assertEquals(httpResponse.getCode(), 404);
     }
 
+    // TODO: getUserByEmail_badEmail_400 test
+
     @Test
     public void createNewUser_validUser_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setId(null);
+        userDTO.setIsDriver(false);
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/users");
@@ -228,14 +205,9 @@ public class UserIntegrationTests {
 
     @Test
     public void createNewUser_invalidUser_400() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("900090000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
+        userDTO.setMobile("6969696969");
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/users");
@@ -253,24 +225,14 @@ public class UserIntegrationTests {
 
     @Test
     public void updateUserById_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
 
-        UserDTO userDTOUpdated = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert2")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
         User user = userService.createNewUser(userDTO);
+
+        UserDTO userDTOUpdated = this.userDTO;
+        userDTO.setIsDriver(false);
+        userDTO.setName("Testing123");
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/users/" + user.getId());
@@ -293,16 +255,10 @@ public class UserIntegrationTests {
 
     @Test
     public void updateUser_invalidUser_400() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
 
-        UserDTO userDTOUpdated = UserDTO.builder()
+        UserDTO userDTOInvalidUpdate = UserDTO.builder()
                 .nric("S9999999Z22")
                 .name("Robert")
                 .dob(new Date(90000000))
@@ -317,7 +273,7 @@ public class UserIntegrationTests {
                 + "/api/v1/users/" + user.getId());
 
         StringEntity entity = new StringEntity(new ObjectMapper()
-                .writeValueAsString(userDTOUpdated));
+                .writeValueAsString(userDTOInvalidUpdate));
 
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
@@ -326,22 +282,16 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 400);
+        assertEquals(400, httpResponse.getCode());
     }
 
     @Test
     public void updateUser_userDoesntExist_404() throws IOException {
-        UserDTO userDTOUpdated = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTOUpdated = this.userDTO;
+        userDTOUpdated.setIsDriver(false);
 
         HttpUriRequest request = new HttpPut(baseUrl + port
-                + "/api/v1/users/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+                + "/api/v1/users/" + UUID.randomUUID());
 
         StringEntity entity = new StringEntity(new ObjectMapper()
                 .writeValueAsString(userDTOUpdated));
@@ -358,14 +308,8 @@ public class UserIntegrationTests {
 
     @Test
     public void deleteUser_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false).build();
+        UserDTO userDTO = this.userDTO;
+        userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpDelete(baseUrl + port
@@ -383,7 +327,7 @@ public class UserIntegrationTests {
     @Test
     public void deleteUser_userDoesntExist_404() throws IOException {
         HttpUriRequest request = new HttpDelete(baseUrl + port
-                + "/api/v1/users/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+                + "/api/v1/users/" + UUID.randomUUID());
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);

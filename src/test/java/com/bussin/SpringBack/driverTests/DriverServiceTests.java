@@ -1,6 +1,8 @@
 package com.bussin.SpringBack.driverTests;
 
+import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.exception.UserNotFoundException;
+import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
@@ -16,13 +18,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -55,47 +60,25 @@ public class DriverServiceTests {
 
     @Test
     public void addNewDriver_success() {
-        UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
 
-        UserDTO userDTO = UserDTO.builder()
-                .id(uuid)
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(false)
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        driverDTO.setCarPlate("SAA1234A");
+        driverDTO.setModelAndColour("Yellow Submarine");
+        driverDTO.setCapacity(4);
 
-        User userResult = User.builder()
-                .id(uuid)
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(true)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(false);
 
-        Driver driverResult = Driver.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .user(userResult)
-                .build();
+        User userResult = TestObjects.USER.clone();
+        userResult.setId(UUID.randomUUID());
+        userResult.setIsDriver(true);
 
-        when(userService.getUserById(uuid))
+        Driver driverResult = TestObjects.DRIVER.clone();
+        driverResult.setUser(userResult);
+
+        when(userService.getUserById(userDTO.getId()))
                 .thenReturn(userDTO);
-        when(userService.updateUser(uuid, userDTO))
+        when(userService.updateUser(userDTO.getId(), userDTO))
                 .thenAnswer(invocationOnMock ->
                     ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
                             //Will end test if bad
@@ -103,11 +86,11 @@ public class DriverServiceTests {
         when(driverRepository.save(driverResult))
                 .thenReturn(driverResult);
 
-        assertEquals(driverService.addNewDriver(uuid, driverDTO), driverResult);
+        assertEquals(driverService.addNewDriver(userDTO.getId(), driverDTO), driverResult);
 
-        verify(userService, times(1)).getUserById(uuid);
+        verify(userService, times(1)).getUserById(userDTO.getId());
         verify(userService, times(1))
-                .updateUser(uuid, userDTO);
+                .updateUser(userDTO.getId(), userDTO);
         verify(driverRepository, times(1)).save(driverResult);
     }
 
@@ -115,13 +98,8 @@ public class DriverServiceTests {
     public void addNewDriver_invalidParams_exception() {
         UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Flamingo MrBean Car")
-                //Bad capacity
-                .capacity(1)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        driverDTO.setCapacity(1);
 
         assertThrows(ConstraintViolationException.class,
                 () -> driverService.addNewDriver(uuid, driverDTO));
@@ -133,12 +111,7 @@ public class DriverServiceTests {
     public void addNewDriver_userNotFound_exception(){
         UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("Premium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         when(userService.getUserById(uuid)).thenThrow(UserNotFoundException.class);
 
@@ -152,40 +125,19 @@ public class DriverServiceTests {
     public void updateDriver_success() {
         UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345A")
-                //Modified model and colour
-                .modelAndColour("Mystery Machine")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        driverDTO.setCarPlate("SAA1234A");
+        driverDTO.setCapacity(4);
 
-        User userResult = User.builder()
-                .id(uuid)
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(true)
-                .build();
+        User userResult = TestObjects.USER.clone();
+        userResult.setIsDriver(true);
 
-        Driver driver = Driver.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .user(userResult)
-                .build();
+        Driver driver = TestObjects.DRIVER.clone();
+        driver.setUser(userResult);
 
-        Driver driverResult = Driver.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Mystery Machine")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .user(userResult)
-                .build();
+        Driver driverResult = TestObjects.DRIVER.clone();
+        driverResult.setUser(userResult);
+        driverResult.setModelAndColour("Flamingo MrBean Car");
 
         userResult.setDriver(driver);
         when(driverRepository.findDriverByCarPlate(driverDTO.getCarPlate()))
@@ -203,60 +155,66 @@ public class DriverServiceTests {
     }
 
     @Test
+    public void updateDriver_nonUniqueParams_exception() {
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        driverDTO.setCarPlate("SAA1234A");
+        driverDTO.setModelAndColour("Yellow Submarine");
+        driverDTO.setCapacity(4);
+
+        User userResult = TestObjects.USER.clone();
+        userResult.setIsDriver(true);
+
+        Driver driver = TestObjects.DRIVER.clone();
+        driver.setUser(userResult);
+
+        Driver driverResult = TestObjects.DRIVER.clone();
+        driverResult.setUser(userResult);
+
+        userResult.setDriver(driver);
+
+        when(driverRepository.findDriverByCarPlate(driverDTO.getCarPlate()))
+                .thenReturn(Optional.of(driver));
+
+        when(driverRepository.save(driverResult))
+                .thenThrow(ConstraintViolationException.class);
+
+        assertThrows(ConstraintViolationException.class,
+                        () -> driverService.updateDriver(driver.getCarPlate(), driverDTO));
+
+        verify(driverRepository, times(1)).findDriverByCarPlate(any(String.class));
+        verify(driverRepository, times(1)).save(any(Driver.class));
+    }
+
+    @Test
     public void deleteDriver_success() {
-        UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
 
-        UserDTO userDTO = UserDTO.builder()
-                .id(uuid)
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(false)
-                .build();
+        UUID id = UUID.randomUUID();
 
-        User userResult = User.builder()
-                .id(uuid)
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(true)
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        driverDTO.setCarPlate("SAA1234A");
+        driverDTO.setModelAndColour("Yellow Submarine");
+        driverDTO.setCapacity(4);
 
-        User userResultGood = User.builder()
-                .id(uuid)
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setId(id);
+        userDTO.setIsDriver(false);
 
-        Driver driverResult = Driver.builder()
-                .carPlate("SAA12345A")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .user(userResult)
-                .build();
+        User userResult = TestObjects.USER.clone();
+        userResult.setId(id);
+        userResult.setIsDriver(true);
+
+        User userResultGood = TestObjects.USER.clone();
+        userResultGood.setId(id);
+
+        Driver driverResult = TestObjects.DRIVER.clone();
+        driverResult.setUser(userResult);
+
+        userResult.setDriver(driverResult);
 
         when(driverRepository.findDriverByCarPlate(driverResult.getCarPlate()))
                 .thenReturn(Optional.of(driverResult));
 
-        when(userService.updateUser(uuid, userDTO))
+        when(userService.updateUser(userDTO.getId(), userDTO))
                 .thenAnswer(invocationOnMock ->
                         ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
                                 //Will end test if bad
@@ -268,6 +226,19 @@ public class DriverServiceTests {
         verify(driverRepository, times(1))
                 .findDriverByCarPlate(driverResult.getCarPlate());
         verify(userService, times(1))
-                .updateUser(uuid, userDTO);
+                .updateUser(userDTO.getId(), userDTO);
     }
+
+     @Test
+     public void deleteDriver_doesntExist_exception() {
+        String carPlate = "SAA1234B";
+        when(driverRepository.findDriverByCarPlate(carPlate))
+                .thenReturn(Optional.empty());
+
+        assertThrows(DriverNotFoundException.class,
+                () -> driverService.deleteDriver(carPlate));
+
+        verify(driverRepository, times(1)).findDriverByCarPlate(carPlate);
+        verify(driverRepository, never()).deleteByCarPlate(carPlate);
+     }
 }

@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.plannedRouteTests;
 
+import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.repositories.DriverRepository;
@@ -44,21 +45,6 @@ public class PlannedRouteServiceTests {
     @InjectMocks
     private PlannedRouteService plannedRouteService;
 
-    static final PlannedRoute PLANNED_ROUTE = PlannedRoute.builder()
-            .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-            .plannedFrom("Start")
-            .plannedTo("To")
-            .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-            .capacity(1)
-            .build();
-
-    static final PlannedRouteDTO PLANNED_ROUTE_DTO = PlannedRouteDTO.builder()
-            .plannedFrom("Start")
-            .plannedTo("To")
-            .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-            .capacity(1)
-            .build();
-
     @BeforeEach
     private void setUp() {
         modelMapper = new ModelMapper();
@@ -88,7 +74,7 @@ public class PlannedRouteServiceTests {
     public void getAllPlannedRoutes_success() {
         ArrayList<PlannedRoute> plannedRoutes = new ArrayList<>();
 
-        plannedRoutes.add(PLANNED_ROUTE.clone());
+        plannedRoutes.add(TestObjects.PLANNED_ROUTE.clone());
 
         when(plannedRoutesRepository.findAll()).thenReturn(plannedRoutes);
 
@@ -100,15 +86,10 @@ public class PlannedRouteServiceTests {
     @Test
     public void createNewPlannedRoute_invalidParams_exception() {
         //No capacity
-        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
         plannedRouteDTO.setCapacity(-1);
 
-        Driver driver = Driver.builder()
-                .carPlate("SAA1234A")
-                .modelAndColour("Yellow Submarine")
-                .capacity(4)
-                .fuelType("TypePremium")
-                .build();
+        Driver driver = TestObjects.DRIVER.clone();
 
         assertThrows(ConstraintViolationException.class,
                 () -> plannedRouteService.createNewPlannedRoute(plannedRouteDTO, driver.getCarPlate()));
@@ -117,48 +98,24 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void getPassengersOnRoute_success() {
-        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
         HashSet<Ride> rides = new HashSet<>();
 
-        User user1 = User.builder()
-                .id(UUID.randomUUID())
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        User user1 = TestObjects.USER.clone();
+        user1.setId(UUID.randomUUID());
 
-        Ride ride1 = Ride.builder()
-            .id(UUID.randomUUID())
-            .passengers(1)
-            .plannedRoute(plannedRoute)
-            .cost(BigDecimal.TEN)
-            .timestamp(new Timestamp(System.currentTimeMillis()))
-            .user(user1)
-            .build();
+        Ride ride1 = TestObjects.RIDE.clone();
+        ride1.setUser(user1);
+        ride1.setPlannedRoute(plannedRoute);
 
-        User user2 = User.builder()
-                .id(UUID.randomUUID())
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        User user2 = TestObjects.USER.clone();
+        user2.setId(UUID.randomUUID());
+        user2.setEmail("testguy2@test.com");
 
-        Ride ride2 = Ride.builder()
-                .id(UUID.randomUUID())
-                .passengers(1)
-                .plannedRoute(plannedRoute)
-                .cost(BigDecimal.TEN)
-                .timestamp(new Timestamp(System.currentTimeMillis()))
-                .user(user2)
-                .build();
+        Ride ride2 = TestObjects.RIDE.clone();
+        ride2.setId(UUID.randomUUID());
+        ride2.setPlannedRoute(plannedRoute);
+        ride2.setUser(user2);
 
         rides.add(ride1);
         rides.add(ride2);
@@ -180,7 +137,7 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void getPassengersOnRoute_noRoute_failure() {
-        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
 
         when(plannedRoutesRepository.findById(plannedRoute.getId()))
                 .thenReturn(Optional.empty());
@@ -194,13 +151,8 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void createNewPlannedRoute_alreadyExists_exception() {
-        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
-        Driver driver = Driver.builder()
-                .carPlate("SAA1234A")
-                .modelAndColour("Yellow Submarine")
-                .capacity(4)
-                .fuelType("TypePremium")
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
+        Driver driver = TestObjects.DRIVER.clone();
 
         PlannedRoute plannedRoute = modelMapper.map(plannedRouteDTO,
                 PlannedRoute.class);
@@ -225,17 +177,20 @@ public class PlannedRouteServiceTests {
                 .fuelType("TypePremium")
                 .build();
 
-        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
         plannedRoute.setDriver(driver);
 
         //Changed capacity
-        PlannedRoute plannedRouteResult = PLANNED_ROUTE.clone();
+        PlannedRoute plannedRouteResult = TestObjects.PLANNED_ROUTE.clone();
         plannedRouteResult.setCapacity(3);
+        plannedRouteResult.setDriver(driver);
 
-        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
+        plannedRouteDTO.setId(plannedRouteResult.getId());
+        plannedRouteDTO.setPlannedFrom("Start");
+        plannedRouteDTO.setPlannedTo("To");
 
-        when(plannedRoutesRepository.findById(
-                UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555")))
+        when(plannedRoutesRepository.findById(plannedRouteResult.getId()))
                 .thenReturn(Optional.of(plannedRoute));
         when(plannedRoutesRepository.save(plannedRouteResult))
                 .thenReturn(plannedRouteResult);
@@ -252,15 +207,15 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void updatePlannedRoute_doesntExist_exception() {
-        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
+        plannedRouteDTO.setId(UUID.randomUUID());
 
-        when(plannedRoutesRepository.findById(PLANNED_ROUTE.getId()))
+        when(plannedRoutesRepository.findById(TestObjects.PLANNED_ROUTE.getId()))
                 .thenReturn(Optional.empty());
 
         assertThrows(PlannedRouteNotFoundException.class,
                 () -> plannedRouteService.updatePlannedRouteById(
-                                UUID.fromString(
-                                        "a6bb7dc3-5cbb-4408-a749-514e0b4a0555"),
+                                TestObjects.PLANNED_ROUTE.getId(),
                         plannedRouteDTO));
 
         verify(plannedRoutesRepository, times(1))
@@ -270,9 +225,10 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void updatePlannedRoute_nonUniqueParams_exception() {
-        PlannedRouteDTO plannedRouteDTO = PLANNED_ROUTE_DTO.clone();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
+        plannedRouteDTO.setId(UUID.randomUUID());
 
-        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
 
         when(plannedRoutesRepository.findById(plannedRoute.getId()))
                 .thenReturn(Optional.of(plannedRoute));
@@ -292,7 +248,7 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void deletePlannedRoute_success() {
-        PlannedRoute plannedRoute = PLANNED_ROUTE.clone();
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
 
         when(plannedRoutesRepository.findById(plannedRoute.getId()))
                 .thenReturn(Optional.of(plannedRoute));

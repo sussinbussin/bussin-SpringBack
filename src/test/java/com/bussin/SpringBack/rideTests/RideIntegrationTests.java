@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.rideTests;
 
+import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.PlannedRouteDTO;
@@ -84,42 +85,21 @@ public class RideIntegrationTests {
 
     @Test
     public void getAllRides_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         Ride ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
@@ -143,42 +123,22 @@ public class RideIntegrationTests {
 
     @Test
     public void getRideByID_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         Ride ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
@@ -203,7 +163,7 @@ public class RideIntegrationTests {
     @Test
     public void getRideByID_noRide_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
-                "/ride/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+                "/ride/" + UUID.randomUUID());
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -213,42 +173,22 @@ public class RideIntegrationTests {
 
     @Test
     public void createNewRide_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
                 .rideDTO(rideDTO)
@@ -282,42 +222,23 @@ public class RideIntegrationTests {
 
     @Test
     public void createNewRide_invalidParams_400() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(222222)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setPassengers(1000);
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
                 .rideDTO(rideDTO)
@@ -343,47 +264,27 @@ public class RideIntegrationTests {
 
     @Test
     public void createNewRide_missingUser_404() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.clone();
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(2)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
                 .rideDTO(rideDTO)
                 .plannedRouteUUID(plannedRoute.getId())
-                .userUUID(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
+                .userUUID(UUID.randomUUID())
                 .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
@@ -404,45 +305,25 @@ public class RideIntegrationTests {
 
     @Test
     public void createNewRide_noRoute_404() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                 driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(2)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
                 .rideDTO(rideDTO)
-                .plannedRouteUUID(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
+                .plannedRouteUUID(UUID.randomUUID())
                 .userUUID(user.getId())
                 .build();
 
@@ -464,47 +345,25 @@ public class RideIntegrationTests {
 
     @Test
     public void updateRideById_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
-        RideDTO updatedRideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO updatedRideDTO = TestObjects.RIDE_DTO.clone();
+        updatedRideDTO.setPassengers(2);
 
         Ride ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
@@ -535,46 +394,26 @@ public class RideIntegrationTests {
 
     @Test
     public void updateRideById_invalidParams_400() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         RideDTO updatedRideDTO = RideDTO.builder()
                 .passengers(1000)
-                .timestamp(new Timestamp(now))
+                .timestamp(rideDTO.getTimestamp())
                 .build();
 
         Ride ride = rideService.createNewRide(rideDTO, user.getId(),
@@ -598,41 +437,22 @@ public class RideIntegrationTests {
 
     @Test
     public void updateRideById_noRide_404() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
+        plannedRouteDTO.setCapacity(3);
 
         plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                 driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO updatedRideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO updatedRideDTO = TestObjects.RIDE_DTO.clone();
+        updatedRideDTO.setPassengers(3);
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/ride/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
@@ -652,42 +472,22 @@ public class RideIntegrationTests {
 
     @Test
     public void deleteRideByID_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true).build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
         User user = userService.createNewUser(userDTO);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         driverService.addNewDriver(user.getId(), driverDTO);
 
-        PlannedRouteDTO plannedRouteDTO = PlannedRouteDTO.builder()
-                .plannedFrom("111111")
-                .plannedTo("222222")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(3)
-                .build();
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO;
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        long now = System.currentTimeMillis();
-        RideDTO rideDTO = RideDTO.builder()
-                .passengers(1)
-                .timestamp(new Timestamp(now))
-                .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO;
 
         Ride ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
@@ -712,7 +512,7 @@ public class RideIntegrationTests {
     @Test
     public void deleteRideByID_noRide_404() throws IOException {
         HttpUriRequest request = new HttpDelete(baseUrl + port + "/api/v1" +
-                "/ride/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+                "/ride/" + UUID.randomUUID());
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
