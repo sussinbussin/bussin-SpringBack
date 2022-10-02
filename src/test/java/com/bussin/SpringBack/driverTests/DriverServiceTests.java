@@ -2,6 +2,7 @@ package com.bussin.SpringBack.driverTests;
 
 import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.exception.UserNotFoundException;
+import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
@@ -17,7 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.Optional;
@@ -152,6 +155,37 @@ public class DriverServiceTests {
     }
 
     @Test
+    public void updateDriver_nonUniqueParams_exception() {
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        driverDTO.setCarPlate("SAA1234A");
+        driverDTO.setModelAndColour("Yellow Submarine");
+        driverDTO.setCapacity(4);
+
+        User userResult = TestObjects.USER.clone();
+        userResult.setIsDriver(true);
+
+        Driver driver = TestObjects.DRIVER.clone();
+        driver.setUser(userResult);
+
+        Driver driverResult = TestObjects.DRIVER.clone();
+        driverResult.setUser(userResult);
+
+        userResult.setDriver(driver);
+
+        when(driverRepository.findDriverByCarPlate(driverDTO.getCarPlate()))
+                .thenReturn(Optional.of(driver));
+
+        when(driverRepository.save(driverResult))
+                .thenThrow(ConstraintViolationException.class);
+
+        assertThrows(ConstraintViolationException.class,
+                        () -> driverService.updateDriver(driver.getCarPlate(), driverDTO));
+
+        verify(driverRepository, times(1)).findDriverByCarPlate(any(String.class));
+        verify(driverRepository, times(1)).save(any(Driver.class));
+    }
+
+    @Test
     public void deleteDriver_success() {
 
         UUID id = UUID.randomUUID();
@@ -175,6 +209,8 @@ public class DriverServiceTests {
         Driver driverResult = TestObjects.DRIVER.clone();
         driverResult.setUser(userResult);
 
+        userResult.setDriver(driverResult);
+
         when(driverRepository.findDriverByCarPlate(driverResult.getCarPlate()))
                 .thenReturn(Optional.of(driverResult));
 
@@ -193,10 +229,16 @@ public class DriverServiceTests {
                 .updateUser(userDTO.getId(), userDTO);
     }
 
-    /**
-     * @yaolongt TODO:
-     * - delete Driver ID not found test
-     * - update Driver Non-unique params exception test
-     * - add new Driver already exists test
-     */
+     @Test
+     public void deleteDriver_doesntExist_exception() {
+        String carPlate = "SAA1234B";
+        when(driverRepository.findDriverByCarPlate(carPlate))
+                .thenReturn(Optional.empty());
+
+        assertThrows(DriverNotFoundException.class,
+                () -> driverService.deleteDriver(carPlate));
+
+        verify(driverRepository, times(1)).findDriverByCarPlate(carPlate);
+        verify(driverRepository, never()).deleteByCarPlate(carPlate);
+     }
 }
