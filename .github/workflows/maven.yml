@@ -29,6 +29,7 @@ jobs:
           mysql database: 'bussin'
       - name: Build with Maven
         env:
+          gmapsapiKey: ${{ secrets.gmapsapiKey }}
           SPRING_DATASOURCE_USERNAME: root
           SPRING_DATASOURCE_PASSWORD: root
         run: |
