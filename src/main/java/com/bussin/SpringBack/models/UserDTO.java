@@ -40,7 +40,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @EqualsAndHashCode
-public class UserDTO implements Serializable {
+public class UserDTO implements Serializable, Cloneable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Type(type = "org.hibernate.type.UUIDCharType")

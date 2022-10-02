@@ -24,7 +24,7 @@ import java.util.Set;
 @Builder
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "carPlate")
-public class Driver implements Serializable {
+public class Driver implements Serializable, Cloneable {
     @Id
     @NotNull(message = "Car Plate should not be empty")
     private String carPlate;

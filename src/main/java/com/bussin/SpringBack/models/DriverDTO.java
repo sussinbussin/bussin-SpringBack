@@ -21,7 +21,7 @@ import java.util.Set;
 @Setter
 @Builder
 @EqualsAndHashCode
-public class DriverDTO implements Serializable {
+public class DriverDTO implements Serializable, Cloneable {
     @NotNull(message = "Car Plate should not be empty")
     private String carPlate;
 
