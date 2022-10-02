@@ -178,10 +178,7 @@ public class PlannedRouteIntegrationTests {
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        RideDTO rideDTO = RideDTO.builder()
-            .passengers(1)
-            .timestamp(new Timestamp(System.currentTimeMillis()))
-            .build();
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         rideService.createNewRide(rideDTO, passenger.getId(),
                 plannedRoute.getId());

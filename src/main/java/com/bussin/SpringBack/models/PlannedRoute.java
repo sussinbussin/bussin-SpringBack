@@ -23,6 +23,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -43,9 +44,11 @@ public class PlannedRoute implements Serializable, Cloneable {
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
+    @Pattern(regexp = "^[0-9]{6}$")
     @NotNull(message = "Please set a starting point")
     private String plannedFrom;
 
+    @Pattern(regexp = "^[0-9]{6}$")
     @NotNull(message = "Please set a destination.")
     private String plannedTo;
 
