@@ -21,6 +21,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -53,6 +54,14 @@ public class Ride implements Serializable, Cloneable{
     @DecimalMin("0")
     private BigDecimal cost;
 
+    @Pattern(regexp = "^[0-9]{6}$")
+    @NotNull
+    private String rideFrom;
+
+    @Pattern(regexp = "^[0-9]{6}$")
+    @NotNull
+    private String rideTo;
+
     @ManyToOne
     @JoinColumn(name = "planned_route_id")
     private PlannedRoute plannedRoute;
@@ -65,6 +74,8 @@ public class Ride implements Serializable, Cloneable{
         this.id = rideDTO.getId();
         this.timestamp = rideDTO.getTimestamp();
         this.passengers = rideDTO.getPassengers();
+        this.rideTo = rideDTO.getRideTo();
+        this.rideFrom = rideDTO.getRideFrom();
     }
 
     @Override
