@@ -1,5 +1,6 @@
-package com.bussin.SpringBack.driverTests;
+ package com.bussin.SpringBack.driverTests;
 
+import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
@@ -25,8 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -67,22 +68,10 @@ public class DriverIntegrationTests {
 
     @Test
     public void getAllDrivers_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         User user = userService.createNewUser(userDTO);
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -104,22 +93,10 @@ public class DriverIntegrationTests {
 
     @Test
     public void getDriverByCarPlate_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(true)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         User user = userService.createNewUser(userDTO);
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -152,22 +129,10 @@ public class DriverIntegrationTests {
 
     @Test
     public void addNewDriver_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpPost(baseUrl + port
@@ -194,15 +159,10 @@ public class DriverIntegrationTests {
 
     @Test
     public void addNewDriver_noUser_404() throws IOException {
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
-                + "/api/v1/driver/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+                + "/api/v1/driver/" + UUID.randomUUID());
 
         StringEntity entity =
                 new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
@@ -218,22 +178,11 @@ public class DriverIntegrationTests {
 
     @Test
     public void addNewDriver_badParams_400() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2000)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        driverDTO.setCapacity(1000);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpPost(baseUrl + port
@@ -253,29 +202,15 @@ public class DriverIntegrationTests {
 
     @Test
     public void updateDriver_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
-        DriverDTO updatedDriverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Clown Car")
-                .capacity(12)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO updatedDriverDTO = TestObjects.DRIVER_DTO.clone();
+        updatedDriverDTO.setModelAndColour("Clown Car");
+        updatedDriverDTO.setCapacity(12);
+        updatedDriverDTO.setFuelType("TypePremium");
 
         User user = userService.createNewUser(userDTO);
         Driver driver = driverService.addNewDriver(user.getId(), driverDTO);
@@ -304,22 +239,10 @@ public class DriverIntegrationTests {
 
     @Test
     public void updateDriver_noDriver_404() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO updatedDriverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Clown Car")
-                .capacity(12)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO updatedDriverDTO = TestObjects.DRIVER_DTO.clone();
 
         userService.createNewUser(userDTO);
 
@@ -340,29 +263,14 @@ public class DriverIntegrationTests {
 
     @Test
     public void updateDriver_badParams_400() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
-        DriverDTO updatedDriverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Actual Clown Car")
-                .capacity(12000)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO updatedDriverDTO = TestObjects.DRIVER_DTO.clone();
+        updatedDriverDTO.setModelAndColour("Actual clown car");
+        updatedDriverDTO.setCapacity(12000);
 
         User user = userService.createNewUser(userDTO);
         driverService.addNewDriver(user.getId(), driverDTO);
@@ -384,22 +292,10 @@ public class DriverIntegrationTests {
 
     @Test
     public void deleteDriver_success() throws IOException {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .address("123123")
-                .email("Robert@gmail.com")
-                .mobile("90009000")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
 
-        DriverDTO driverDTO = DriverDTO.builder()
-                .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         User user = userService.createNewUser(userDTO);
         Driver driver = driverService.addNewDriver(user.getId(), driverDTO);

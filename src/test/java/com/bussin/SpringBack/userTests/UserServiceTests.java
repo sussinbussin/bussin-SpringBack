@@ -1,10 +1,12 @@
 package com.bussin.SpringBack.userTests;
 
+import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.Ride;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.repositories.UserRepository;
 import com.bussin.SpringBack.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,16 +63,10 @@ public class UserServiceTests {
 
     @Test
     public void getAllUsers_success() {
+        User user = TestObjects.USER.clone();
+
         ArrayList<User> users = new ArrayList<>();
-        User user = User.builder()
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(false)
-                .build();
+
         users.add(user);
 
         when(userRepository.findAll()).thenReturn(users);
@@ -82,15 +78,8 @@ public class UserServiceTests {
 
     @Test
     public void createNewUser_success() {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(false);
 
         User saved = modelMapper.map(userDTO, User.class);
         when(userRepository.save(saved)).thenReturn(saved);
@@ -102,15 +91,10 @@ public class UserServiceTests {
 
     @Test
     public void createNewUser_invalidParams_exception() {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S1234567")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("10009000")
-                .email("testguytest.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setId(null);
+        userDTO.setIsDriver(false);
+        userDTO.setMobile("10009000");
 
         assertThrows(ConstraintViolationException.class,
                 () -> userService.createNewUser(userDTO));
@@ -120,15 +104,9 @@ public class UserServiceTests {
 
     @Test
     public void createNewUser_alreadyExists_exception() {
-        UserDTO userDTO = UserDTO.builder()
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(System.currentTimeMillis()))
-                .mobile("90009000")
-                .email("testguy@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        // userDTO.setId(null);
+        userDTO.setIsDriver(false);
 
         User saved = modelMapper.map(userDTO, User.class);
         when(userRepository.save(saved))
@@ -141,54 +119,24 @@ public class UserServiceTests {
 
     @Test
     public void updateUser_success() {
-        UserDTO userDTO = UserDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy2")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        UUID uuid = UUID.randomUUID();
 
-        User user = User.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setId(uuid);
+        userDTO.setName("Test Guy2");
+        userDTO.setIsDriver(false);
 
-        User userResult = User.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy2")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        User user = TestObjects.USER.clone();
+        user.setId(uuid);
 
-        PlannedRoute plannedRoute = PlannedRoute.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(1)
-                .build();
+        User userResult = TestObjects.USER.clone();
+        userResult.setId(uuid);
+        userResult.setName("Test Guy2");
 
-        Ride ride = Ride.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0533"))
-                .user(user)
-                .cost(BigDecimal.TEN)
-                .timestamp(new Timestamp(900000500))
-                .passengers(1)
-                .build();
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+
+        Ride ride = TestObjects.RIDE.clone();
+        ride.setUser(user);
 
         HashSet<Ride> rides = new HashSet<>();
         rides.add(ride);
@@ -202,7 +150,7 @@ public class UserServiceTests {
         when(userRepository.save(userResult))
                 .thenReturn(userResult);
 
-        assertEquals(userService.updateUser(user.getId(), userDTO), userResult);
+        assertEquals(userService.updateUser(userDTO.getId(), userDTO), userResult);
 
         verify(userRepository, times(1))
                 .findById(any(UUID.class));
@@ -212,16 +160,7 @@ public class UserServiceTests {
 
     @Test
     public void updateUser_doesntExist_exception() {
-        UserDTO userDTO = UserDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy2")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
 
         when(userRepository.findById(userDTO.getId()))
                 .thenReturn(Optional.empty());
@@ -237,15 +176,8 @@ public class UserServiceTests {
 
     @Test
     public void updateUser_invalidParams_exception() {
-        UserDTO userDTO = UserDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setName(null);
 
         assertThrows(ConstraintViolationException.class,
                 () -> userService.updateUser(userDTO.getId(), userDTO));
@@ -257,54 +189,24 @@ public class UserServiceTests {
 
     @Test
     public void updateUser_nonUniqueParams_exception() {
-        UserDTO userDTO = UserDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy2")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
 
-        User user = User.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        UUID uuid = UUID.randomUUID();
 
-        User userResult = User.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy2")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setName("Test Guy2");
+        userDTO.setIsDriver(false);
 
-        PlannedRoute plannedRoute = PlannedRoute.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0555"))
-                .plannedFrom("Start")
-                .plannedTo("To")
-                .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
-                .capacity(1)
-                .build();
+        User user = TestObjects.USER.clone();
+        user.setId(uuid);
 
-        Ride ride = Ride.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a0533"))
-                .user(user)
-                .cost(BigDecimal.TEN)
-                .timestamp(new Timestamp(900000500))
-                .passengers(1)
-                .build();
+        User userResult = TestObjects.USER.clone();
+        userResult.setId(uuid);
+        userResult.setName("Test Guy2");
+
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+
+        Ride ride = TestObjects.RIDE.clone();
+        ride.setUser(user);
 
         HashSet<Ride> rides = new HashSet<>();
         rides.add(ride);
@@ -329,16 +231,7 @@ public class UserServiceTests {
 
     @Test
     public void deleteUser_success() {
-        UserDTO userDTO = UserDTO.builder()
-                .id(UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3"))
-                .nric("S1234567A")
-                .name("Test Guy2")
-                .address("444333")
-                .dob(new Date(900000000))
-                .mobile("90009000")
-                .email("testguy2@test.com")
-                .isDriver(false)
-                .build();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
 
         when(userRepository.findUserById(userDTO.getId()))
                 .thenReturn(Optional.of(userDTO));

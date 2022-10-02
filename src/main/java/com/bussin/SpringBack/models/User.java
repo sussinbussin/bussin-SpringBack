@@ -2,7 +2,11 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
+
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +18,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name = "bussinuser")
@@ -26,11 +31,10 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Builder
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class User implements Serializable {
+public class User implements Serializable, Cloneable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -56,7 +60,9 @@ public class User implements Serializable {
     private String mobile;
 
     @NotNull(message = "Email should not be empty")
-    @Email(message = "Email should be valid format: johnsus@email.xyz")
+    @Email(regexp = "^[A-Z0-9._-]+@[A-Z0-9]+.[A-Z]{2,6}$", 
+            flags = Pattern.Flag.CASE_INSENSITIVE, 
+            message = "Email should be valid format: johnsus@email.xyz")
     private String email;
 
     private Boolean isDriver;
@@ -87,5 +93,30 @@ public class User implements Serializable {
         this.mobile = userDTO.getMobile();
         this.email = userDTO.getEmail();
         this.isDriver = userDTO.getIsDriver();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public User clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), User.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }

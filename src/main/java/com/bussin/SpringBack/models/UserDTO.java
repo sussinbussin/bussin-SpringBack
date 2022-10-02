@@ -2,8 +2,11 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
@@ -36,7 +39,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class UserDTO implements Serializable {
+@EqualsAndHashCode
+public class UserDTO implements Serializable, Cloneable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -62,9 +66,9 @@ public class UserDTO implements Serializable {
     private String mobile;
 
     @NotNull(message = "Email should not be empty")
-    @Email(message = "Email should be valid format: johnsus@email.xyz")
-    private String email;
-
+    @Email(regexp = "^[A-Z0-9._-]+@[A-Z0-9]+.[A-Z]{2,6}$", 
+            flags = Pattern.Flag.CASE_INSENSITIVE, 
+            message = "Email should be valid format: johnsus@email.xyz")private String email;
     private Boolean isDriver;
 
     public void validate() {
@@ -75,23 +79,6 @@ public class UserDTO implements Serializable {
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-            return false;
-        }
-        UserDTO userDTO = (UserDTO) o;
-        return id != null && Objects.equals(id, userDTO.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 
     @JsonCreator
@@ -111,5 +98,16 @@ public class UserDTO implements Serializable {
         this.mobile = mobile;
         this.email = email;
         this.isDriver = isDriver;
+    }
+
+    @Override
+    public UserDTO clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), UserDTO.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }

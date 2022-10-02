@@ -2,6 +2,8 @@ package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +21,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -33,7 +36,7 @@ import java.util.UUID;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id")
-public class Ride implements Serializable {
+public class Ride implements Serializable, Cloneable{
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
@@ -51,6 +54,14 @@ public class Ride implements Serializable {
     @DecimalMin("0")
     private BigDecimal cost;
 
+    @Pattern(regexp = "^[0-9]{6}$")
+    @NotNull
+    private String rideFrom;
+
+    @Pattern(regexp = "^[0-9]{6}$")
+    @NotNull
+    private String rideTo;
+
     @ManyToOne
     @JoinColumn(name = "planned_route_id")
     private PlannedRoute plannedRoute;
@@ -63,6 +74,8 @@ public class Ride implements Serializable {
         this.id = rideDTO.getId();
         this.timestamp = rideDTO.getTimestamp();
         this.passengers = rideDTO.getPassengers();
+        this.rideTo = rideDTO.getRideTo();
+        this.rideFrom = rideDTO.getRideFrom();
     }
 
     @Override
@@ -77,5 +90,16 @@ public class Ride implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @Override
+    public Ride clone() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(this), Ride.class);
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }
