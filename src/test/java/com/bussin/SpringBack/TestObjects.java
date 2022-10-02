@@ -69,6 +69,8 @@ public class TestObjects {
     public static final RideDTO RIDE_DTO = RideDTO.builder()
             .timestamp(new Timestamp(System.currentTimeMillis()))
             .passengers(1)
+            .rideTo("188605")
+            .rideFrom("119077")
             .build();
 
     public static final Ride RIDE = Ride.builder()
@@ -76,5 +78,7 @@ public class TestObjects {
             .timestamp(new Timestamp(System.currentTimeMillis()))
             .passengers(1)
             .cost(new BigDecimal(6.90))
+            .rideTo("188605")
+            .rideFrom("119077")
             .build();
 }
