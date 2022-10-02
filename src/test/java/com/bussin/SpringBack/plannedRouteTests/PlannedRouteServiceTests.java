@@ -17,11 +17,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolationException;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -170,12 +166,7 @@ public class PlannedRouteServiceTests {
 
     @Test
     public void updatePlannedRoute_success() {
-        Driver driver = Driver.builder()
-                .carPlate("SAA1234A")
-                .modelAndColour("Yellow Submarine")
-                .capacity(4)
-                .fuelType("TypePremium")
-                .build();
+        Driver driver = TestObjects.DRIVER.clone();
 
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
         plannedRoute.setDriver(driver);
@@ -187,8 +178,6 @@ public class PlannedRouteServiceTests {
 
         PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
         plannedRouteDTO.setId(plannedRouteResult.getId());
-        plannedRouteDTO.setPlannedFrom("Start");
-        plannedRouteDTO.setPlannedTo("To");
 
         when(plannedRoutesRepository.findById(plannedRouteResult.getId()))
                 .thenReturn(Optional.of(plannedRoute));

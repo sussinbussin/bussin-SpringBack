@@ -123,8 +123,6 @@ public class DriverServiceTests {
 
     @Test
     public void updateDriver_success() {
-        UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
-
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
         driverDTO.setCarPlate("SAA1234A");
         driverDTO.setCapacity(4);
@@ -187,7 +185,6 @@ public class DriverServiceTests {
 
     @Test
     public void deleteDriver_success() {
-
         UUID id = UUID.randomUUID();
 
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
