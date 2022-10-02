@@ -162,6 +162,9 @@ public class PlannedRouteIntegrationTests {
         User user = userService.createNewUser(userDTO);
 
         UserDTO passengerDTO = TestObjects.USER_DTO.clone();
+        passengerDTO.setNric("S6969691Z");
+        passengerDTO.setEmail("another@test.com");
+        passengerDTO.setMobile("89898989");
 
         User passenger = userService.createNewUser(passengerDTO);
 
