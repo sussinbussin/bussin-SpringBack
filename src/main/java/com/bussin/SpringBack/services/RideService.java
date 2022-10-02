@@ -2,6 +2,11 @@ package com.bussin.SpringBack.services;
 
 import javax.transaction.Transactional;
 
+import com.bussin.SpringBack.config.GeoApiConfig;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +14,9 @@ import org.springframework.stereotype.Service;
 import com.bussin.SpringBack.repositories.*;
 import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.exception.*;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -17,17 +25,17 @@ public class RideService {
     private final RideRepository rideRepository;
     private final PlannedRoutesRepository plannedRoutesRepository;
     private final UserService userService;
-    private final GasPriceService gasPriceService;
+    private final PricingService pricingService;
 
     @Autowired
     public RideService(ModelMapper modelMapper, RideRepository rideRepository,
             PlannedRoutesRepository plannedRoutesRepository,
-                       UserService userService, GasPriceService gasPriceService) {
+                       UserService userService, PricingService pricingService) {
         this.modelMapper = modelMapper;
         this.rideRepository = rideRepository;
         this.plannedRoutesRepository = plannedRoutesRepository;
         this.userService = userService;
-        this.gasPriceService = gasPriceService;
+        this.pricingService = pricingService;
     }
 
     public List<Ride> getAllRides() {
@@ -49,8 +57,7 @@ public class RideService {
                 .orElseThrow(() ->
                         new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
 
-        ride.setCost(gasPriceService.getAvgGasPriceByType(
-                GasPriceKey.GasType.valueOf(plannedRoute.getDriver().getFuelType())));
+        ride.setCost(pricingService.getPriceOfRide(plannedRoute));
         ride.setUser(found);
 
         //TODO: Check that passengers does not exceed capacity
@@ -77,5 +84,4 @@ public class RideService {
             return found;
         }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId));
     }
-
 }

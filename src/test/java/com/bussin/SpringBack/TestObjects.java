@@ -53,15 +53,15 @@ public class TestObjects {
 
     public static final PlannedRoute PLANNED_ROUTE = PlannedRoute.builder()
             .id(UUID.randomUUID())
-            .plannedFrom("Start")
-            .plannedTo("To")
+            .plannedFrom("188065")
+            .plannedTo("119077")
             .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
             .capacity(1)
             .build();
 
     public static final PlannedRouteDTO PLANNED_ROUTE_DTO = PlannedRouteDTO.builder()
-            .plannedFrom("111111")
-            .plannedTo("222222")
+            .plannedFrom("188065")
+            .plannedTo("119077")
             .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
             .capacity(3)
             .build();
