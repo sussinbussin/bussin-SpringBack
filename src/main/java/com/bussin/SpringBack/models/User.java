@@ -61,6 +61,7 @@ public class User implements Serializable, Cloneable {
 
     @NotNull(message = "Email should not be empty")
     @Email(message = "Email should be valid format: johnsus@email.xyz")
+    // TODO: Email Regex Pattern
     private String email;
 
     private Boolean isDriver;
