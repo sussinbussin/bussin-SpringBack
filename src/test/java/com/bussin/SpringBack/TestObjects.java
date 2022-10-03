@@ -45,11 +45,11 @@ public class TestObjects {
             .build();
 
     public static final DriverDTO DRIVER_DTO = DriverDTO.builder()
-            .carPlate("SAA12345B")
-                .modelAndColour("Flamingo MrBean Car")
-                .capacity(2)
-                .fuelType("TypePremium")
-                .build();
+            .carPlate("SAA1234A")
+            .modelAndColour("Yellow Submarine")
+            .capacity(4)
+            .fuelType("TypePremium")
+            .build();
 
     public static final PlannedRoute PLANNED_ROUTE = PlannedRoute.builder()
             .id(UUID.randomUUID())
