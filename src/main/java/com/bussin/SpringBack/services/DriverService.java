@@ -60,9 +60,9 @@ public class DriverService {
     }
 
     public Set<PlannedRoute> getAllPlannedRoutesByDriver(String carPlate) {
-        return driverRepository.findDriverByCarPlate(carPlate).map(found ->
-                found.getPlannedRoutes()).orElseThrow(()
-                -> new DriverNotFoundException("No driver with car plate " + carPlate));
+        return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
+            return found.getPlannedRoutes();
+        }).orElseThrow(() -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
 
     @Transactional
