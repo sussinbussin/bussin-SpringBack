@@ -4,6 +4,7 @@ import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
+import java.util.Set;
 
 @Service
 public class DriverService {
@@ -55,6 +57,12 @@ public class DriverService {
                 .orElseThrow(() ->
                         new DriverNotFoundException(
                                 "No driver found with car plate " + carPlate));
+    }
+
+    public Set<PlannedRoute> getAllPlannedRoutesByDriver(String carPlate) {
+        return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
+            return found.getPlannedRoutes();
+        }).orElseThrow(() -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
 
     @Transactional
