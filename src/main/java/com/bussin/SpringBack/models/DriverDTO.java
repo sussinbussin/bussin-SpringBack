@@ -25,7 +25,7 @@ public class DriverDTO implements Serializable, Cloneable {
     @NotNull(message = "Car Plate should not be empty")
     private String carPlate;
 
-    @Size(max = 20, message = "Not longer than 20 characters")
+    @Size(max = 255, message = "Not longer than 255 characters")
     @NotNull(message = "Model and colour should not be empty")
     private String modelAndColour;
 

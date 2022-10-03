@@ -42,6 +42,7 @@ public class Ride implements Serializable, Cloneable{
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
+    @NotNull
     private Timestamp timestamp;
 
     @NotNull
