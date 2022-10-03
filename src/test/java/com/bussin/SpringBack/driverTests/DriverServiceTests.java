@@ -60,11 +60,7 @@ public class DriverServiceTests {
 
     @Test
     public void addNewDriver_success() {
-
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
-        driverDTO.setCarPlate("SAA1234A");
-        driverDTO.setModelAndColour("Yellow Submarine");
-        driverDTO.setCapacity(4);
 
         UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
@@ -96,7 +92,7 @@ public class DriverServiceTests {
 
     @Test
     public void addNewDriver_invalidParams_exception() {
-        UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+        UUID uuid = UUID.randomUUID();
 
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
         driverDTO.setCapacity(1);
@@ -109,7 +105,7 @@ public class DriverServiceTests {
 
     @Test
     public void addNewDriver_userNotFound_exception(){
-        UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+        UUID uuid = UUID.randomUUID();
 
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
@@ -124,8 +120,7 @@ public class DriverServiceTests {
     @Test
     public void updateDriver_success() {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
-        driverDTO.setCarPlate("SAA1234A");
-        driverDTO.setCapacity(4);
+        driverDTO.setModelAndColour("Flamingo MrBean Car");
 
         User userResult = TestObjects.USER.clone();
         userResult.setIsDriver(true);
@@ -155,9 +150,6 @@ public class DriverServiceTests {
     @Test
     public void updateDriver_nonUniqueParams_exception() {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
-        driverDTO.setCarPlate("SAA1234A");
-        driverDTO.setModelAndColour("Yellow Submarine");
-        driverDTO.setCapacity(4);
 
         User userResult = TestObjects.USER.clone();
         userResult.setIsDriver(true);
@@ -188,9 +180,6 @@ public class DriverServiceTests {
         UUID id = UUID.randomUUID();
 
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
-        driverDTO.setCarPlate("SAA1234A");
-        driverDTO.setModelAndColour("Yellow Submarine");
-        driverDTO.setCapacity(4);
 
         UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setId(id);
