@@ -179,8 +179,6 @@ public class DriverServiceTests {
     public void deleteDriver_success() {
         UUID id = UUID.randomUUID();
 
-        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
-
         UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setId(id);
         userDTO.setIsDriver(false);
@@ -207,7 +205,7 @@ public class DriverServiceTests {
                                 userResultGood:null);
 
         assertEquals(driverService
-                .deleteDriver(driverDTO.getCarPlate()), driverResult);
+                .deleteDriver(driverResult.getCarPlate()), driverResult);
 
         verify(driverRepository, times(1))
                 .findDriverByCarPlate(driverResult.getCarPlate());
@@ -218,7 +216,7 @@ public class DriverServiceTests {
      @Test
      public void deleteDriver_doesntExist_exception() {
         String carPlate = "SAA1234B";
-        when(driverRepository.findDriverByCarPlate(carPlate))
+        when(driverRepository.findDriverByCarPlate(any(String.class)))
                 .thenReturn(Optional.empty());
 
         assertThrows(DriverNotFoundException.class,

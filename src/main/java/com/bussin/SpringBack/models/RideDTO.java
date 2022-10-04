@@ -18,7 +18,7 @@ import javax.validation.Validator;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -42,12 +42,12 @@ public class RideDTO implements Serializable, Cloneable {
     @NotNull(message = "How many passengers can this ride accommodate?")
     private Integer passengers;
 
-    @Pattern(regexp = "^[0-9]{6}$")
     @NotNull
+    @Size(max = 512)
     private String rideFrom;
 
-    @Pattern(regexp = "^[0-9]{6}$")
     @NotNull
+    @Size(max = 512)
     private String rideTo;
 
     public void validate() {
