@@ -25,9 +25,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -54,6 +54,7 @@ public class UserDTO implements Serializable, Cloneable {
     private String name;
 
     @NotNull(message = "Address should not be empty")
+    @Size(max = 512)
     private String address;
 
     @NotNull(message = "Date of Birth should not be empty")

@@ -19,7 +19,7 @@ public class TestObjects {
     public static final User USER = User.builder()
             .nric("S1234567A")
             .name("Test Guy")
-            .address("444333")
+            .address("place_id:ChIJOVLiR10F2jERTB2-cCujA4o")
             .dob(new Date(System.currentTimeMillis()))
             .mobile("90009000")
             .email("testguy@test.com")
@@ -30,7 +30,7 @@ public class TestObjects {
             .id(UUID.randomUUID())
             .nric("S1234567A")
             .name("Test Guy")
-            .address("444333")
+            .address("place_id:ChIJOVLiR10F2jERTB2-cCujA4o")
             .dob(new Date(System.currentTimeMillis()))
             .mobile("90009000")
             .email("testguy@test.com")
@@ -53,15 +53,15 @@ public class TestObjects {
 
     public static final PlannedRoute PLANNED_ROUTE = PlannedRoute.builder()
             .id(UUID.randomUUID())
-            .plannedFrom("188065")
-            .plannedTo("119077")
+            .plannedFrom("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
+            .plannedTo("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
             .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
             .capacity(1)
             .build();
 
     public static final PlannedRouteDTO PLANNED_ROUTE_DTO = PlannedRouteDTO.builder()
-            .plannedFrom("188065")
-            .plannedTo("119077")
+            .plannedFrom("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
+            .plannedTo("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
             .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
             .capacity(3)
             .build();
@@ -69,8 +69,8 @@ public class TestObjects {
     public static final RideDTO RIDE_DTO = RideDTO.builder()
             .timestamp(new Timestamp(System.currentTimeMillis()))
             .passengers(1)
-            .rideTo("188605")
-            .rideFrom("119077")
+            .rideTo("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
+            .rideFrom("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
             .build();
 
     public static final Ride RIDE = Ride.builder()
@@ -78,7 +78,7 @@ public class TestObjects {
             .timestamp(new Timestamp(System.currentTimeMillis()))
             .passengers(1)
             .cost(new BigDecimal(6.90))
-            .rideTo("188605")
-            .rideFrom("119077")
+            .rideTo("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
+            .rideFrom("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
             .build();
 }
