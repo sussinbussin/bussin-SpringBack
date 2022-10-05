@@ -27,6 +27,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -144,27 +145,23 @@ public class DriverServiceTests {
         verify(driverRepository, times(1)).findAll();
     }
 
-//     @Test
-//     public void getAllPlannedRoutesByDriver_success() {
-//         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
-//         Driver driver = modelMapper.map(driverDTO, Driver.class);
+     @Test
+     public void getAllPlannedRoutesByDriver_success() {
+         Driver driver = TestObjects.DRIVER.clone();
 
-//         List<Driver> driverList = new ArrayList<>();
+         Set<PlannedRoute> plannedRouteResult = new HashSet<>();
 
-//         Set<PlannedRoute> plannedRouteResult = new HashSet<>();
+         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+         plannedRoute.setDriver(driver);
+         plannedRouteResult.add(plannedRoute);
+         driver.setPlannedRoutes(plannedRouteResult);
 
-//         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
-//         plannedRoute.setDriver(driver);
+         when(driverRepository.findDriverByCarPlate(driver.getCarPlate())).thenReturn(Optional.of(driver));
 
-//         plannedRouteResult.add(plannedRoute);
+         assertEquals(driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()), plannedRouteResult);
 
-//         when(driverRepository.findDriverByCarPlate(driverDTO.getCarPlate())).thenReturn(Optional.of(driver));
-//         when(driverService.getAllPlannedRoutesByDriver(driver.getCarPlate())).thenReturn(plannedRouteResult);
-
-//         assertEquals(driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()), plannedRouteResult);
-
-//         verify(driverService, times(1)).getAllPlannedRoutesByDriver(driver.getCarPlate());
-//     }
+         verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
+     }
 
 
     @Test
