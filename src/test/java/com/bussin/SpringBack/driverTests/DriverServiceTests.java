@@ -7,6 +7,7 @@ import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.UserService;
@@ -22,8 +23,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -116,6 +122,47 @@ public class DriverServiceTests {
 
         verify(driverRepository, never()).save(any(Driver.class));
     }
+
+    @Test
+    public void getAllDrivers_success() {
+        ArrayList<Driver> drivers = new ArrayList<>();
+
+        drivers.add(TestObjects.DRIVER.clone());
+
+        when(driverRepository.findAll()).thenReturn(drivers);
+
+        assertEquals(driverService.getAllDrivers(), drivers);
+
+        verify(driverRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void getAllDrivers_noDrivers_success() {
+        when(driverRepository.findAll()).thenReturn(new ArrayList<>());
+
+        assertEquals(driverService.getAllDrivers(), new ArrayList<>());
+
+        verify(driverRepository, times(1)).findAll();
+    }
+
+     @Test
+     public void getAllPlannedRoutesByDriver_success() {
+         Driver driver = TestObjects.DRIVER.clone();
+
+         Set<PlannedRoute> plannedRouteResult = new HashSet<>();
+
+         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+         plannedRoute.setDriver(driver);
+         plannedRouteResult.add(plannedRoute);
+         driver.setPlannedRoutes(plannedRouteResult);
+
+         when(driverRepository.findDriverByCarPlate(driver.getCarPlate())).thenReturn(Optional.of(driver));
+
+         assertEquals(driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()), plannedRouteResult);
+
+         verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
+     }
+
 
     @Test
     public void updateDriver_success() {
