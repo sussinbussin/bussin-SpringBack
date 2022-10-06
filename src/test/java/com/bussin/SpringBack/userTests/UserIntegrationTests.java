@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.userTests;
 
 import com.bussin.SpringBack.TestObjects;
+import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.services.UserService;
@@ -12,7 +13,10 @@ import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {TestContextConfig.class, H2JpaConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserIntegrationTests {
 
     @LocalServerPort
@@ -51,25 +56,37 @@ public class UserIntegrationTests {
     @Autowired
     private UserService userService;
 
-    UserDTO userDTO = TestObjects.USER_DTO.clone();
+    @Autowired
+    private CognitoLogin cognitoLogin;
+
+    private String idToken;
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    @BeforeEach
+    private void setUp() throws IOException {
+        idToken = "Bearer " + cognitoLogin.getAuthToken();
+        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+    }
 
     @Test
     public void getAllUsers_noUsers_success() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
     }
 
     @Test
     public void getAllUsers_success() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.COGNITO_USER_DTO.clone();
         userDTO.setIsDriver(false);
 
-        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -80,22 +97,20 @@ public class UserIntegrationTests {
                         new TypeReference<>() {
                         });
 
-        //Because ID will change
-        userDTO.setId(user.getId());
-
         UserDTO dest = UserDTO.builder().build();
         modelMapper.map(users.get(0), dest);
-        assertEquals(dest, userDTO);
+        assertEquals(dest.getNric(), userDTO.getNric());
     }
 
     @Test
     public void getFullUserById_userExists_success() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users"
                 + "/full/" + user.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -109,12 +124,13 @@ public class UserIntegrationTests {
 
     @Test
     public void getUserById_userExists_success() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users/"
                 + user.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -130,6 +146,7 @@ public class UserIntegrationTests {
         HttpUriRequest request =
                 new HttpGet(baseUrl + port
                         + "/api/v1/users/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -141,6 +158,7 @@ public class UserIntegrationTests {
     public void getUserById_badUUID_400() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port
                 + "/api/v1/users/beans");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -150,13 +168,14 @@ public class UserIntegrationTests {
 
     @Test
     public void getUserByEmail_userExists_success() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
                 "/byEmail/"
                 + user.getEmail());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -171,6 +190,7 @@ public class UserIntegrationTests {
     public void getUserByEmail_userDoesntExist_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
                 "/byEmail/Robert@gmail.com");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -182,12 +202,14 @@ public class UserIntegrationTests {
 
     @Test
     public void createNewUser_validUser_success() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setId(null);
         userDTO.setIsDriver(false);
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/users");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
         StringEntity entity =
                 new StringEntity(new ObjectMapper().writeValueAsString(userDTO));
         request.setEntity(entity);
@@ -205,12 +227,14 @@ public class UserIntegrationTests {
 
     @Test
     public void createNewUser_invalidUser_400() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
         userDTO.setMobile("6969696969");
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/users");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
         StringEntity entity =
                 new StringEntity(new ObjectMapper().writeValueAsString(userDTO));
         request.setEntity(entity);
@@ -220,22 +244,23 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 400);
+        assertEquals(400, httpResponse.getCode());
     }
 
     @Test
     public void updateUserById_success() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
 
-        UserDTO userDTOUpdated = this.userDTO;
+        UserDTO userDTOUpdated = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
         userDTO.setName("Testing123");
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/users/" + user.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
         StringEntity entity =
                 new StringEntity(
                         new ObjectMapper().writeValueAsString(userDTOUpdated));
@@ -255,7 +280,7 @@ public class UserIntegrationTests {
 
     @Test
     public void updateUser_invalidUser_400() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
 
         UserDTO userDTOInvalidUpdate = UserDTO.builder()
@@ -271,6 +296,7 @@ public class UserIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/users/" + user.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(new ObjectMapper()
                 .writeValueAsString(userDTOInvalidUpdate));
@@ -287,11 +313,12 @@ public class UserIntegrationTests {
 
     @Test
     public void updateUser_userDoesntExist_404() throws IOException {
-        UserDTO userDTOUpdated = this.userDTO;
+        UserDTO userDTOUpdated = TestObjects.USER_DTO.clone();
         userDTOUpdated.setIsDriver(false);
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/users/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(new ObjectMapper()
                 .writeValueAsString(userDTOUpdated));
@@ -308,12 +335,13 @@ public class UserIntegrationTests {
 
     @Test
     public void deleteUser_success() throws IOException {
-        UserDTO userDTO = this.userDTO;
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.setIsDriver(false);
 
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpDelete(baseUrl + port
                 + "/api/v1/users/" + user.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -328,6 +356,7 @@ public class UserIntegrationTests {
     public void deleteUser_userDoesntExist_404() throws IOException {
         HttpUriRequest request = new HttpDelete(baseUrl + port
                 + "/api/v1/users/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
