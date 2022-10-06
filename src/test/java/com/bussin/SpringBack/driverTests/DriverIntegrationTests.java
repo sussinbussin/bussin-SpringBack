@@ -1,6 +1,7 @@
  package com.bussin.SpringBack.driverTests;
 
 import com.bussin.SpringBack.TestObjects;
+import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.User;
@@ -15,7 +16,9 @@ import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {TestContextConfig.class, H2JpaConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DriverIntegrationTests {
 
     @LocalServerPort
@@ -56,9 +60,23 @@ public class DriverIntegrationTests {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CognitoLogin cognitoLogin;
+
+    private String idToken;
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    @BeforeEach
+    private void setUp() throws IOException {
+        idToken = "Bearer " + cognitoLogin.getAuthToken();
+        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+    }
+
     @Test
     public void getAllDrivers_noDrivers_success() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/driver");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -76,6 +94,7 @@ public class DriverIntegrationTests {
         User user = userService.createNewUser(userDTO);
         driverService.addNewDriver(user.getId(), driverDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/driver/");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -102,6 +121,7 @@ public class DriverIntegrationTests {
         driverService.addNewDriver(user.getId(), driverDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port
                 + "/api/v1/driver/" + driverDTO.getCarPlate());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -120,6 +140,7 @@ public class DriverIntegrationTests {
     public void getDriverByCarPlate_noDriver_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port
                 + "/api/v1/driver/Beans");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -137,6 +158,7 @@ public class DriverIntegrationTests {
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/driver/" + user.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity =
                 new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
@@ -163,6 +185,7 @@ public class DriverIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/driver/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity =
                 new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
@@ -187,6 +210,7 @@ public class DriverIntegrationTests {
         User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/driver/" + user.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity =
                 new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
@@ -217,6 +241,7 @@ public class DriverIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/driver/" + driverDTO.getCarPlate());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(new ObjectMapper()
                 .writeValueAsString(updatedDriverDTO));
@@ -248,6 +273,7 @@ public class DriverIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/driver/" + updatedDriverDTO.getCarPlate());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(new ObjectMapper()
                 .writeValueAsString(updatedDriverDTO));
@@ -277,6 +303,7 @@ public class DriverIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/driver/" + driverDTO.getCarPlate());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(new ObjectMapper()
                 .writeValueAsString(updatedDriverDTO));
@@ -302,6 +329,7 @@ public class DriverIntegrationTests {
 
         HttpUriRequest request = new HttpDelete(baseUrl + port
                 + "/api/v1/driver/" + driverDTO.getCarPlate());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -321,6 +349,7 @@ public class DriverIntegrationTests {
     public void deleteDriver_noDriver_404() throws IOException {
         HttpUriRequest request = new HttpDelete(baseUrl + port
                 + "/api/v1/driver/" + "SSS13370Z");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);

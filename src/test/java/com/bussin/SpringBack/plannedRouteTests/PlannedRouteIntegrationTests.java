@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.plannedRouteTests;
 
 import com.bussin.SpringBack.TestObjects;
+import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.PlannedRouteService;
@@ -19,7 +20,9 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {TestContextConfig.class, H2JpaConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlannedRouteIntegrationTests {
     @LocalServerPort
     private int port;
@@ -68,10 +72,24 @@ public class PlannedRouteIntegrationTests {
     @Autowired
     private PlannedRouteService plannedRouteService;
 
+    @Autowired
+    private CognitoLogin cognitoLogin;
+
+    private String idToken;
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    @BeforeEach
+    private void setUp() throws IOException {
+        idToken = "Bearer " + cognitoLogin.getAuthToken();
+        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+    }
+
     @Test
     public void getAllRoutes_noRoutes_Success() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/planned");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -95,7 +113,8 @@ public class PlannedRouteIntegrationTests {
                                 .createNewPlannedRoute(plannedRouteDTO, driverDTO.getCarPlate());
 
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
-                "/planned"); 
+                "/planned");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
         
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -129,6 +148,7 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/planned/" + plannedRoute.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -148,6 +168,7 @@ public class PlannedRouteIntegrationTests {
     public void getPlannedRouteById_doesntExist_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/planned/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -188,6 +209,7 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/planned/" + plannedRoute.getId() + "/passengers");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -204,6 +226,7 @@ public class PlannedRouteIntegrationTests {
     public void getPassengersOnRoute_noRoute_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/planned/" + UUID.randomUUID() + "/passengers");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -225,6 +248,8 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/planned/" + driverDTO.getCarPlate());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(plannedRouteDTO));
 
@@ -261,6 +286,8 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/planned/" + driverDTO.getCarPlate());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(plannedRouteDTO));
 
@@ -280,6 +307,8 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/planned/" + "SAA1345A");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(plannedRouteDTO));
 
@@ -316,6 +345,7 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/planned/" + plannedRoute.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(updatedPlannedRouteDTO));
@@ -358,6 +388,7 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/planned/" + plannedRoute.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(updatedPlannedRouteDTO));
@@ -378,6 +409,7 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/planned/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(updatedPlannedRouteDTO));
@@ -410,6 +442,7 @@ public class PlannedRouteIntegrationTests {
 
         HttpUriRequest request = new HttpDelete(baseUrl + port + "/api/v1" +
                 "/planned/" + plannedRoute.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -429,6 +462,7 @@ public class PlannedRouteIntegrationTests {
     public void deletePlannedRoute_noRoute_404() throws IOException {
         HttpUriRequest request = new HttpDelete(baseUrl + port + "/api/v1" +
                 "/planned/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);

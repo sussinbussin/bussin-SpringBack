@@ -30,6 +30,9 @@ jobs:
       - name: Build with Maven
         env:
           gmapsapiKey: ${{ secrets.gmapsapiKey }}
+          COGNITO_CLIENTID: ${{secrets.COGNITO_CLIENTID}}
+          COGNITO_PASSWORD: ${{secrets.COGNITO_PASSWORD}}
+          COGNITO_USERNAME: ${{secrets.COGNITO_USERNAME}}
           SPRING_DATASOURCE_USERNAME: root
           SPRING_DATASOURCE_PASSWORD: root
         run: |
