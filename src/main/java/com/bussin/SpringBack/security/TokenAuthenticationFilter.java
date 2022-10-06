@@ -31,8 +31,8 @@ import java.util.Date;
 
 public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER = new AntPathRequestMatcher(
-            "/login", "POST");
+    private static final AntPathRequestMatcher DEFAULT_ANT_PATH_REQUEST_MATCHER
+            = new AntPathRequestMatcher("/**");
 
     private UserService userService;
 
@@ -52,9 +52,8 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        String token = request.getHeader("Authentication");
-        User user = userFromToken(token);
-
+        String token = request.getHeader("Authorization");
+        User user = userFromToken(token);;
         UsernamePasswordAuthenticationToken authentication
                 = new UsernamePasswordAuthenticationToken(user, null,
                 Collections.singletonList(new SimpleGrantedAuthority("user")));
@@ -73,7 +72,9 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
     }
 
     public static String validateToken(String token) throws JsonProcessingException {
-        if (token != null && !token.isEmpty()) {
+        if (token != null && token.startsWith("Bearer ")) {
+            String trimmedToken = token.substring(7).trim();
+
             String aws_cognito_region = "ap-southeast-1";
             String aws_user_pools_id = "ap-southeast-1_cAJ9EgqL1";
             RSAKeyProvider keyProvider = new AwsCognitoRSAKeyProvider(aws_cognito_region, aws_user_pools_id);
@@ -81,13 +82,14 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
             JWTVerifier jwtVerifier = JWT.require(algorithm)
                     .build();
 
-            DecodedJWT decodedJWT = jwtVerifier.verify(token);
+            DecodedJWT decodedJWT = jwtVerifier.verify(trimmedToken);
             if(decodedJWT.getExpiresAt().before(new Date(System.currentTimeMillis()))){
                 throw new BadCredentialsException("Expired");
             }
 
+            System.out.println(new String(Base64.getDecoder().decode(decodedJWT.getPayload())));
             ObjectNode node = new ObjectMapper().readValue(new String(Base64.getDecoder().decode(decodedJWT.getPayload())), ObjectNode.class);
-            return node.get("cognito:username").asText().replaceAll("^\"|\"$", "");
+            return node.get("email").asText().replaceAll("^\"|\"$", "");
         }
         throw new BadCredentialsException("Cannot log in");
     }
