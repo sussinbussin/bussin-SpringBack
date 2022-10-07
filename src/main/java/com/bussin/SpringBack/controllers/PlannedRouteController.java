@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,15 +41,20 @@ public class PlannedRouteController {
 
     @Operation(summary = "Gets passengers on planned route")
     @GetMapping("/{routeId}/passengers")
-    public List<UserPublicDTO> getPassengersOnRoute(@Valid @PathVariable UUID
-                                                    routeId) {
+    public List<UserPublicDTO> getPassengersOnRoute(@Valid @PathVariable UUID routeId) {
         return plannedRouteService.getPassengersOnRoute(routeId);
+    }
+
+    @Operation(summary = "Gets all routes after specific time")
+    @GetMapping("/after/{dateTime}")
+    public List<PlannedRoute> getPlannedRouteAfterTime(@Valid @PathVariable LocalDateTime dateTime) {
+        return plannedRouteService.getPlannedRouteAfterTime(dateTime);
     }
 
     @Operation(summary = "Gets distance between two addresses")
     @GetMapping("/distance")
     public BigDecimal getDistanceBetween(@Pattern(regexp = "^[0-9]{6}$") @PathVariable String tripStart,
-                                         @Pattern(regexp = "^[0-9]{6}$") @PathVariable String tripEnd) {
+            @Pattern(regexp = "^[0-9]{6}$") @PathVariable String tripEnd) {
         return plannedRouteService.getDistanceBetween(tripStart, tripEnd);
     }
 
@@ -56,16 +62,15 @@ public class PlannedRouteController {
             "destination")
     @GetMapping("/suggestion")
     public List<PlannedRoute> getSuggestedRoutes(@RequestParam String tripStart,
-                                                 @RequestParam String tripEnd) {
+            @RequestParam String tripEnd) {
         return plannedRouteService.getSuggestedRoutes(tripStart, tripEnd);
     }
 
     @Operation(summary = "Creates a planned route for a Driver")
     @Transactional
     @PostMapping("/{carPlate}")
-    public PlannedRoute createNewPlannedRoute
-            (@RequestBody @Valid PlannedRouteDTO plannedRouteDTO,
-             @PathVariable String carPlate) {
+    public PlannedRoute createNewPlannedRoute(@RequestBody @Valid PlannedRouteDTO plannedRouteDTO,
+            @PathVariable String carPlate) {
         return plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                 carPlate);
     }
@@ -73,9 +78,8 @@ public class PlannedRouteController {
     @Operation(summary = "Updates a planned route")
     @Transactional
     @PutMapping("/{routeId}")
-    public PlannedRoute updatePlannedRouteById
-            (@Valid @PathVariable UUID routeId,
-             @Valid @RequestBody PlannedRouteDTO plannedRouteDTO) {
+    public PlannedRoute updatePlannedRouteById(@Valid @PathVariable UUID routeId,
+            @Valid @RequestBody PlannedRouteDTO plannedRouteDTO) {
         return plannedRouteService.updatePlannedRouteById(routeId,
                 plannedRouteDTO);
     }

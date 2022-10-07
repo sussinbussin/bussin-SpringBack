@@ -131,6 +131,7 @@ public class PlannedRouteServiceTests {
                 .findById(plannedRoute.getId());
     }
 
+
     @Test
     public void getPassengersOnRoute_noRoute_failure() {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
@@ -162,6 +163,24 @@ public class PlannedRouteServiceTests {
                         .createNewPlannedRoute(plannedRouteDTO, driver.getCarPlate()));
         verify(plannedRoutesRepository, times(1))
                 .save(any(PlannedRoute.class));
+    }
+
+    @Test
+    public void getAllPlannedRoutesAfterTime_success() {
+        List<PlannedRoute> plannedRouteResult = new ArrayList<>();
+
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+        plannedRouteResult.add(plannedRoute);
+
+        when(plannedRoutesRepository.findPlannedRouteByDateTime(
+                        plannedRoute.getDateTime()))
+                        .thenReturn(plannedRouteResult);
+
+        assertEquals(plannedRouteService.getPlannedRouteAfterTime(
+                        plannedRoute.getDateTime()), plannedRouteResult); 
+                        
+        verify(plannedRoutesRepository, times(1)).findPlannedRouteByDateTime(
+                        plannedRoute.getDateTime());
     }
 
     @Test

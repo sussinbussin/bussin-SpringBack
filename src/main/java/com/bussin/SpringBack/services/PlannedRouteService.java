@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -101,6 +102,10 @@ public class PlannedRouteService {
         throw new PlannedRouteNotFoundException(String.format("Cannot find " +
                 "any routes suiting a journey from %s to %s",
                 tripStart, tripEnd));
+    }
+
+    public List<PlannedRoute> getPlannedRouteAfterTime(LocalDateTime dateTime) {
+        return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime);
     }
 
     //Will link to distance service

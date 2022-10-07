@@ -125,7 +125,7 @@ public class ExceptionHandling {
     }
 
     /**
-     * Handles DriverNotFoundException.
+     * Handles PlannedRouteNotFoundException.
      *
      * @param e DriverNotFoundException
      * @return Response entity with HTTP code 404
