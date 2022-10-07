@@ -1,6 +1,4 @@
 FROM openjdk:17-slim
-CMD echo "Starting"
-CMD echo "SPRING_DATASOURCE_URL = $SPRING_DATASOURCE_URL"
 ARG uid=1009
 
 RUN groupadd --gid ${uid} -r app \
