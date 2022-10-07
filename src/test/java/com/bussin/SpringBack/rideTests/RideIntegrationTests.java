@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.rideTests;
 
 import com.bussin.SpringBack.TestObjects;
+import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.PlannedRouteDTO;
@@ -25,7 +26,9 @@ import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +39,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,6 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {TestContextConfig.class, H2JpaConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RideIntegrationTests {
     @LocalServerPort
     private int port;
@@ -72,10 +73,24 @@ public class RideIntegrationTests {
     @Autowired
     private RideService rideService;
 
+    @Autowired
+    private CognitoLogin cognitoLogin;
+
+    private String idToken;
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    @BeforeEach
+    private void setUp() throws IOException {
+        idToken = "Bearer " + cognitoLogin.getAuthToken();
+        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+    }
+
     @Test
     public void getAllRides_noRides_success() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/ride");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -106,6 +121,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/ride");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -145,6 +161,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/ride/" + ride.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -164,6 +181,7 @@ public class RideIntegrationTests {
     public void getRideByID_noRide_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/ride/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -198,6 +216,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(rideCreationDTO));
@@ -248,6 +267,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(rideCreationDTO));
@@ -289,6 +309,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(rideCreationDTO));
@@ -329,6 +350,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(rideCreationDTO));
@@ -370,6 +392,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/ride/" + ride.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(updatedRideDTO));
@@ -421,6 +444,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
                 "/ride/" + ride.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(updatedRideDTO));
@@ -448,14 +472,16 @@ public class RideIntegrationTests {
         PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
         plannedRouteDTO.setCapacity(3);
 
-        plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
+        PlannedRoute plannedRoute =
+                plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                 driverDTO.getCarPlate());
 
         RideDTO updatedRideDTO = TestObjects.RIDE_DTO.clone();
         updatedRideDTO.setPassengers(3);
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
-                "/ride/" + "a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
+                "/ride/" + plannedRoute.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity = new StringEntity(objectMapper
                 .writeValueAsString(updatedRideDTO));
@@ -494,6 +520,7 @@ public class RideIntegrationTests {
 
         HttpUriRequest request = new HttpDelete(baseUrl + port + "/api/v1" +
                 "/ride/" + ride.getId());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
@@ -513,6 +540,7 @@ public class RideIntegrationTests {
     public void deleteRideByID_noRide_404() throws IOException {
         HttpUriRequest request = new HttpDelete(baseUrl + port + "/api/v1" +
                 "/ride/" + UUID.randomUUID());
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);

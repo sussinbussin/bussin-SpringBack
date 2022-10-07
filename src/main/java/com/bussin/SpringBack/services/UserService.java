@@ -6,6 +6,9 @@ import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -46,6 +49,11 @@ public class UserService {
 
     public UserDTO getUserByEmail(String email) {
         return userRepository.findUserByEmail(email).orElseThrow(()
+                -> new UserNotFoundException("No user with email " + email));
+    }
+
+    public User getFullUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException("No user with email " + email));
     }
 
