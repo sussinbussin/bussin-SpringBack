@@ -513,7 +513,7 @@ public class RideIntegrationTests {
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                         driverDTO.getCarPlate());
 
-        RideDTO rideDTO = TestObjects.RIDE_DTO;
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         Ride ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());

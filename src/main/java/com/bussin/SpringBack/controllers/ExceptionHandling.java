@@ -173,7 +173,7 @@ public class ExceptionHandling {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Error> handleException(final Exception e) {
-        System.out.println(e);
+        System.out.println("500 caused by " +e);
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -80,7 +80,7 @@ public class DriverServiceTests {
 
         when(userService.getUserById(userDTO.getId()))
                 .thenReturn(userDTO);
-        when(userService.updateUser(userDTO.getId(), userDTO))
+        when(userService.updateUser(any(UUID.class), any(UserDTO.class)))
                 .thenAnswer(invocationOnMock ->
                     ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
                             //Will end test if bad
@@ -245,7 +245,7 @@ public class DriverServiceTests {
         when(driverRepository.findDriverByCarPlate(driverResult.getCarPlate()))
                 .thenReturn(Optional.of(driverResult));
 
-        when(userService.updateUser(userDTO.getId(), userDTO))
+        when(userService.updateUser(any(UUID.class), any(UserDTO.class)))
                 .thenAnswer(invocationOnMock ->
                         ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
                                 //Will end test if bad
