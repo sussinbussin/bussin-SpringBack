@@ -245,7 +245,7 @@ public class DriverServiceTests {
         when(driverRepository.findDriverByCarPlate(driverResult.getCarPlate()))
                 .thenReturn(Optional.of(driverResult));
 
-        when(userService.updateUser(userDTO.getId(), userDTO))
+        when(userService.updateUser(userDTO.getId(), any(UserDTO.class)))
                 .thenAnswer(invocationOnMock ->
                         ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
                                 //Will end test if bad
