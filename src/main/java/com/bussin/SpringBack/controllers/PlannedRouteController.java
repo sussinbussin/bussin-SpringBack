@@ -46,7 +46,7 @@ public class PlannedRouteController {
     }
 
     @Operation(summary = "Gets all routes after specific time")
-    @GetMapping("/{dateTime}")
+    @GetMapping("/after/{dateTime}")
     public List<PlannedRoute> getPlannedRouteAfterTime(@Valid @PathVariable LocalDateTime dateTime) {
         return plannedRouteService.getPlannedRouteAfterTime(dateTime);
     }
