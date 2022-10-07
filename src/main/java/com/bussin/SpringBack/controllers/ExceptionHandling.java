@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.controllers;
 
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.bussin.SpringBack.exception.CannotConnectToDistanceServerException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
@@ -82,6 +83,19 @@ public class ExceptionHandling {
     public ResponseEntity<Void> handleConstraintViolationException(
             final ConstraintViolationException e) {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles SignatureVerificationException.
+     *
+     * @param e SignatureVerificationException
+     * @return Response entity with HTTP code 401
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(SignatureVerificationException.class)
+    public ResponseEntity<Void> handleSignatureVerificationException(
+            final SignatureVerificationException e) {
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
     /**
