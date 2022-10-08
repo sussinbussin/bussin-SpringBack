@@ -283,6 +283,49 @@ public class RideIntegrationTests {
     }
 
     @Test
+    public void createNewRide_passengersOverCapacity_400() throws IOException {
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
+
+        User user = userService.createNewUser(userDTO);
+
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+
+        driverService.addNewDriver(user.getId(), driverDTO);
+
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
+
+        PlannedRoute plannedRoute =
+                plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
+                        driverDTO.getCarPlate());
+
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setPassengers(5);
+
+        RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
+                .rideDTO(rideDTO)
+                .plannedRouteUUID(plannedRoute.getId())
+                .userUUID(user.getId())
+                .build();
+
+        HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
+                "/ride/");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
+        StringEntity entity = new StringEntity(objectMapper
+                .writeValueAsString(rideCreationDTO));
+
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(400, httpResponse.getCode());
+    }
+
+    @Test
     public void createNewRide_missingUser_404() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.clone();

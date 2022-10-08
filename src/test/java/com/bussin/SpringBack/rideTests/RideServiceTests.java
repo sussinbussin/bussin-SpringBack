@@ -1,9 +1,9 @@
 package com.bussin.SpringBack.rideTests;
 
 import com.bussin.SpringBack.TestObjects;
+import com.bussin.SpringBack.exception.RideException;
 import com.bussin.SpringBack.exception.RideNotFoundException;
 import com.bussin.SpringBack.models.Driver;
-import com.bussin.SpringBack.models.GasPriceKey;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.Ride;
 import com.bussin.SpringBack.models.RideDTO;
@@ -106,6 +106,24 @@ public class RideServiceTests {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
 
         assertThrows(ConstraintViolationException.class,
+                () -> rideService.createNewRide(rideDTO,
+                        user.getId(), plannedRoute.getId()));
+
+        verify(rideRepository, never()).save(any(Ride.class));
+    }
+
+    @Test
+    public void createNewRide_passengersOverCapacity_exception() {
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setPassengers(5);
+
+	User user = TestObjects.USER.clone();
+
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+
+        when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId())).thenReturn(Optional.of(plannedRoute));
+
+        assertThrows(RideException.class,
                 () -> rideService.createNewRide(rideDTO,
                         user.getId(), plannedRoute.getId()));
 

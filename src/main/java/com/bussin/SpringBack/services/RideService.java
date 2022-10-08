@@ -2,11 +2,6 @@ package com.bussin.SpringBack.services;
 
 import javax.transaction.Transactional;
 
-import com.bussin.SpringBack.config.GeoApiConfig;
-import com.google.maps.DistanceMatrixApi;
-import com.google.maps.GeoApiContext;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.DistanceMatrix;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +10,6 @@ import com.bussin.SpringBack.repositories.*;
 import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.exception.*;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -60,11 +53,12 @@ public class RideService {
         ride.setCost(pricingService.getPriceOfRide(plannedRoute));
         ride.setUser(found);
 
-        //TODO: Check that passengers does not exceed capacity
+        if (plannedRoute.getCapacity() < ride.getPassengers()) {
+            throw new RideException("Passenger is over the car's capacity");
+        }
 
         ride.setPlannedRoute(plannedRoute);
         return rideRepository.save(ride);
-
     }
 
     @Transactional
