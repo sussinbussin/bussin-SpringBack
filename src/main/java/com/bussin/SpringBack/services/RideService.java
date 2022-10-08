@@ -23,7 +23,7 @@ public class RideService {
     @Autowired
     public RideService(ModelMapper modelMapper, RideRepository rideRepository,
             PlannedRoutesRepository plannedRoutesRepository,
-                       UserService userService, PricingService pricingService) {
+            UserService userService, PricingService pricingService) {
         this.modelMapper = modelMapper;
         this.rideRepository = rideRepository;
         this.plannedRoutesRepository = plannedRoutesRepository;
@@ -36,24 +36,31 @@ public class RideService {
     }
 
     public Ride getRideById(UUID uuid) {
-        return rideRepository.findById(uuid).orElseThrow(() ->
-                new RideNotFoundException("No ride with id " + uuid));
+        return rideRepository.findById(uuid).orElseThrow(() -> new RideNotFoundException("No ride with id " + uuid));
     }
 
     @Transactional
     public Ride createNewRide(RideDTO rideDTO, UUID userId, UUID plannedRouteId) {
         rideDTO.validate();
-        User found =  userService.getFullUserById(userId);
+        User found = userService.getFullUserById(userId);
         Ride ride = modelMapper.map(rideDTO, Ride.class);
         PlannedRoute plannedRoute = plannedRoutesRepository
                 .findPlannedRouteById(plannedRouteId)
-                .orElseThrow(() ->
-                        new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
+                .orElseThrow(() -> new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
 
         ride.setCost(pricingService.getPriceOfRide(plannedRoute));
         ride.setUser(found);
 
-        if (plannedRoute.getCapacity() < ride.getPassengers()) {
+        int passengersOnBoard = 0;
+
+        if (plannedRoute.getRides() != null) {
+            for (Ride rideFound : plannedRoute.getRides()) {
+                passengersOnBoard += rideFound.getPassengers();
+            }
+        }
+
+        if (ride.getPassengers() > plannedRoute.getCapacity() ||
+                (passengersOnBoard + ride.getPassengers()) > plannedRoute.getCapacity()) {
             throw new RideException("Passenger is over the car's capacity");
         }
 

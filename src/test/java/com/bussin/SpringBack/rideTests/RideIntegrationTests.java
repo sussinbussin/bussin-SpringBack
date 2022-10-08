@@ -39,7 +39,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -301,6 +303,56 @@ public class RideIntegrationTests {
 
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
         rideDTO.setPassengers(5);
+
+        RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
+                .rideDTO(rideDTO)
+                .plannedRouteUUID(plannedRoute.getId())
+                .userUUID(user.getId())
+                .build();
+
+        HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
+                "/ride/");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
+        StringEntity entity = new StringEntity(objectMapper
+                .writeValueAsString(rideCreationDTO));
+
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(400, httpResponse.getCode());
+    }
+
+    @Test
+    public void createNewRide_multipleRidesOverCapacity_400() throws IOException {
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setIsDriver(true);
+
+        User user = userService.createNewUser(userDTO);
+
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+
+        driverService.addNewDriver(user.getId(), driverDTO);
+
+        PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
+
+        PlannedRoute plannedRoute =
+                plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
+                        driverDTO.getCarPlate());
+
+        Ride ride = TestObjects.RIDE.clone();
+        Set<Ride> rides = new HashSet<Ride>() {{
+                add(ride);
+        }};
+
+        plannedRoute.setRides(rides);
+
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setPassengers(4);
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
                 .rideDTO(rideDTO)

@@ -28,7 +28,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -120,6 +122,31 @@ public class RideServiceTests {
 	User user = TestObjects.USER.clone();
 
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+
+        when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId())).thenReturn(Optional.of(plannedRoute));
+
+        assertThrows(RideException.class,
+                () -> rideService.createNewRide(rideDTO,
+                        user.getId(), plannedRoute.getId()));
+
+        verify(rideRepository, never()).save(any(Ride.class));
+    }
+
+    @Test
+    public void createNewRide_multipleRidesOverCapacity_exception() {
+        Ride ride = TestObjects.RIDE.clone();
+
+        Set<Ride> rides = new HashSet<Ride>(){{
+                add(ride);
+        }};
+
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setPassengers(4);
+
+	User user = TestObjects.USER.clone();
+
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+        plannedRoute.setRides(rides);
 
         when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId())).thenReturn(Optional.of(plannedRoute));
 
