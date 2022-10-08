@@ -43,7 +43,8 @@ public class SecurityConfiguration {
                     )
                     .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
                     .authorizeRequests()
-                    .anyRequest()
+                    .antMatchers("/users/**", "/driver/**", "/planned/**",
+                            "/ride/**")
                     .authenticated()
                 .and()
                     .exceptionHandling()
