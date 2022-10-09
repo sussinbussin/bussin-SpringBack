@@ -1,10 +1,10 @@
 package com.bussin.SpringBack.controllers;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.bussin.SpringBack.exception.CannotConnectToDistanceServerException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
-import com.bussin.SpringBack.exception.RideException;
 import com.bussin.SpringBack.exception.RideNotFoundException;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -87,27 +87,15 @@ public class ExceptionHandling {
     }
 
     /**
-     * Handles RideException.
-     * @param e RideException
-     * @return Response entity with HTTP code 400
-     */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RideException.class)
-    public ResponseEntity<Void> handleRideException(
-            final RideException e) {
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * Handles SignatureVerificationException.
+     * Handles JWTVerificationException.
      *
-     * @param e SignatureVerificationException
+     * @param e JWTVerificationException
      * @return Response entity with HTTP code 401
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(SignatureVerificationException.class)
-    public ResponseEntity<Void> handleSignatureVerificationException(
-            final SignatureVerificationException e) {
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<Void> handleJWTVerificationException(
+            final JWTVerificationException e) {
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
