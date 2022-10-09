@@ -198,7 +198,17 @@ public class UserIntegrationTests {
         assertEquals(httpResponse.getCode(), 404);
     }
 
-    // TODO: getUserByEmail_badEmail_400 test
+    @Test
+    public void getUserByEmail_emailDoesntExist_404() throws IOException {
+        HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
+                "/byEmail/testing@gmail.com");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(httpResponse.getCode(), 404);
+    }
 
     @Test
     public void createNewUser_validUser_success() throws IOException {
