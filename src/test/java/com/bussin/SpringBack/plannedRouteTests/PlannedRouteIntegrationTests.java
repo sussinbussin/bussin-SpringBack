@@ -90,7 +90,7 @@ public class PlannedRouteIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
     }
 
     @Test
