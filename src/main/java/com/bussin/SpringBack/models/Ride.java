@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,27 +41,34 @@ public class Ride implements Serializable, Cloneable{
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
+    @Schema(description = "UUID of the ride.",
+            example = "844b8d14-ef82-4b27-b9b5-a5e765c1254f")
     private UUID id;
 
-    @NotNull
+    @Schema(description = "Time when the passenger started riding")
     private Timestamp timestamp;
 
-    @NotNull
     @Max(11)
     @Min(1)
     @NotNull(message = "How many passengers can this ride accommodate?")
+    @Schema(description = "Number of seats booked", example = "2")
     private Integer passengers;
 
     @NotNull
     @DecimalMin("0")
+    @Schema(description = "Cost of the ride", example = "3.00")
     private BigDecimal cost;
 
     @NotNull
     @Size(max = 512)
+    @Schema(description = "Place ID of the passenger's journey start location",
+            example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String rideFrom;
 
     @NotNull
     @Size(max = 512)
+    @Schema(description = "Place ID of the passenger's journey destination " +
+            "location", example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String rideTo;
 
     @ManyToOne
