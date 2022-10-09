@@ -24,7 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Value("${cognito.clientid}")
+    @Value("${clientid}")
     private String clientID;
 
     private AWSCognitoIdentityProvider client;
@@ -58,6 +58,9 @@ public class UserService {
     public User createNewUserWithCognito(UserCreationDTO userCreationDTO) {
         userCreationDTO.getUserDTO().validate();
 
+        User user = userRepository.save(modelMapper.map(userCreationDTO.getUserDTO(),
+                User.class));
+
         List<AttributeType> attributeTypes = new ArrayList<>();
         attributeTypes.add(new AttributeType()
                 .withName("email")
@@ -71,8 +74,7 @@ public class UserService {
 
         client.signUp(signUpRequest);
 
-        return userRepository.save(modelMapper.map(userCreationDTO.getUserDTO(),
-                User.class));
+        return user;
     }
 
     public User getFullUserById(UUID uuid) {

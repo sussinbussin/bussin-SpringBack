@@ -52,17 +52,6 @@ public class RouteSecurityTests {
     }
 
     @Test
-    public void createNewUserWithCognito_invalidInput_400() throws IOException {
-        HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1/users" +
-                "/wCognito/create");
-
-        CloseableHttpResponse httpResponse =
-                HttpClientBuilder.create().build().execute(request);
-
-        assertEquals(400, httpResponse.getCode());
-    }
-
-    @Test
     public void getDriverByCarPlate_Unauthorized_401() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port
                 + "/api/v1/driver/" + TestObjects.DRIVER.getCarPlate());

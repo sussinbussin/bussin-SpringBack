@@ -44,7 +44,7 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
-    @Value("${cognito.clientid}")
+    @Value("${clientid}")
     private String clientID;
 
     @BeforeEach

@@ -53,6 +53,8 @@ public class SecurityConfiguration {
                             "/planned/**",
                             "/ride/**")
                     .authenticated()
+                    .antMatchers("/users/wCognito/create")
+                    .permitAll()
                 .and()
                     .exceptionHandling()
                     .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
