@@ -10,6 +10,7 @@ import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -66,6 +67,10 @@ public class TestObjects {
             .id(UUID.randomUUID())
             .plannedFrom("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
             .plannedTo("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
+            .originLatitude(BigDecimal.valueOf(103.985120))
+            .originLongitude(BigDecimal.valueOf(1.349640))
+            .destLatitude(BigDecimal.valueOf(103.852020))
+            .destLongitude(BigDecimal.valueOf(1.296700))
             .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
             .capacity(1)
             .build();
@@ -73,6 +78,10 @@ public class TestObjects {
     public static final PlannedRouteDTO PLANNED_ROUTE_DTO = PlannedRouteDTO.builder()
             .plannedFrom("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
             .plannedTo("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
+            .originLatitude(BigDecimal.valueOf(1.349640))
+            .originLongitude(BigDecimal.valueOf(103.985120))
+            .destLatitude(BigDecimal.valueOf(1.296700))
+            .destLongitude(BigDecimal.valueOf(103.852020))
             .dateTime(LocalDateTime.of(2022, 6, 6, 6, 6))
             .capacity(3)
             .build();

@@ -14,6 +14,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -71,6 +73,22 @@ public class PlannedRoute implements Serializable, Cloneable {
             example = "2")
     private Integer capacity;
 
+    @NotNull
+    @Column(scale = 6, precision = 8)
+    private BigDecimal originLatitude;
+
+    @NotNull
+    @Column(scale = 6, precision = 9)
+    private BigDecimal originLongitude;
+
+    @NotNull
+    @Column(scale = 6, precision = 8)
+    private BigDecimal destLatitude;
+
+    @NotNull
+    @Column(scale = 6, precision = 9)
+    private BigDecimal destLongitude;
+
     @OneToMany(mappedBy = "plannedRoute")
     private Set<Ride> rides;
 
@@ -86,23 +104,23 @@ public class PlannedRoute implements Serializable, Cloneable {
         this.plannedTo = plannedRouteDTO.getPlannedTo();
         this.dateTime = plannedRouteDTO.getDateTime();
         this.capacity = plannedRouteDTO.getCapacity();
+        this.originLatitude = plannedRouteDTO.getOriginLatitude();
+        this.originLongitude = plannedRouteDTO.getOriginLongitude();
+        this.destLatitude = plannedRouteDTO.getDestLatitude();
+        this.destLongitude = plannedRouteDTO.getDestLongitude();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         PlannedRoute that = (PlannedRoute) o;
-        return plannedFrom != null && Objects.equals(plannedFrom, that.plannedFrom);
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getPlannedFrom(), that.getPlannedFrom()) && Objects.equals(getPlannedTo(), that.getPlannedTo()) && Objects.equals(getDateTime(), that.getDateTime()) && Objects.equals(getCapacity(), that.getCapacity());
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(getId(), getPlannedFrom(), getPlannedTo(), getDateTime(), getCapacity());
     }
 
     @Override
