@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -31,22 +32,32 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
+    @Schema(description = "UUID of the planned route.",
+            example = "844b8d14-ef82-4b27-b9b5-a5e765c1254f")
     private UUID id;
 
     @NotNull
     @Size(max = 512)
+    @Schema(description = "Place ID of the starting location",
+            example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String plannedFrom;
 
     @NotNull
     @Size(max = 512)
+    @Schema(description = "Place ID of the destination location",
+            example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String plannedTo;
 
     @NotNull(message = "Date and time should not be empty")
+    @Schema(description = "Date and Time of when this planned route will be " +
+            "travelled.", example = "2022-10-09T01:09:34.337Z")
     private LocalDateTime dateTime;
 
     @Max(11)
     @Min(1)
     @NotNull(message = "How many passengers?")
+    @Schema(description = "How many passengers the driver is willing to take",
+            example = "2")
     private Integer capacity;
 
     public void validate() {
