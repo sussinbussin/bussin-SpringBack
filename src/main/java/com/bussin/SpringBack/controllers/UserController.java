@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.models.UserCreationDTO;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,6 +83,19 @@ public class UserController {
     public User createNewUser(@Valid @RequestBody UserDTO userDTO) {
 
         return userService.createNewUser(userDTO);
+    }
+
+    /**
+     * Add new user object.
+     *
+     * @param userCreationDTO User object to add.
+     * @return A user that was added.
+     */
+    @Operation(summary = "Creates a new user")
+    @PostMapping("/wCognito/create")
+    public User createNewUserWithCognito(@Valid @RequestBody UserCreationDTO userCreationDTO) {
+
+        return userService.createNewUserWithCognito(userCreationDTO);
     }
 
 

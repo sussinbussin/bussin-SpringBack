@@ -30,7 +30,7 @@ public class CognitoLogin {
     static final String COGNITO_URL = "https://cognito-idp.ap-southeast-1" +
             ".amazonaws.com/";
 
-    @Value("${cognito.clientid}")
+    @Value("${clientid}")
     private String cognitoClientId;
 
     @Value("${cognito.username}")

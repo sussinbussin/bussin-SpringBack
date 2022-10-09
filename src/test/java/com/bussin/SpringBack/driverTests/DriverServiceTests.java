@@ -257,7 +257,7 @@ public class DriverServiceTests {
         verify(driverRepository, times(1))
                 .findDriverByCarPlate(driverResult.getCarPlate());
         verify(userService, times(1))
-                .updateUser(userDTO.getId(), userDTO);
+                .updateUser(any(UUID.class), any(UserDTO.class));
     }
 
      @Test

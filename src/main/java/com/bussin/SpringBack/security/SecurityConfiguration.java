@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -19,16 +18,19 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private TokenValidator tokenValidator;
+
     @Autowired
     private void setTokenValidator(TokenValidator tokenValidator) {
         this.tokenValidator = tokenValidator;
     }
 
     private FilterChainExceptionHandler filterChainExceptionHandler;
+
     @Autowired
     private void setFilterChainExceptionHandler(FilterChainExceptionHandler filterChainExceptionHandler) {
         this.filterChainExceptionHandler = filterChainExceptionHandler;
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.
@@ -43,9 +45,16 @@ public class SecurityConfiguration {
                     )
                     .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
                     .authorizeRequests()
-                    .antMatchers("/users/**", "/driver/**", "/planned/**",
+                    .antMatchers(
+                            "/users/*",
+                            "/users/full/*",
+                            "/users/byEmail/*",
+                            "/driver/**",
+                            "/planned/**",
                             "/ride/**")
                     .authenticated()
+                    .antMatchers("/users/wCognito/create")
+                    .permitAll()
                 .and()
                     .exceptionHandling()
                     .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))

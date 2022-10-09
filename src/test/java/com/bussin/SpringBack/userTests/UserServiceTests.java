@@ -1,10 +1,14 @@
 package com.bussin.SpringBack.userTests;
 
+import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
+import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
+import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClientBuilder;
 import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.Ride;
 import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.models.UserCreationDTO;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.repositories.UserRepository;
@@ -17,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolationException;
@@ -39,6 +44,9 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
+    @Value("${clientid}")
+    private String clientID;
+
     @BeforeEach
     private void setUp() {
         modelMapper = new ModelMapper();
@@ -49,7 +57,19 @@ public class UserServiceTests {
             }
         });
 
+        ClasspathPropertiesFileCredentialsProvider propertiesFileCredentialsProvider =
+                new ClasspathPropertiesFileCredentialsProvider("application" +
+                        ".properties");
+
+       AWSCognitoIdentityProvider cognitoIdentityProvider =
+               AWSCognitoIdentityProviderClientBuilder.standard()
+                .withCredentials(propertiesFileCredentialsProvider)
+                .withRegion("ap-southeast-1")
+                .build();
+
         userService = new UserService(userRepository, modelMapper);
+        userService.setAmazonCognitoClient(cognitoIdentityProvider);
+        userService.setClientID("4pv7rad4vqjk19j50hlpg6jleo");
     }
 
     @Test
@@ -116,6 +136,24 @@ public class UserServiceTests {
                 () -> userService.createNewUser(userDTO));
         verify(userRepository, times(1)).save(any(User.class));
     }
+
+    /**
+     * This test cannot be replicated because it adds to the user pool
+     */
+//    @Test
+//    public void createNewUserWithCognito_success() {
+//        UserDTO userDTO = TestObjects.USER_DTO.clone();
+//        userDTO.setIsDriver(false);
+//        userDTO.setEmail("signupusertest@gmail.com");
+//
+//        UserCreationDTO userCreationDTO = UserCreationDTO.builder()
+//                .userDTO(userDTO)
+//                .username("signupuser")
+//                .password("P@ssw0rd")
+//                .build();
+//
+//        userService.createNewUserWithCognito(userCreationDTO);
+//    }
 
     @Test
     public void updateUser_success() {
