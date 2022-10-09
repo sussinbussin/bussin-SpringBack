@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.ConstraintViolation;
@@ -20,14 +21,16 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
+@ToString
 public class PlannedRouteDTO implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -60,6 +63,22 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
             example = "2")
     private Integer capacity;
 
+    @NotNull
+    @Column(scale = 6, precision = 8)
+    private BigDecimal originLatitude;
+
+    @NotNull
+    @Column(scale = 6, precision = 9)
+    private BigDecimal originLongitude;
+
+    @NotNull
+    @Column(scale = 6, precision = 8)
+    private BigDecimal destLatitude;
+
+    @NotNull
+    @Column(scale = 6, precision = 9)
+    private BigDecimal destLongitude;
+
     public void validate() {
         Validator validator =
                 Validation.buildDefaultValidatorFactory().getValidator();
@@ -75,12 +94,21 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
                            @JsonProperty("plannedFrom") String plannedFrom,
                            @JsonProperty("plannedTo") String plannedTo,
                            @JsonProperty("dateTime") LocalDateTime dateTime,
-                           @JsonProperty("capacity") Integer capacity) {
+                           @JsonProperty("capacity") Integer capacity,
+                           @JsonProperty("originLatitude") BigDecimal originLatitude,
+                           @JsonProperty("originLongitude") BigDecimal originLongitude,
+                           @JsonProperty("destLatitude") BigDecimal destLatitude,
+                           @JsonProperty("destLongitude") BigDecimal destLongitude)
+    {
         this.id = id;
         this.plannedFrom = plannedFrom;
         this.plannedTo = plannedTo;
         this.dateTime = dateTime;
         this.capacity = capacity;
+        this.originLatitude = originLatitude;
+        this.originLongitude = originLongitude;
+        this.destLatitude = destLatitude;
+        this.destLongitude = destLongitude;
     }
 
     @Override
@@ -94,5 +122,18 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlannedRouteDTO that = (PlannedRouteDTO) o;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getPlannedFrom(), that.getPlannedFrom()) && Objects.equals(getPlannedTo(), that.getPlannedTo()) && Objects.equals(getDateTime(), that.getDateTime()) && Objects.equals(getCapacity(), that.getCapacity());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getPlannedFrom(), getPlannedTo(), getDateTime(), getCapacity());
     }
 }
