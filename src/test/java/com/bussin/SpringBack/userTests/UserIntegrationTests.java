@@ -135,7 +135,7 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
         assertEquals(user.getId(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), User.class).getId());
@@ -151,7 +151,7 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 404);
+        assertEquals(404, httpResponse.getCode());
     }
 
     @Test
@@ -180,7 +180,7 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
         assertEquals(user.getId(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), User.class).getId());
@@ -195,10 +195,20 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 404);
+        assertEquals(404, httpResponse.getCode());
     }
 
-    // TODO: getUserByEmail_badEmail_400 test
+    @Test
+    public void getUserByEmail_emailDoesntExist_404() throws IOException {
+        HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
+                "/byEmail/testing@gmail.com");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(404, httpResponse.getCode());
+    }
 
     @Test
     public void createNewUser_validUser_success() throws IOException {
@@ -219,7 +229,7 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
         assertEquals(userDTO.getNric(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), User.class).getNric());
@@ -227,9 +237,14 @@ public class UserIntegrationTests {
 
     @Test
     public void createNewUser_invalidUser_400() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-        userDTO.setMobile("6969696969");
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S9999999Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .address("123123")
+                .email("Robert@gmail.com")
+                .mobile("6969696969")
+                .isDriver(false).build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/users");
@@ -272,7 +287,7 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
         assertEquals(userDTOUpdated.getName(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), User.class).getName());
@@ -330,7 +345,7 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 404);
+        assertEquals(404, httpResponse.getCode());
     }
 
     @Test
@@ -346,7 +361,7 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
         assertEquals(user.getName(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), User.class).getName());
@@ -361,6 +376,6 @@ public class UserIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 404);
+        assertEquals(404, httpResponse.getCode());
     }
 }

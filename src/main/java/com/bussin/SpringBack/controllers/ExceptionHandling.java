@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.controllers;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.bussin.SpringBack.exception.CannotConnectToDistanceServerException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
@@ -99,15 +100,15 @@ public class ExceptionHandling {
     }
 
     /**
-     * Handles SignatureVerificationException.
+     * Handles JWTVerificationException.
      *
-     * @param e SignatureVerificationException
+     * @param e JWTVerificationException
      * @return Response entity with HTTP code 401
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(SignatureVerificationException.class)
-    public ResponseEntity<Void> handleSignatureVerificationException(
-            final SignatureVerificationException e) {
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<Void> handleJWTVerificationExceptionT(
+            final JWTVerificationException e) {
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 

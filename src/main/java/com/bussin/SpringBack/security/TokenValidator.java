@@ -3,6 +3,7 @@ package com.bussin.SpringBack.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.RSAKeyProvider;
 import com.bussin.SpringBack.models.User;
@@ -11,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class TokenValidator {
         try {
             return userService.getFullUserByEmail(validateToken(token));
         } catch (UsernameNotFoundException | JsonProcessingException e) {
-            throw new BadCredentialsException("Bad credentials");
+            throw new JWTVerificationException("Bad credentials");
         }
     }
 
@@ -49,13 +49,14 @@ public class TokenValidator {
 
             DecodedJWT decodedJWT = jwtVerifier.verify(trimmedToken);
             if (decodedJWT.getExpiresAt().before(new Date(System.currentTimeMillis()))) {
-                throw new BadCredentialsException("Expired");
+                throw new JWTVerificationException("Expired");
             }
 
-            ObjectNode node = new ObjectMapper().readValue(new String(Base64.getDecoder().decode(decodedJWT.getPayload())), ObjectNode.class);
+            ObjectNode node = new ObjectMapper()
+                    .readValue(new String(Base64.getDecoder().decode(decodedJWT.getPayload())), ObjectNode.class);
             return node.get("email").asText().replaceAll("^\"|\"$", "");
         }
-        throw new BadCredentialsException("Cannot log in");
+        throw new JWTVerificationException("Cannot log in");
     }
 
     public boolean sameUser(UUID uuid, String credentials) {
