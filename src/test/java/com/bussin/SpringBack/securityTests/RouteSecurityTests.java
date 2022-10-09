@@ -10,6 +10,7 @@ import com.bussin.SpringBack.testConfig.TestContextConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -48,6 +49,17 @@ public class RouteSecurityTests {
                 HttpClientBuilder.create().build().execute(request);
 
         assertEquals(401, httpResponse.getCode());
+    }
+
+    @Test
+    public void createNewUserWithCognito_invalidInput_400() throws IOException {
+        HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1/users" +
+                "/wCognito/create");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(400, httpResponse.getCode());
     }
 
     @Test

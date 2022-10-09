@@ -71,7 +71,8 @@ public class UserService {
 
         client.signUp(signUpRequest);
 
-        return null;
+        return userRepository.save(modelMapper.map(userCreationDTO.getUserDTO(),
+                User.class));
     }
 
     public User getFullUserById(UUID uuid) {

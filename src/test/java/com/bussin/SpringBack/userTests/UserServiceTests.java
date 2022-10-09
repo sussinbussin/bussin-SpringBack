@@ -137,20 +137,23 @@ public class UserServiceTests {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    @Test
-    public void createNewUserWithCognito_success() {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-        userDTO.setEmail("signupusertest@gmail.com");
-
-        UserCreationDTO userCreationDTO = UserCreationDTO.builder()
-                .userDTO(userDTO)
-                .username("signupuser")
-                .password("P@ssw0rd")
-                .build();
-
-        userService.createNewUserWithCognito(userCreationDTO);
-    }
+    /**
+     * This test cannot be replicated because it adds to the user pool
+     */
+//    @Test
+//    public void createNewUserWithCognito_success() {
+//        UserDTO userDTO = TestObjects.USER_DTO.clone();
+//        userDTO.setIsDriver(false);
+//        userDTO.setEmail("signupusertest@gmail.com");
+//
+//        UserCreationDTO userCreationDTO = UserCreationDTO.builder()
+//                .userDTO(userDTO)
+//                .username("signupuser")
+//                .password("P@ssw0rd")
+//                .build();
+//
+//        userService.createNewUserWithCognito(userCreationDTO);
+//    }
 
     @Test
     public void updateUser_success() {

@@ -88,11 +88,11 @@ public class UserController {
     /**
      * Add new user object.
      *
-     * @param userDTO User object to add.
+     * @param userCreationDTO User object to add.
      * @return A user that was added.
      */
     @Operation(summary = "Creates a new user")
-    @PostMapping("/wCognito")
+    @PostMapping("/wCognito/create")
     public User createNewUserWithCognito(@Valid @RequestBody UserCreationDTO userCreationDTO) {
 
         return userService.createNewUserWithCognito(userCreationDTO);
