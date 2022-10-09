@@ -1,16 +1,21 @@
 package com.bussin.SpringBack.services;
 
-import javax.transaction.Transactional;
-
+import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
+import com.bussin.SpringBack.exception.RideException;
+import com.bussin.SpringBack.exception.RideNotFoundException;
+import com.bussin.SpringBack.models.PlannedRoute;
+import com.bussin.SpringBack.models.Ride;
+import com.bussin.SpringBack.models.RideDTO;
+import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
+import com.bussin.SpringBack.repositories.RideRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bussin.SpringBack.repositories.*;
-import com.bussin.SpringBack.models.*;
-import com.bussin.SpringBack.exception.*;
-
-import java.util.*;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RideService {
@@ -22,8 +27,8 @@ public class RideService {
 
     @Autowired
     public RideService(ModelMapper modelMapper, RideRepository rideRepository,
-            PlannedRoutesRepository plannedRoutesRepository,
-            UserService userService, PricingService pricingService) {
+                       PlannedRoutesRepository plannedRoutesRepository,
+                       UserService userService, PricingService pricingService) {
         this.modelMapper = modelMapper;
         this.rideRepository = rideRepository;
         this.plannedRoutesRepository = plannedRoutesRepository;
@@ -51,16 +56,15 @@ public class RideService {
         ride.setCost(pricingService.getPriceOfRide(plannedRoute));
         ride.setUser(found);
 
-        int passengersOnBoard = 0;
+        int passengersOnBoard = ride.getPassengers();
 
-        if (plannedRoute.getRides() != null) {
+        if(plannedRoute.getRides() != null) {
             for (Ride rideFound : plannedRoute.getRides()) {
                 passengersOnBoard += rideFound.getPassengers();
             }
         }
 
-        if (ride.getPassengers() > plannedRoute.getCapacity() ||
-                (passengersOnBoard + ride.getPassengers()) > plannedRoute.getCapacity()) {
+        if (passengersOnBoard > plannedRoute.getCapacity()) {
             throw new RideException("Passenger is over the car's capacity");
         }
 

@@ -103,7 +103,7 @@ public class RideServiceTests {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
         rideDTO.setPassengers(1000);
 
-		User user = TestObjects.USER.clone();
+        User user = TestObjects.USER.clone();
 
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
 
@@ -119,7 +119,7 @@ public class RideServiceTests {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
         rideDTO.setPassengers(5);
 
-	User user = TestObjects.USER.clone();
+        User user = TestObjects.USER.clone();
 
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
 
@@ -136,14 +136,14 @@ public class RideServiceTests {
     public void createNewRide_multipleRidesOverCapacity_exception() {
         Ride ride = TestObjects.RIDE.clone();
 
-        Set<Ride> rides = new HashSet<Ride>(){{
-                add(ride);
+        Set<Ride> rides = new HashSet<>() {{
+            add(ride);
         }};
 
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
         rideDTO.setPassengers(4);
 
-	User user = TestObjects.USER.clone();
+        User user = TestObjects.USER.clone();
 
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
         plannedRoute.setRides(rides);
@@ -166,7 +166,7 @@ public class RideServiceTests {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
         plannedRoute.setDriver(driver);
 
-		UserDTO userDTO = TestObjects.USER_DTO.clone();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
 
         User user = modelMapper.map(userDTO, User.class);
         user.setDriver(driver);

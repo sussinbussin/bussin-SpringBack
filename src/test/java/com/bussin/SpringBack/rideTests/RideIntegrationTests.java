@@ -130,7 +130,8 @@ public class RideIntegrationTests {
 
         List<Ride> rides =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        new TypeReference<>() {});
+                        new TypeReference<>() {
+                        });
 
         rideDTO.setId(ride.getId());
 
@@ -346,7 +347,7 @@ public class RideIntegrationTests {
 
         Ride ride = TestObjects.RIDE.clone();
         Set<Ride> rides = new HashSet<Ride>() {{
-                add(ride);
+            add(ride);
         }};
 
         plannedRoute.setRides(rides);
@@ -569,7 +570,7 @@ public class RideIntegrationTests {
 
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
-                driverDTO.getCarPlate());
+                        driverDTO.getCarPlate());
 
         RideDTO updatedRideDTO = TestObjects.RIDE_DTO.clone();
         updatedRideDTO.setPassengers(3);
