@@ -1,23 +1,21 @@
 package com.bussin.SpringBack.services;
 
-import javax.transaction.Transactional;
-
-import com.bussin.SpringBack.config.GeoApiConfig;
-import com.google.maps.DistanceMatrixApi;
-import com.google.maps.GeoApiContext;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.DistanceMatrix;
+import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
+import com.bussin.SpringBack.exception.RideException;
+import com.bussin.SpringBack.exception.RideNotFoundException;
+import com.bussin.SpringBack.models.PlannedRoute;
+import com.bussin.SpringBack.models.Ride;
+import com.bussin.SpringBack.models.RideDTO;
+import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
+import com.bussin.SpringBack.repositories.RideRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bussin.SpringBack.repositories.*;
-import com.bussin.SpringBack.models.*;
-import com.bussin.SpringBack.exception.*;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.*;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RideService {
@@ -29,7 +27,7 @@ public class RideService {
 
     @Autowired
     public RideService(ModelMapper modelMapper, RideRepository rideRepository,
-            PlannedRoutesRepository plannedRoutesRepository,
+                       PlannedRoutesRepository plannedRoutesRepository,
                        UserService userService, PricingService pricingService) {
         this.modelMapper = modelMapper;
         this.rideRepository = rideRepository;
@@ -43,28 +41,35 @@ public class RideService {
     }
 
     public Ride getRideById(UUID uuid) {
-        return rideRepository.findById(uuid).orElseThrow(() ->
-                new RideNotFoundException("No ride with id " + uuid));
+        return rideRepository.findById(uuid).orElseThrow(() -> new RideNotFoundException("No ride with id " + uuid));
     }
 
     @Transactional
     public Ride createNewRide(RideDTO rideDTO, UUID userId, UUID plannedRouteId) {
         rideDTO.validate();
-        User found =  userService.getFullUserById(userId);
+        User found = userService.getFullUserById(userId);
         Ride ride = modelMapper.map(rideDTO, Ride.class);
         PlannedRoute plannedRoute = plannedRoutesRepository
                 .findPlannedRouteById(plannedRouteId)
-                .orElseThrow(() ->
-                        new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
+                .orElseThrow(() -> new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
 
         ride.setCost(pricingService.getPriceOfRide(plannedRoute));
         ride.setUser(found);
 
-        //TODO: Check that passengers does not exceed capacity
+        int passengersOnBoard = ride.getPassengers();
+
+        if(plannedRoute.getRides() != null) {
+            for (Ride rideFound : plannedRoute.getRides()) {
+                passengersOnBoard += rideFound.getPassengers();
+            }
+        }
+
+        if (passengersOnBoard > plannedRoute.getCapacity()) {
+            throw new RideException("Passenger is over the car's capacity");
+        }
 
         ride.setPlannedRoute(plannedRoute);
         return rideRepository.save(ride);
-
     }
 
     @Transactional

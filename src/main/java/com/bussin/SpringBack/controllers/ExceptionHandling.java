@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.bussin.SpringBack.exception.CannotConnectToDistanceServerException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
+import com.bussin.SpringBack.exception.RideException;
 import com.bussin.SpringBack.exception.RideNotFoundException;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -82,6 +83,18 @@ public class ExceptionHandling {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Void> handleConstraintViolationException(
             final ConstraintViolationException e) {
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles RideException.
+     * @param e RideException
+     * @return Response entity with HTTP code 400
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RideException.class)
+    public ResponseEntity<Void> handleRideException(
+            final RideException e) {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 

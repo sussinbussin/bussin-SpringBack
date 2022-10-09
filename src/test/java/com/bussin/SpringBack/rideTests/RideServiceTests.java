@@ -1,9 +1,9 @@
 package com.bussin.SpringBack.rideTests;
 
 import com.bussin.SpringBack.TestObjects;
+import com.bussin.SpringBack.exception.RideException;
 import com.bussin.SpringBack.exception.RideNotFoundException;
 import com.bussin.SpringBack.models.Driver;
-import com.bussin.SpringBack.models.GasPriceKey;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.Ride;
 import com.bussin.SpringBack.models.RideDTO;
@@ -28,7 +28,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -101,11 +103,54 @@ public class RideServiceTests {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
         rideDTO.setPassengers(1000);
 
-		User user = TestObjects.USER.clone();
+        User user = TestObjects.USER.clone();
 
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
 
         assertThrows(ConstraintViolationException.class,
+                () -> rideService.createNewRide(rideDTO,
+                        user.getId(), plannedRoute.getId()));
+
+        verify(rideRepository, never()).save(any(Ride.class));
+    }
+
+    @Test
+    public void createNewRide_passengersOverCapacity_exception() {
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setPassengers(5);
+
+        User user = TestObjects.USER.clone();
+
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+
+        when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId())).thenReturn(Optional.of(plannedRoute));
+
+        assertThrows(RideException.class,
+                () -> rideService.createNewRide(rideDTO,
+                        user.getId(), plannedRoute.getId()));
+
+        verify(rideRepository, never()).save(any(Ride.class));
+    }
+
+    @Test
+    public void createNewRide_multipleRidesOverCapacity_exception() {
+        Ride ride = TestObjects.RIDE.clone();
+
+        Set<Ride> rides = new HashSet<>() {{
+            add(ride);
+        }};
+
+        RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setPassengers(4);
+
+        User user = TestObjects.USER.clone();
+
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+        plannedRoute.setRides(rides);
+
+        when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId())).thenReturn(Optional.of(plannedRoute));
+
+        assertThrows(RideException.class,
                 () -> rideService.createNewRide(rideDTO,
                         user.getId(), plannedRoute.getId()));
 
@@ -121,7 +166,7 @@ public class RideServiceTests {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
         plannedRoute.setDriver(driver);
 
-		UserDTO userDTO = TestObjects.USER_DTO.clone();
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
 
         User user = modelMapper.map(userDTO, User.class);
         user.setDriver(driver);
