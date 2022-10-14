@@ -35,10 +35,20 @@ public class DriverService {
         this.driverRepository = driverRepository;
     }
 
+    /**
+     * Get all drivers
+     * @return List of all drivers
+     */
     public List<Driver> getAllDrivers() {
         return driverRepository.findAll();
     }
 
+    /**
+     * Create a new driver
+     * @param uuid The UUID of User
+     * @param driverDTO The driver DTO of car details
+     * @return The driver if created
+     */
     @Transactional
     public Driver addNewDriver(UUID uuid, DriverDTO driverDTO) {
         driverDTO.validate();
@@ -52,6 +62,11 @@ public class DriverService {
         return driverRepository.save(driver);
     }
 
+    /**
+     * Get a driver by car plate
+     * @param carPlate The String of Driver's car plate
+     * @return The driver, if found
+     */
     public Driver getDriverByCarPlate(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate)
                 .orElseThrow(() ->
@@ -59,12 +74,23 @@ public class DriverService {
                                 "No driver found with car plate " + carPlate));
     }
 
+    /**
+     * Get the set of planned routes that is created by a driver
+     * @param carPlate The String of Driver's car plate
+     * @return A set of planned routes, if found
+     */
     public Set<PlannedRoute> getAllPlannedRoutesByDriver(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate).map(found ->
                 found.getPlannedRoutes()).orElseThrow(()
                 -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
 
+    /**
+     * Update a driver with driver DTO details
+     * @param carPlate The String of Driver's car plate
+     * @param driverDTO The Driver DTO of new details
+     * @return Updated driver
+     */
     @Transactional
     public Driver updateDriver(String carPlate, DriverDTO driverDTO) {
         driverDTO.validate();
