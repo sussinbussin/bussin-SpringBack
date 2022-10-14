@@ -44,16 +44,30 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Get all user
+     * @return List of users
+     */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    /**
+     * Create a new user
+     * @param userDTO The UserDTO
+     * @return The user, if created successfully
+     */
     @Transactional
     public User createNewUser(UserDTO userDTO) {
         userDTO.validate();
         return userRepository.save(modelMapper.map(userDTO, User.class));
     }
 
+    /**
+     * Create a new user with cognito
+     * @param userCreationDTO The UserCreationDTO
+     * @return The user, if created successfully
+     */
     @Transactional
     public User createNewUserWithCognito(UserCreationDTO userCreationDTO) {
         userCreationDTO.getUserDTO().validate();
@@ -77,26 +91,52 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Get all the details of a user by ID
+     * @param uuid The UUID of user
+     * @return The full user, if found
+     */
     public User getFullUserById(UUID uuid) {
         return userRepository.findById(uuid).orElseThrow(()
                 -> new UserNotFoundException("No user with id " + uuid));
     }
 
+    /**
+     * Get a user by ID
+     * @param uuid The UUID of user
+     * @return The user DTO, if found
+     */
     public UserDTO getUserById(UUID uuid) {
         return userRepository.findUserById(uuid).orElseThrow(()
                 -> new UserNotFoundException("No user with id " + uuid));
     }
 
+    /**
+     * Get a user by email
+     * @param email The email of user to return
+     * @return The user DTO, if found
+     */
     public UserDTO getUserByEmail(String email) {
         return userRepository.findUserByEmail(email).orElseThrow(()
                 -> new UserNotFoundException("No user with email " + email));
     }
 
+    /**
+     * Get all the details of a user by email
+     * @param email The email of user to return
+     * @return The full user, if found
+     */
     public User getFullUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException("No user with email " + email));
     }
 
+    /**
+     * Update a user with new details using ID
+     * @param uuid The UUID of user
+     * @param userDTO The new user DTO details to update
+     * @return The full details of user, if found
+     */
     @Transactional
     public User updateUser(UUID uuid, UserDTO userDTO) {
         userDTO.setId(uuid);
@@ -107,6 +147,11 @@ public class UserService {
         }).orElseThrow(() -> new UserNotFoundException("No user with id " + uuid));
     }
 
+    /**
+     * Delete a user by ID
+     * @param uuid The UUID of user
+     * @return The user DTO, if found
+     */
     @Transactional
     public UserDTO deleteUser(UUID uuid) {
         return userRepository.findUserById(uuid).map(found -> {
