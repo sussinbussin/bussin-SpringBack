@@ -12,6 +12,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.ArrayList;
 
 @Configuration
 @EnableWebSecurity
@@ -53,8 +58,6 @@ public class SecurityConfiguration {
                             "/planned/**",
                             "/ride/**")
                     .authenticated()
-                    .antMatchers("/users/wCognito/create")
-                    .permitAll()
                 .and()
                     .exceptionHandling()
                     .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
@@ -65,6 +68,14 @@ public class SecurityConfiguration {
     @Bean
     public TokenAuthFilter tokenAuthFilter() {
         TokenAuthFilter authenticationFilter = new TokenAuthFilter();
+        ArrayList<RequestMatcher> matchers = new ArrayList();
+        matchers.add(new AntPathRequestMatcher("/users/*"));
+        matchers.add(new AntPathRequestMatcher( "/users/full/*"));
+        matchers.add(new AntPathRequestMatcher("/users/byEmail/*"));
+        matchers.add(new AntPathRequestMatcher("/driver/**"));
+        matchers.add(new AntPathRequestMatcher("/planned/**"));
+        matchers.add(new AntPathRequestMatcher("/ride/**"));
+        authenticationFilter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(matchers));
         authenticationFilter.setAuthenticationManager(authentication -> {
             tokenValidator.userFromToken((String) authentication.getCredentials());
             authentication.setAuthenticated(true);
