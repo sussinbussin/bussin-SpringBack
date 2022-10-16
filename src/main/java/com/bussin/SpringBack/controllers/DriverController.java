@@ -57,6 +57,12 @@ public class DriverController {
         return driverService.getAllPlannedRoutesByDriver(carPlate);
     }
 
+    /**
+     * Create a new driver
+     * @param userUUID The UUID of user that is going to be a driver
+     * @param driverDTO The driver DTO to be created
+     * @return The Driver that is created
+     */
     @Operation(summary = "Converts a User to Driver")
     @PostMapping("/{userUUID}")
     public Driver addNewDriver(@Valid @PathVariable UUID userUUID,
