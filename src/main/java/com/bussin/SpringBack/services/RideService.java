@@ -36,14 +36,30 @@ public class RideService {
         this.pricingService = pricingService;
     }
 
+    /**
+     * Get all rides
+     * @return List of all rides
+     */
     public List<Ride> getAllRides() {
         return rideRepository.findAll();
     }
 
+    /**
+     * Get a ride by ID
+     * @param uuid The UUID of Ride
+     * @return Ride details
+     */
     public Ride getRideById(UUID uuid) {
         return rideRepository.findById(uuid).orElseThrow(() -> new RideNotFoundException("No ride with id " + uuid));
     }
 
+    /**
+     * Create a new ride
+     * @param rideDTO The ride DTO details to create
+     * @param userId The UUID of user
+     * @param plannedRouteId The UUID of planned route
+     * @return Ride details created
+     */
     @Transactional
     public Ride createNewRide(RideDTO rideDTO, UUID userId, UUID plannedRouteId) {
         rideDTO.validate();
@@ -72,6 +88,12 @@ public class RideService {
         return rideRepository.save(ride);
     }
 
+    /**
+     * Update a ride by ID
+     * @param rideId The UUID of ride to be updated
+     * @param rideDTO The ride DTO to update
+     * @return Updated Ride
+     */
     @Transactional
     public Ride updateRideById(UUID rideId, RideDTO rideDTO) {
         rideDTO.setId(rideId);
@@ -82,6 +104,11 @@ public class RideService {
         }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId));
     }
 
+    /**
+     * Delete a ride by ID
+     * @param rideId The UUID of ride
+     * @return Deleted Ride
+     */
     @Transactional
     public Ride deleteRideById(UUID rideId) {
         return rideRepository.findById(rideId).map(found -> {

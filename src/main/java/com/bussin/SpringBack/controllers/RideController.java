@@ -30,18 +30,32 @@ public class RideController {
         this.rideService = rideService;
     }
 
+    /**
+     * Get all rides
+     * @return List of all rides
+     */
     @Operation(summary = "Gets the details of all rides")
     @GetMapping
     public List<Ride> getAllRides() {
         return rideService.getAllRides();
     }
 
+    /**
+     * Get a ride by a ride ID
+     * @param rideId The UUID of ride
+     * @return The ride if found, else null
+     */
     @Operation(summary = "Gets a ride by its ID")
     @GetMapping("/{rideId}")
     public Ride getRideById(@Valid @PathVariable UUID rideId) {
         return rideService.getRideById(rideId);
     }
 
+    /**
+     * Create a new ride
+     * @param creationDTO The ride creation DTO to create a new ride
+     * @return The ride that is created
+     */
     @Operation(summary = "Create a new ride")
     @Transactional
     @PostMapping
@@ -50,6 +64,12 @@ public class RideController {
                 creationDTO.getUserUUID(), creationDTO.getPlannedRouteUUID());
     }
 
+    /**
+     * Update a ride by ID
+     * @param rideId The UUID of ride to be updated
+     * @param rideDTO The ride DTO details to update
+     * @return Updated Ride
+     */
     @Operation(summary = "Update a ride by its ID")
     @Transactional
     @PutMapping("/{rideId}")
@@ -59,6 +79,11 @@ public class RideController {
         return rideService.updateRideById(rideId, rideDTO);
     }
 
+    /**
+     * Delete a ride by ID
+     * @param rideId The UUID of ride
+     * @return Deleted Ride
+     */
     @Operation(summary = "Delete a ride by its ID")
     @Transactional
     @DeleteMapping("/{rideId}")
