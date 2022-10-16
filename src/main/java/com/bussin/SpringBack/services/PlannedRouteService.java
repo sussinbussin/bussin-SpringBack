@@ -54,16 +54,30 @@ public class PlannedRouteService {
         this.driverRepository = driverRepository;
     }
 
+    /**
+     * Get all planned routes
+     * @return List of planned routes
+     */
     public List<PlannedRoute> getAllPlannedRoutes() {
         return plannedRoutesRepository.findAll();
     }
 
+    /**
+     * Get a planned route by ID
+     * @param uuid The UUID of planned route
+     * @return Planned route if found
+     */
     public PlannedRoute getPlannedRouteById(UUID uuid) {
         return plannedRoutesRepository.findById(uuid)
                 .orElseThrow(() -> new PlannedRouteNotFoundException("No " +
                         "planned route with ID " + uuid));
     }
 
+    /**
+     * Get all passengers on a particular route
+     * @param plannedRouteUUID The UUID of planned route
+     * @return List of user public DTO if planned route is found
+     */
     public List<UserPublicDTO> getPassengersOnRoute(UUID plannedRouteUUID) {
         return plannedRoutesRepository.findById(plannedRouteUUID).map(found -> {
             List<UserPublicDTO> users = new ArrayList<>();
@@ -74,41 +88,23 @@ public class PlannedRouteService {
                 "planned route with ID " + plannedRouteUUID));
     }
 
-    //Will link to distance service
-    public List<PlannedRoute> getSuggestedRoutes(String tripStart,
-                                                 String tripEnd) {
-        try{
-            URI uri = new URIBuilder(distanceUrl+"/suggestions")
-                    .addParameter("tripStart", tripStart)
-                    .addParameter("tripEnd", tripEnd)
-                    .build();
-
-            HttpGet request = new HttpGet(uri);
-
-            request.setHeader("Accept", "application/json");
-            request.setHeader("Content-type", "application/json");
-
-            CloseableHttpResponse httpResponse =
-                    HttpClientBuilder.create().build().execute(request);
-
-            return objectMapper.readValue(httpResponse.getEntity().getContent(),
-                            new TypeReference<>() {});
-        } catch (URISyntaxException e) {
-
-        } catch (IOException e) {
-            throw new CannotConnectToDistanceServerException();
-        }
-
-        throw new PlannedRouteNotFoundException(String.format("Cannot find " +
-                "any routes suiting a journey from %s to %s",
-                tripStart, tripEnd));
-    }
-
+    /**
+     * Get a planned route after specific time
+     * @param dateTime The LocalDateTime
+     * @return List of planned routes after datetime
+     */
     public List<PlannedRoute> getPlannedRouteAfterTime(LocalDateTime dateTime) {
         return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime);
     }
 
     //Will link to distance service
+
+    /**
+     * Get distance between the trip starts and trip ends
+     * @param tripStart The String
+     * @param tripEnd The String
+     * @return The distance of between the start and end of trip
+     */
     public BigDecimal getDistanceBetween(String tripStart, String tripEnd) {
         try{
             URI uri = new URIBuilder(distanceUrl+"/distance")
@@ -135,6 +131,12 @@ public class PlannedRouteService {
                 "distance");
     }
 
+    /**
+     * Create a new planned route for a driver
+     * @param plannedRouteDTO The PlannedRouteDTO with details to create
+     * @param carPlate The String of driver that created the planned route
+     * @return Created PlannedRoute if driver is found
+     */
     @Transactional
     public PlannedRoute createNewPlannedRoute(PlannedRouteDTO plannedRouteDTO,
                                               String carPlate) {
@@ -148,6 +150,12 @@ public class PlannedRouteService {
                 "plate " + carPlate));
     }
 
+    /**
+     * Update a planned route by ID
+     * @param uuid The UUID of Planned Route to be updated
+     * @param plannedRouteDTO The PlannedRouteDTO details to update
+     * @return Updated Planned Route if found
+     */
     @Transactional
     public PlannedRoute updatePlannedRouteById(UUID uuid,
                                                PlannedRouteDTO plannedRouteDTO) {
@@ -160,6 +168,11 @@ public class PlannedRouteService {
                 "planned route with ID " + uuid));
     }
 
+    /**
+     * Delete a planned route by ID
+     * @param uuid The UUID of planned route
+     * @return Deleted Planned Route if found
+     */
     @Transactional
     public PlannedRoute deletePlannedRouteByID(UUID uuid) {
         return plannedRoutesRepository.findById(uuid).map(found -> {
