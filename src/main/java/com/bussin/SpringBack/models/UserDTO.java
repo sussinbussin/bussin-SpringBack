@@ -58,12 +58,6 @@ public class UserDTO implements Serializable, Cloneable {
     @Schema(description = "User's name.", example = "Robert")
     private String name;
 
-    @NotNull(message = "Address should not be empty")
-    @Size(max = 512)
-    @Schema(description = "User's address as a place ID",
-            example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
-    private String address;
-
     @NotNull(message = "Date of Birth should not be empty")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Past
@@ -101,7 +95,6 @@ public class UserDTO implements Serializable, Cloneable {
     public UserDTO(@JsonProperty("id") UUID id,
                    @JsonProperty("nric") String nric,
                    @JsonProperty("name") String name,
-                   @JsonProperty("address") String address,
                    @JsonProperty("dob") Date dob,
                    @JsonProperty("mobile") String mobile,
                    @JsonProperty("email") String email,
@@ -109,7 +102,6 @@ public class UserDTO implements Serializable, Cloneable {
         this.id = id;
         this.nric = nric;
         this.name = name;
-        this.address = address;
         this.dob = dob;
         this.mobile = mobile;
         this.email = email;

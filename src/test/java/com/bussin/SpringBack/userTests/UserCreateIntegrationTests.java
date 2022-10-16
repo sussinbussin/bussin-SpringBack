@@ -109,7 +109,6 @@ public class UserCreateIntegrationTests {
                 .nric("S9999999Z")
                 .name("Robert")
                 .dob(new Date(90000000))
-                .address("123123")
                 .email("Robert@gmail.com")
                 .mobile("6969696969")
                 .isDriver(false).build();
