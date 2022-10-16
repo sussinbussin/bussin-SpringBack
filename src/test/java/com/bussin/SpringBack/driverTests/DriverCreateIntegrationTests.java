@@ -131,7 +131,7 @@ public class DriverCreateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 404);
+        assertEquals(404, httpResponse.getCode());
     }
 
     /**
@@ -160,6 +160,6 @@ public class DriverCreateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 400);
+        assertEquals(400, httpResponse.getCode());
     }
 }

@@ -119,7 +119,6 @@ public class UserUpdateIntegrationTests {
                 .nric("S9999999Z22")
                 .name("Robert")
                 .dob(new Date(90000000))
-                .address("123123")
                 .email("Robert@gmail.com")
                 .mobile("900090000")
                 .isDriver(false).build();

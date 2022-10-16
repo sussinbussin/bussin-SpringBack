@@ -54,12 +54,6 @@ public class User implements Serializable, Cloneable {
     @Schema(description = "User's name.", example = "Robert")
     private String name;
 
-    @NotNull(message = "Address should not be empty")
-    @Size(max = 512)
-    @Schema(description = "User's address as a place ID",
-            example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
-    private String address;
-
     @NotNull(message = "Date of Birth should not be empty")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Past
@@ -94,7 +88,6 @@ public class User implements Serializable, Cloneable {
     public User(String nric, String name, String address, Date dob, String mobile, String email) {
         this.nric = nric;
         this.name = name;
-        this.address = address;
         this.dob = dob;
         this.mobile = mobile;
         this.email = email;
@@ -104,7 +97,6 @@ public class User implements Serializable, Cloneable {
     public void updateFromDTO(UserDTO userDTO) {
         this.nric = userDTO.getNric();
         this.name = userDTO.getName();
-        this.address = userDTO.getAddress();
         this.dob = userDTO.getDob();
         this.mobile = userDTO.getMobile();
         this.email = userDTO.getEmail();
