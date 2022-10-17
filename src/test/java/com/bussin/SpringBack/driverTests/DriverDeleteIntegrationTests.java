@@ -42,11 +42,6 @@ public class DriverDeleteIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -65,7 +60,6 @@ public class DriverDeleteIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -75,7 +69,6 @@ public class DriverDeleteIntegrationTests {
 
     /**
      * Delete a driver when car plate exist success
-     * @throws IOException
      */
     @Test
     public void deleteDriver_success() throws IOException {
@@ -107,7 +100,6 @@ public class DriverDeleteIntegrationTests {
 
     /**
      * Delete a driver when car plate is not found throw 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void deleteDriver_noDriver_404() throws IOException {

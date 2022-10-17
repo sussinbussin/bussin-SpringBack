@@ -16,7 +16,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -78,21 +77,12 @@ public class User implements Serializable, Cloneable {
     private Boolean isDriver;
 
     @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            optional = true)
+            cascade = CascadeType.ALL
+    )
     private Driver driver;
 
     @OneToMany(mappedBy = "user")
     private Set<Ride> rides;
-
-    public User(String nric, String name, String address, Date dob, String mobile, String email) {
-        this.nric = nric;
-        this.name = name;
-        this.dob = dob;
-        this.mobile = mobile;
-        this.email = email;
-        this.isDriver = false;
-    }
 
     public void updateFromDTO(UserDTO userDTO) {
         this.nric = userDTO.getNric();

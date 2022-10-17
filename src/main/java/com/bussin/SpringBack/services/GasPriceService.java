@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class GasPriceService {
-    private GasPriceRepository gasPriceRepository;
+    private final GasPriceRepository gasPriceRepository;
 
     @Autowired
     public GasPriceService(GasPriceRepository gasPriceRepository) {

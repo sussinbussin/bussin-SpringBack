@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 @Service
 public class CognitoLogin {
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
     @Autowired
     public CognitoLogin(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -79,7 +79,7 @@ public class CognitoLogin {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    class AuthParameters implements Serializable {
+    static class AuthParameters implements Serializable {
         @JsonProperty("USERNAME")
         private String username;
 

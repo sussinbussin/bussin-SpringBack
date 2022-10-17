@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -121,7 +120,7 @@ public class PlannedRouteController {
     @Operation(summary = "Deletes a planned route by ID")
     @Transactional
     @DeleteMapping("/{routeId}")
-    public PlannedRoute deletePlannedrouteById(@Valid @PathVariable UUID routeId) {
+    public PlannedRoute deletePlannedRouteById(@Valid @PathVariable UUID routeId) {
         return plannedRouteService.deletePlannedRouteByID(routeId);
     }
 }

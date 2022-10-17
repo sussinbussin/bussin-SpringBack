@@ -68,7 +68,7 @@ public class SecurityConfiguration {
     @Bean
     public TokenAuthFilter tokenAuthFilter() {
         TokenAuthFilter authenticationFilter = new TokenAuthFilter();
-        ArrayList<RequestMatcher> matchers = new ArrayList();
+        ArrayList<RequestMatcher> matchers = new ArrayList<>();
         matchers.add(new AntPathRequestMatcher("/users/*"));
         matchers.add(new AntPathRequestMatcher( "/users/full/*"));
         matchers.add(new AntPathRequestMatcher("/users/byEmail/*"));

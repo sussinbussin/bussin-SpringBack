@@ -71,7 +71,6 @@ public class PlannedRouteUpdateIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -81,7 +80,6 @@ public class PlannedRouteUpdateIntegrationTests {
 
     /**
      * Update a planned route with valid parameters success
-     * @throws IOException
      */
     @Test
     public void updatePlannedRoute_success() throws IOException {
@@ -130,7 +128,6 @@ public class PlannedRouteUpdateIntegrationTests {
 
     /**
      * Update a planned route with invalid parameters throws 400 BAD_REQUEST
-     * @throws IOException
      */
     @Test
     public void updatePlannedRoute_invalidParams_400() throws IOException {
@@ -170,7 +167,6 @@ public class PlannedRouteUpdateIntegrationTests {
 
     /**
      * Update a planned route with no route found throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void updatePlannedRoute_noRoute_404() throws IOException {

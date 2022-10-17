@@ -44,11 +44,6 @@ public class DriverReadIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -67,7 +62,6 @@ public class DriverReadIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -77,7 +71,6 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get no drivers when there are no drivers success
-     * @throws IOException
      */
     @Test
     public void getAllDrivers_noDrivers_success() throws IOException {
@@ -92,7 +85,6 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get all drivers when there are drivers success
-     * @throws IOException
      */
     @Test
     public void getAllDrivers_success() throws IOException {
@@ -122,7 +114,6 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get driver by car plate when car plate exist success
-     * @throws IOException
      */
     @Test
     public void getDriverByCarPlate_success() throws IOException {
@@ -152,7 +143,6 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get driver by car plate when no car plate exist throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void getDriverByCarPlate_noDriver_404() throws IOException {

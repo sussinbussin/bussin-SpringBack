@@ -70,7 +70,6 @@ public class PlannedRouteDeleteIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -80,7 +79,6 @@ public class PlannedRouteDeleteIntegrationTests {
 
     /**
      * Delete a planned route with planned route found success
-     * @throws IOException
      */
     @Test
     public void deletePlannedRoute_success() throws IOException {
@@ -118,7 +116,6 @@ public class PlannedRouteDeleteIntegrationTests {
 
     /**
      * Delete a planned route with no route found throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void deletePlannedRoute_noRoute_404() throws IOException {
