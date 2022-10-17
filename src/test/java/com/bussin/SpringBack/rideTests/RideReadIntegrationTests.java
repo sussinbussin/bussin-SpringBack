@@ -71,7 +71,6 @@ public class RideReadIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -81,7 +80,6 @@ public class RideReadIntegrationTests {
 
     /**
      * Get all rides when no rides are found success
-     * @throws IOException
      */
     @Test
     public void getAllRides_noRides_success() throws IOException {
@@ -97,7 +95,6 @@ public class RideReadIntegrationTests {
 
     /**
      * Get all rides when rides exist are found success
-     * @throws IOException
      */
     @Test
     public void getAllRides_success() throws IOException {
@@ -141,7 +138,6 @@ public class RideReadIntegrationTests {
 
     /**
      * Get a ride by ID success
-     * @throws IOException
      */
     @Test
     public void getRideByID_success() throws IOException {
@@ -185,7 +181,6 @@ public class RideReadIntegrationTests {
 
     /**
      * Get a ride by ID when no ride is found throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void getRideByID_noRide_404() throws IOException {

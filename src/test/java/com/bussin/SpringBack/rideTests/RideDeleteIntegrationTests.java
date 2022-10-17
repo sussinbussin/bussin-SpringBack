@@ -69,7 +69,6 @@ public class RideDeleteIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -79,7 +78,6 @@ public class RideDeleteIntegrationTests {
 
     /**
      * Delete a ride by its ID when ride is found success
-     * @throws IOException
      */
     @Test
     public void deleteRideByID_success() throws IOException {
@@ -123,7 +121,6 @@ public class RideDeleteIntegrationTests {
 
     /**
      * Delete a ride by ID when ride is not found throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void deleteRideByID_noRide_404() throws IOException {

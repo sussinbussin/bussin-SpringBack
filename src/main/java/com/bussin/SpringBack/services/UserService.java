@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     private final UserRepository userRepository;
 

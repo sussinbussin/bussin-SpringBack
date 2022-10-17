@@ -41,11 +41,6 @@ public class UserCreateIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -62,7 +57,6 @@ public class UserCreateIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -72,7 +66,6 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with valid credentials success
-     * @throws IOException
      */
     @Test
     public void createNewUser_validUser_success() throws IOException {
@@ -101,7 +94,6 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with invalid credentials throws 400 BAD_REQUEST
-     * @throws IOException
      */
     @Test
     public void createNewUser_invalidUser_400() throws IOException {

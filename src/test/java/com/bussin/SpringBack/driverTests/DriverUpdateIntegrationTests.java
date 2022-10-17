@@ -43,11 +43,6 @@ public class DriverUpdateIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -66,7 +61,6 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -76,7 +70,6 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver with new valid credentials success
-     * @throws IOException
      */
     @Test
     public void updateDriver_success() throws IOException {
@@ -118,7 +111,6 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver when car plate is not found throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void updateDriver_noDriver_404() throws IOException {
@@ -147,7 +139,6 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver with invalid credentials throws 400 BAD_REQUEST
-     * @throws IOException
      */
     @Test
     public void updateDriver_badParams_400() throws IOException {

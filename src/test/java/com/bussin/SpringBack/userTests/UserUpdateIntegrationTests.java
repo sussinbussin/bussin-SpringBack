@@ -42,11 +42,6 @@ public class UserUpdateIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -63,7 +58,6 @@ public class UserUpdateIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -73,7 +67,6 @@ public class UserUpdateIntegrationTests {
 
     /**
      * Update a user by ID when ID exist success
-     * @throws IOException
      */
     @Test
     public void updateUserById_success() throws IOException {
@@ -108,7 +101,6 @@ public class UserUpdateIntegrationTests {
 
     /**
      * Update a user when user is invalid throws 400 BAD_REQUEST
-     * @throws IOException
      */
     @Test
     public void updateUser_invalidUser_400() throws IOException {
@@ -144,7 +136,6 @@ public class UserUpdateIntegrationTests {
 
     /**
      * Update user when user does not exist throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void updateUser_userDoesntExist_404() throws IOException {

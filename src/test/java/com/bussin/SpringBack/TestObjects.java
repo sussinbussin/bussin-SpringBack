@@ -10,7 +10,6 @@ import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -94,7 +93,7 @@ public class TestObjects {
             .id(UUID.randomUUID())
             .timestamp(new Timestamp(System.currentTimeMillis()))
             .passengers(1)
-            .cost(new BigDecimal(6.90))
+            .cost(new BigDecimal("6.90"))
             .rideTo("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
             .rideFrom("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
             .build();

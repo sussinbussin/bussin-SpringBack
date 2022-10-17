@@ -74,7 +74,6 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -84,7 +83,6 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      *
-     * @throws IOException
      */
     @Test
     public void getAllRoutes_noRoutes_Success() throws IOException {

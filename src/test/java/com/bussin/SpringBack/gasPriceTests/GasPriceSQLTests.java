@@ -39,7 +39,7 @@ public class GasPriceSQLTests {
     @Autowired
     private GasPriceService gasPriceService;
 
-    private static List<GasPrice> expectedRecent = new ArrayList<>();
+    private static final List<GasPrice> expectedRecent = new ArrayList<>();
 
     private void populateTable() {
         List<GasPrice> toSave = new ArrayList<>();

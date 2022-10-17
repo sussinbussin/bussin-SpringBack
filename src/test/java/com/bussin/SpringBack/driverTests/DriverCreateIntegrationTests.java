@@ -44,11 +44,6 @@ public class DriverCreateIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -67,7 +62,6 @@ public class DriverCreateIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -77,7 +71,6 @@ public class DriverCreateIntegrationTests {
 
     /**
      * Create a new driver with valid credentials success
-     * @throws IOException
      */
     @Test
     public void addNewDriver_success() throws IOException {
@@ -112,7 +105,6 @@ public class DriverCreateIntegrationTests {
 
     /**
      * Create a new driver with no user found throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void addNewDriver_noUser_404() throws IOException {
@@ -136,7 +128,6 @@ public class DriverCreateIntegrationTests {
 
     /**
      * Create a new driver with invalid credentials throws 400 BAD_REQUEST
-     * @throws IOException
      */
     @Test
     public void addNewDriver_badParams_400() throws IOException {

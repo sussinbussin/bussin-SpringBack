@@ -1,8 +1,5 @@
 package com.bussin.SpringBack.pricingTests;
 
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
-import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.GasPriceService;
 import com.bussin.SpringBack.services.PricingService;
 import com.google.maps.GeoApiContext;
@@ -10,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 
 import java.math.BigDecimal;
 

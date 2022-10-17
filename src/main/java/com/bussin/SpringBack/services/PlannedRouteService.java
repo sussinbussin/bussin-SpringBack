@@ -8,7 +8,6 @@ import com.bussin.SpringBack.models.PlannedRouteDTO;
 import com.bussin.SpringBack.models.UserPublicDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -123,12 +122,11 @@ public class PlannedRouteService {
             return objectMapper.readValue(httpResponse.getEntity().getContent(),
                     BigDecimal.class);
         } catch (URISyntaxException e) {
-
+            throw new IllegalStateException("Something went wrong while finding " +
+                    "distance", e);
         } catch (IOException e) {
             throw new CannotConnectToDistanceServerException();
         }
-        throw new IllegalStateException("Something went wrong while finding " +
-                "distance");
     }
 
     /**

@@ -1,24 +1,15 @@
 package com.bussin.SpringBack.securityTests;
 
 import com.bussin.SpringBack.TestObjects;
-import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
-import com.bussin.SpringBack.services.UserService;
 import com.bussin.SpringBack.testConfig.H2JpaConfig;
 import com.bussin.SpringBack.testConfig.TestContextConfig;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;

@@ -40,11 +40,6 @@ public class UserDeleteIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -61,7 +56,6 @@ public class UserDeleteIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -71,7 +65,6 @@ public class UserDeleteIntegrationTests {
 
     /**
      * Delete a user when user exist success
-     * @throws IOException
      */
     @Test
     public void deleteUser_success() throws IOException {
@@ -94,7 +87,6 @@ public class UserDeleteIntegrationTests {
 
     /**
      * Delete a user when user does not exist throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void deleteUser_userDoesntExist_404() throws IOException {

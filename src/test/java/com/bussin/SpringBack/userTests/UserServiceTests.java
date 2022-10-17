@@ -8,9 +8,7 @@ import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.Ride;
 import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserCreationDTO;
 import com.bussin.SpringBack.models.UserDTO;
-import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.repositories.UserRepository;
 import com.bussin.SpringBack.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,9 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolationException;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -140,20 +135,6 @@ public class UserServiceTests {
     /**
      * This test cannot be replicated because it adds to the user pool
      */
-//    @Test
-//    public void createNewUserWithCognito_success() {
-//        UserDTO userDTO = TestObjects.USER_DTO.clone();
-//        userDTO.setIsDriver(false);
-//        userDTO.setEmail("signupusertest@gmail.com");
-//
-//        UserCreationDTO userCreationDTO = UserCreationDTO.builder()
-//                .userDTO(userDTO)
-//                .username("signupuser")
-//                .password("P@ssw0rd")
-//                .build();
-//
-//        userService.createNewUserWithCognito(userCreationDTO);
-//    }
 
     @Test
     public void updateUser_success() {

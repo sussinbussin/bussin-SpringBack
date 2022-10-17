@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication
 public class TokenAuthFilter
         extends AbstractPreAuthenticatedProcessingFilter {
 
-    private String authHeaderName = "Authorization";
+    private final String authHeaderName = "Authorization";
 
     @Override
     protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {

@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Service
 public class DriverService {
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     private UserService userService;
 
@@ -75,13 +75,12 @@ public class DriverService {
     }
 
     /**
-     * Get the set of planned routes that is created by a driver
+     * Get the set of planned routes created by a driver
      * @param carPlate The String of Driver's car plate
      * @return A set of planned routes, if found
      */
     public Set<PlannedRoute> getAllPlannedRoutesByDriver(String carPlate) {
-        return driverRepository.findDriverByCarPlate(carPlate).map(found ->
-                found.getPlannedRoutes()).orElseThrow(()
+        return driverRepository.findDriverByCarPlate(carPlate).map(Driver::getPlannedRoutes).orElseThrow(()
                 -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
 

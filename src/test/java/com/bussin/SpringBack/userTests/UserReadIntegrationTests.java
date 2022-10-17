@@ -44,11 +44,6 @@ public class UserReadIntegrationTests {
 
     private final String baseUrl = "http://localhost:";
 
-    @Test
-    void contextLoads() {
-
-    }
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -65,7 +60,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Authenticate JWTToken and create a new TestObject user
-     * @throws IOException
      */
     @BeforeEach
     private void setUp() throws IOException {
@@ -75,7 +69,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get no users when there are no users success
-     * @throws IOException
      */
     @Test
     public void getAllUsers_noUsers_success() throws IOException {
@@ -90,7 +83,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get all users when there are users success
-     * @throws IOException
      */
     @Test
     public void getAllUsers_success() throws IOException {
@@ -116,7 +108,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get all details of a specific user if user exists success
-     * @throws IOException
      */
     @Test
     public void getFullUserById_userExists_success() throws IOException {
@@ -140,7 +131,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get details of a specific user if user exists success
-     * @throws IOException
      */
     @Test
     public void getUserById_userExists_success() throws IOException {
@@ -163,7 +153,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by ID when user doesn't exist throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void getUserById_userDoesntExist_404() throws IOException {
@@ -180,7 +169,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by ID when bad UUID is provided throws 400 BAD_REQUEST
-     * @throws IOException
      */
     @Test
     public void getUserById_badUUID_400() throws IOException {
@@ -196,7 +184,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by email when user exist success
-     * @throws IOException
      */
     @Test
     public void getUserByEmail_userExists_success() throws IOException {
@@ -220,7 +207,6 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by email when user doesn't exist throws 404 NOT_FOUND
-     * @throws IOException
      */
     @Test
     public void getUserByEmail_userDoesntExist_404() throws IOException {
