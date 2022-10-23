@@ -1,16 +1,14 @@
 package com.bussin.SpringBack.services;
 
 import com.bussin.SpringBack.exception.DriverNotFoundException;
-import com.bussin.SpringBack.models.Driver;
-import com.bussin.SpringBack.models.DriverDTO;
-import com.bussin.SpringBack.models.UserDTO;
-import com.bussin.SpringBack.models.PlannedRoute;
+import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.Set;
@@ -79,9 +77,13 @@ public class DriverService {
      * @param carPlate The String of Driver's car plate
      * @return A set of planned routes, if found
      */
-    public Set<PlannedRoute> getAllPlannedRoutesByDriver(String carPlate) {
-        return driverRepository.findDriverByCarPlate(carPlate).map(Driver::getPlannedRoutes).orElseThrow(()
-                -> new DriverNotFoundException("No driver with car plate " + carPlate));
+    public Set<PlannedRouteDTO> getAllPlannedRoutesByDriver(String carPlate) {
+        return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
+            Set<PlannedRouteDTO> plannedRouteDTO = new HashSet<>();
+            found.getPlannedRoutes().forEach(plannedRoute -> plannedRouteDTO.add(
+                    modelMapper.map(plannedRoute, PlannedRouteDTO.class)));
+            return plannedRouteDTO;
+        }).orElseThrow(() -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
 
     /**

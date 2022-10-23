@@ -30,6 +30,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 @ToString
 public class PlannedRouteDTO implements Serializable, Cloneable {
     @Id
