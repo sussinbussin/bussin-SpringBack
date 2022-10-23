@@ -63,7 +63,7 @@ public class DriverServiceTests {
     public void addNewDriver_success() {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        UserDTO userDTO = TestObjects.COGNITO_DRIVER_DTO.clone();
         userDTO.setIsDriver(false);
 
         User userResult = TestObjects.USER.clone();
@@ -221,7 +221,7 @@ public class DriverServiceTests {
     public void deleteDriver_success() {
         UUID id = UUID.randomUUID();
 
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        UserDTO userDTO = TestObjects.COGNITO_DRIVER_DTO.clone();
         userDTO.setId(id);
         userDTO.setIsDriver(false);
 

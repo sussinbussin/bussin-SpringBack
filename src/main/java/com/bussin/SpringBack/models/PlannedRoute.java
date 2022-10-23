@@ -91,7 +91,7 @@ public class PlannedRoute implements Serializable, Cloneable {
     @OneToMany(mappedBy = "plannedRoute")
     private Set<Ride> rides;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @Fetch(FetchMode.JOIN)
     @Cascade({ CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DELETE })
     @JoinColumn(name = "carPlate")

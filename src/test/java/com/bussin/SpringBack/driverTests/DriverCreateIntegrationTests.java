@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {TestContextConfig.class, H2JpaConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class DriverCreateIntegrationTests {
     @LocalServerPort
     private int port;
@@ -58,6 +58,8 @@ public class DriverCreateIntegrationTests {
 
     private String idToken;
 
+    private User user;
+
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
@@ -65,8 +67,8 @@ public class DriverCreateIntegrationTests {
      */
     @BeforeEach
     private void setUp() throws IOException {
-        idToken = "Bearer " + cognitoLogin.getAuthToken();
-        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+        idToken = "Bearer " + cognitoLogin.getAuthToken(false);
+        user = userService.createNewUser(TestObjects.COGNITO_USER_DTO);
     }
 
     /**
@@ -74,12 +76,8 @@ public class DriverCreateIntegrationTests {
      */
     @Test
     public void addNewDriver_success() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(true);
-
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
-        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/driver/" + user.getId());
         request.setHeader(AUTHORIZATION_HEADER, idToken);
@@ -131,13 +129,9 @@ public class DriverCreateIntegrationTests {
      */
     @Test
     public void addNewDriver_badParams_400() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(true);
-
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
         driverDTO.setCapacity(1000);
 
-        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/driver/" + user.getId());
         request.setHeader(AUTHORIZATION_HEADER, idToken);
