@@ -32,6 +32,7 @@ jobs:
           gmapsapiKey: ${{ secrets.gmapsapiKey }}
           COGNITO_PASSWORD: ${{secrets.COGNITO_PASSWORD}}
           COGNITO_USERNAME: ${{secrets.COGNITO_USERNAME}}
+          COGNITO_DRIVERNAME: ${{secrets.COGNITO_DRIVERNAME}}
           CLIENTID: ${{secrets.CLIENTID}}
           ENDPOINT: ${{secrets.ENDPOINT}}
           REGION: ${{secrets.REGION}}
