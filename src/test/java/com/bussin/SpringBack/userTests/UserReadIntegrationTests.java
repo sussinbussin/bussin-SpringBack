@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {TestContextConfig.class, H2JpaConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class UserReadIntegrationTests {
     @LocalServerPort
     private int port;
@@ -63,7 +63,7 @@ public class UserReadIntegrationTests {
      */
     @BeforeEach
     private void setUp() throws IOException {
-        idToken = "Bearer " + cognitoLogin.getAuthToken();
+        idToken = "Bearer " + cognitoLogin.getAuthToken(false);
         userService.createNewUser(TestObjects.COGNITO_USER_DTO);
     }
 

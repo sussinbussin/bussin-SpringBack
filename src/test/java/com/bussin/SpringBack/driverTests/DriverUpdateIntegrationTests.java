@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {TestContextConfig.class, H2JpaConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class DriverUpdateIntegrationTests {
     @LocalServerPort
     private int port;
@@ -57,6 +57,8 @@ public class DriverUpdateIntegrationTests {
 
     private String idToken;
 
+    private User user;
+
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
@@ -64,8 +66,8 @@ public class DriverUpdateIntegrationTests {
      */
     @BeforeEach
     private void setUp() throws IOException {
-        idToken = "Bearer " + cognitoLogin.getAuthToken();
-        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+        user = userService.createNewUser(TestObjects.COGNITO_DRIVER_DTO);
+        idToken = "Bearer " + cognitoLogin.getAuthToken(true);
     }
 
     /**
@@ -73,9 +75,6 @@ public class DriverUpdateIntegrationTests {
      */
     @Test
     public void updateDriver_success() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(true);
-
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         DriverDTO updatedDriverDTO = TestObjects.DRIVER_DTO.clone();
@@ -83,7 +82,6 @@ public class DriverUpdateIntegrationTests {
         updatedDriverDTO.setCapacity(12);
         updatedDriverDTO.setFuelType("TypePremium");
 
-        User user = userService.createNewUser(userDTO);
         Driver driver = driverService.addNewDriver(user.getId(), driverDTO);
 
         HttpUriRequest request = new HttpPut(baseUrl + port
@@ -114,12 +112,7 @@ public class DriverUpdateIntegrationTests {
      */
     @Test
     public void updateDriver_noDriver_404() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(true);
-
         DriverDTO updatedDriverDTO = TestObjects.DRIVER_DTO.clone();
-
-        userService.createNewUser(userDTO);
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/driver/" + updatedDriverDTO.getCarPlate());
@@ -142,16 +135,12 @@ public class DriverUpdateIntegrationTests {
      */
     @Test
     public void updateDriver_badParams_400() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(true);
-
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         DriverDTO updatedDriverDTO = TestObjects.DRIVER_DTO.clone();
         updatedDriverDTO.setModelAndColour("Actual clown car");
         updatedDriverDTO.setCapacity(12000);
 
-        User user = userService.createNewUser(userDTO);
         driverService.addNewDriver(user.getId(), driverDTO);
 
         HttpUriRequest request = new HttpPut(baseUrl + port

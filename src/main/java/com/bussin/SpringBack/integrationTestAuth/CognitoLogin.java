@@ -37,11 +37,17 @@ public class CognitoLogin {
     @Value("${cognito.username}")
     private String cognitoUsername;
 
+    @Value("${cognito.driverName}")
+    private String cognitoDriverName;
+
     @Value("${cognito.password}")
     private String cognitoPassword;
 
-    public String getAuthToken() throws IOException {
-        AuthParameters authParameters = new AuthParameters(cognitoUsername, cognitoPassword);
+    public String getAuthToken(boolean isDriver) throws IOException {
+        AuthParameters authParameters = isDriver?
+                new AuthParameters(cognitoDriverName, cognitoPassword) :
+                new AuthParameters(cognitoUsername, cognitoPassword);
+
         LoginRequestModel loginRequestModel = new LoginRequestModel(
                 "USER_PASSWORD_AUTH", cognitoClientId, authParameters);
 

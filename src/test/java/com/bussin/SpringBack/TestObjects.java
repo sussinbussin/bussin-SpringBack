@@ -45,6 +45,16 @@ public class TestObjects {
             .isDriver(false)
             .build();
 
+    public static final UserDTO COGNITO_DRIVER_DTO = UserDTO.builder()
+            .id(UUID.randomUUID())
+            .nric("S1337420Z")
+            .name("Robert The Driver")
+            .dob(new Date(System.currentTimeMillis()))
+            .mobile("94201337")
+            .email("Robert@gmail.com")
+            .isDriver(true)
+            .build();
+
     public static final Driver DRIVER = Driver.builder()
             .carPlate("SAA1234A")
             .modelAndColour("Yellow Submarine")
