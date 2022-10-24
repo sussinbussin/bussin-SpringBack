@@ -58,8 +58,4 @@ public class TokenValidator {
         }
         throw new JWTVerificationException("Cannot log in");
     }
-
-    public boolean sameUser(UUID uuid, String credentials) {
-        return uuid.equals(userFromToken(credentials).getId());
-    }
 }

@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.security;
 
+import com.bussin.SpringBack.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -87,11 +88,13 @@ public class SecurityConfiguration {
         authenticationFilter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(matchers));
         authenticationFilter.setAuthenticationManager(incoming -> {
             List<GrantedAuthority> authorities = new ArrayList<>(List.of(new SimpleGrantedAuthority("User")));
-            if(tokenValidator.userFromToken((String) incoming.getCredentials()).getIsDriver()){
+            User user =
+                    tokenValidator.userFromToken((String) incoming.getCredentials());
+            if(user.getIsDriver()){
                 authorities.add(new SimpleGrantedAuthority("Driver"));
             }
 
-            Authentication auth = new PreAuthenticatedAuthenticationToken("",
+            Authentication auth = new PreAuthenticatedAuthenticationToken(user.getId(),
                     incoming.getCredentials(), authorities);
             auth.setAuthenticated(true);
 

@@ -1,11 +1,14 @@
 package com.bussin.SpringBack.controllers;
 
+import com.bussin.SpringBack.exception.WrongUserException;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserCreationDTO;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,6 +47,9 @@ public class UserController {
     @GetMapping("/{userId}")
     @Operation(summary = "Gets a user by their ID")
     public UserDTO getUserById(@Valid @PathVariable UUID userId) {
+        if(!SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals(userId.toString())){
+            throw new WrongUserException();
+        }
         return userService.getUserById(userId);
     }
 
