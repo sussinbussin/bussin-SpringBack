@@ -20,6 +20,12 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
         this.resolver = handlerExceptionResolver;
     }
 
+    /**
+     * Filters unresolved exceptions that happen during filtering.
+     * @param request The request to check for exceptions
+     * @param response The response to check for exceptions
+     * @param filterChain The filter chain to pass resolved exceptions into
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {

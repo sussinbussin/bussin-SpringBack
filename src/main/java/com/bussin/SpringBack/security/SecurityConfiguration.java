@@ -77,17 +77,11 @@ public class SecurityConfiguration {
     @Bean
     public TokenAuthFilter tokenAuthFilter() {
         TokenAuthFilter authenticationFilter = new TokenAuthFilter();
-        ArrayList<RequestMatcher> matchers = new ArrayList<>();
-        matchers.add(new AntPathRequestMatcher("/users/*"));
-        matchers.add(new AntPathRequestMatcher( "/users/full/*"));
-        matchers.add(new AntPathRequestMatcher("/users/byEmail/*"));
-        matchers.add(new AntPathRequestMatcher("/driver/**"));
-        matchers.add(new AntPathRequestMatcher("/planned/**"));
-        matchers.add(new AntPathRequestMatcher("/ride/**"));
+        authenticationFilter.setRequiresAuthenticationRequestMatcher(getMatcher());
 
-        authenticationFilter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(matchers));
         authenticationFilter.setAuthenticationManager(incoming -> {
-            List<GrantedAuthority> authorities = new ArrayList<>(List.of(new SimpleGrantedAuthority("User")));
+            List<GrantedAuthority> authorities =
+                    new ArrayList<>(List.of(new SimpleGrantedAuthority("User")));
             User user =
                     tokenValidator.userFromToken((String) incoming.getCredentials());
             if(user.getIsDriver()){
@@ -101,5 +95,16 @@ public class SecurityConfiguration {
             return auth;
         });
         return authenticationFilter;
+    }
+
+    private RequestMatcher getMatcher() {
+        ArrayList<RequestMatcher> matchers = new ArrayList<>();
+        matchers.add(new AntPathRequestMatcher("/users/*"));
+        matchers.add(new AntPathRequestMatcher( "/users/full/*"));
+        matchers.add(new AntPathRequestMatcher("/users/byEmail/*"));
+        matchers.add(new AntPathRequestMatcher("/driver/**"));
+        matchers.add(new AntPathRequestMatcher("/planned/**"));
+        matchers.add(new AntPathRequestMatcher("/ride/**"));
+        return new OrRequestMatcher(matchers);
     }
 }
