@@ -94,7 +94,7 @@ public class SecurityConfiguration {
                 authorities.add(new SimpleGrantedAuthority("Driver"));
             }
 
-            Authentication auth = new PreAuthenticatedAuthenticationToken(user.getId(),
+            Authentication auth = new PreAuthenticatedAuthenticationToken(user,
                     incoming.getCredentials(), authorities);
             auth.setAuthenticated(true);
 

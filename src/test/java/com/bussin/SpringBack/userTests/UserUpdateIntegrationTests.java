@@ -53,6 +53,8 @@ public class UserUpdateIntegrationTests {
 
     private String idToken;
 
+    private User user;
+
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
 
@@ -62,7 +64,7 @@ public class UserUpdateIntegrationTests {
     @BeforeEach
     private void setUp() throws IOException {
         idToken = "Bearer " + cognitoLogin.getAuthToken(false);
-        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+        user = userService.createNewUser(TestObjects.COGNITO_USER_DTO);
     }
 
     /**
@@ -70,14 +72,9 @@ public class UserUpdateIntegrationTests {
      */
     @Test
     public void updateUserById_success() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-
-        User user = userService.createNewUser(userDTO);
-
-        UserDTO userDTOUpdated = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-        userDTO.setName("Testing123");
+        UserDTO userDTOUpdated = TestObjects.COGNITO_USER_DTO.clone();
+        userDTOUpdated.setIsDriver(false);
+        userDTOUpdated.setName("Testing123");
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/users/" + user.getId());
@@ -104,9 +101,6 @@ public class UserUpdateIntegrationTests {
      */
     @Test
     public void updateUser_invalidUser_400() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-
         UserDTO userDTOInvalidUpdate = UserDTO.builder()
                 .nric("S9999999Z22")
                 .name("Robert")
@@ -114,8 +108,6 @@ public class UserUpdateIntegrationTests {
                 .email("Robert@gmail.com")
                 .mobile("900090000")
                 .isDriver(false).build();
-
-        User user = userService.createNewUser(userDTO);
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/users/" + user.getId());
@@ -135,11 +127,11 @@ public class UserUpdateIntegrationTests {
     }
 
     /**
-     * Update user when user does not exist throws 404 NOT_FOUND
+     * Update user when user does not exist throws 403 FORBIDDEN
      */
     @Test
-    public void updateUser_userDoesntExist_404() throws IOException {
-        UserDTO userDTOUpdated = TestObjects.USER_DTO.clone();
+    public void updateUser_userDoesntExist_403() throws IOException {
+        UserDTO userDTOUpdated = TestObjects.COGNITO_USER_DTO.clone();
         userDTOUpdated.setIsDriver(false);
 
         HttpUriRequest request = new HttpPut(baseUrl + port
@@ -156,6 +148,6 @@ public class UserUpdateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(404, httpResponse.getCode());
+        assertEquals(403, httpResponse.getCode());
     }
 }
