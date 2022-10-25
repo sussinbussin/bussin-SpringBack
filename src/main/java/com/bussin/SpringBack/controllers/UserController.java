@@ -1,11 +1,13 @@
 package com.bussin.SpringBack.controllers;
 
+import com.bussin.SpringBack.exception.WrongUserException;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserCreationDTO;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,6 +46,7 @@ public class UserController {
     @GetMapping("/{userId}")
     @Operation(summary = "Gets a user by their ID")
     public UserDTO getUserById(@Valid @PathVariable UUID userId) {
+        isSameUser(userId);
         return userService.getUserById(userId);
     }
 
@@ -56,7 +59,7 @@ public class UserController {
     @Operation(summary = "Gets a user and all their related info by their ID")
     @GetMapping("/full/{userId}")
     public User getFullUserById(@Valid @PathVariable UUID userId) {
-
+        isSameUser(userId);
         return userService.getFullUserById(userId);
     }
 
@@ -69,6 +72,7 @@ public class UserController {
     @Operation(summary = "Gets a user by their email")
     @GetMapping("/byEmail/{email}")
     public UserDTO getUserByEmail(@Valid @Email @PathVariable String email) {
+        isSameUser(email);
         return userService.getUserByEmail(email);
     }
 
@@ -81,7 +85,6 @@ public class UserController {
     @Operation(summary = "Creates a new user")
     @PostMapping
     public User createNewUser(@Valid @RequestBody UserDTO userDTO) {
-
         return userService.createNewUser(userDTO);
     }
 
@@ -94,7 +97,6 @@ public class UserController {
     @Operation(summary = "Creates a new user")
     @PostMapping("/wCognito/create")
     public User createNewUserWithCognito(@Valid @RequestBody UserCreationDTO userCreationDTO) {
-
         return userService.createNewUserWithCognito(userCreationDTO);
     }
 
@@ -110,6 +112,7 @@ public class UserController {
     @PutMapping("/{userId}")
     public User updateUserById(@Valid @PathVariable UUID userId,
                                @Valid @RequestBody UserDTO userDTO) {
+        isSameUser(userId);
         return userService.updateUser(userId, userDTO);
     }
 
@@ -122,7 +125,19 @@ public class UserController {
     @Operation(summary = "Deletes a user by their ID")
     @DeleteMapping("/{userId}")
     public UserDTO deleteUserById(@Valid @PathVariable UUID userId) {
-
+        isSameUser(userId);
         return userService.deleteUser(userId);
+    }
+
+    private void isSameUser(UUID userID) {
+        if(!((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId().toString().equals(userID.toString())){
+            throw new WrongUserException();
+        }
+    }
+
+    private void isSameUser(String email) {
+        if(!((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmail().equals(email)){
+            throw new WrongUserException();
+        }
     }
 }

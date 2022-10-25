@@ -96,8 +96,6 @@ public class PlannedRouteService {
         return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime);
     }
 
-    //Will link to distance service
-
     /**
      * Get distance between the trip starts and trip ends
      * @param tripStart The String

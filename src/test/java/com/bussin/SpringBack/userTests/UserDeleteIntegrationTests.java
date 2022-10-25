@@ -51,6 +51,8 @@ public class UserDeleteIntegrationTests {
 
     private String idToken;
 
+    private User user;
+
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
 
@@ -60,7 +62,7 @@ public class UserDeleteIntegrationTests {
     @BeforeEach
     private void setUp() throws IOException {
         idToken = "Bearer " + cognitoLogin.getAuthToken(false);
-        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+        user = userService.createNewUser(TestObjects.COGNITO_USER_DTO);
     }
 
     /**
@@ -68,10 +70,6 @@ public class UserDeleteIntegrationTests {
      */
     @Test
     public void deleteUser_success() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-
-        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpDelete(baseUrl + port
                 + "/api/v1/users/" + user.getId());
         request.setHeader(AUTHORIZATION_HEADER, idToken);
@@ -86,10 +84,10 @@ public class UserDeleteIntegrationTests {
     }
 
     /**
-     * Delete a user when user does not exist throws 404 NOT_FOUND
+     * Delete a user when user does not exist throws 403 Forbidden
      */
     @Test
-    public void deleteUser_userDoesntExist_404() throws IOException {
+    public void deleteUser_userDoesntExist_403() throws IOException {
         HttpUriRequest request = new HttpDelete(baseUrl + port
                 + "/api/v1/users/" + UUID.randomUUID());
         request.setHeader(AUTHORIZATION_HEADER, idToken);
@@ -97,6 +95,6 @@ public class UserDeleteIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(404, httpResponse.getCode());
+        assertEquals(403, httpResponse.getCode());
     }
 }

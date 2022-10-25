@@ -12,26 +12,36 @@ import java.security.interfaces.RSAPublicKey;
 
 public class AwsCognitoRSAKeyProvider implements RSAKeyProvider {
 
-    private final URL aws_kid_store_url;
+    private final URL awsKidStoreUrl;
     private final JwkProvider provider;
 
-    public AwsCognitoRSAKeyProvider(String aws_cognito_region, String aws_user_pools_id) {
-        String url = String.format("https://cognito-idp.%s.amazonaws.com/%s/.well-known/jwks.json", aws_cognito_region, aws_user_pools_id);
+    /**
+     * Constructs an AWS Cognito RSA Key Provider
+     * @param awsCognitoRegion The region to construct the provider in
+     * @param awsUserPoolsId The user pool to construct the provider for
+     */
+    public AwsCognitoRSAKeyProvider(String awsCognitoRegion, String awsUserPoolsId) {
+        String url = String.format("https://cognito-idp.%s.amazonaws.com/%s/.well-known/jwks.json", awsCognitoRegion, awsUserPoolsId);
         try {
-            aws_kid_store_url = new URL(url);
+            awsKidStoreUrl = new URL(url);
         } catch (MalformedURLException e) {
             throw new RuntimeException(String.format("Invalid URL provided, URL=%s", url));
         }
-        provider = new JwkProviderBuilder(aws_kid_store_url).build();
+        provider = new JwkProviderBuilder(awsKidStoreUrl).build();
     }
 
 
+    /**
+     * Gets the public key used to verify JWTs
+     * @param kid The KID
+     * @return The public key for decryption
+     */
     @Override
     public RSAPublicKey getPublicKeyById(String kid) {
         try {
             return (RSAPublicKey) provider.get(kid).getPublicKey();
         } catch (JwkException e) {
-            throw new RuntimeException(String.format("Failed to get JWT kid=%s from aws_kid_store_url=%s", kid, aws_kid_store_url));
+            throw new RuntimeException(String.format("Failed to get JWT kid=%s from aws_kid_store_url=%s", kid, awsKidStoreUrl));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.bussin.SpringBack.security;
 
+import com.bussin.SpringBack.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -76,6 +77,27 @@ public class SecurityConfiguration {
     @Bean
     public TokenAuthFilter tokenAuthFilter() {
         TokenAuthFilter authenticationFilter = new TokenAuthFilter();
+        authenticationFilter.setRequiresAuthenticationRequestMatcher(getMatcher());
+
+        authenticationFilter.setAuthenticationManager(incoming -> {
+            List<GrantedAuthority> authorities =
+                    new ArrayList<>(List.of(new SimpleGrantedAuthority("User")));
+            User user =
+                    tokenValidator.userFromToken((String) incoming.getCredentials());
+            if(user.getIsDriver()){
+                authorities.add(new SimpleGrantedAuthority("Driver"));
+            }
+
+            Authentication auth = new PreAuthenticatedAuthenticationToken(user,
+                    incoming.getCredentials(), authorities);
+            auth.setAuthenticated(true);
+
+            return auth;
+        });
+        return authenticationFilter;
+    }
+
+    private RequestMatcher getMatcher() {
         ArrayList<RequestMatcher> matchers = new ArrayList<>();
         matchers.add(new AntPathRequestMatcher("/users/*"));
         matchers.add(new AntPathRequestMatcher( "/users/full/*"));
@@ -83,20 +105,6 @@ public class SecurityConfiguration {
         matchers.add(new AntPathRequestMatcher("/driver/**"));
         matchers.add(new AntPathRequestMatcher("/planned/**"));
         matchers.add(new AntPathRequestMatcher("/ride/**"));
-
-        authenticationFilter.setRequiresAuthenticationRequestMatcher(new OrRequestMatcher(matchers));
-        authenticationFilter.setAuthenticationManager(incoming -> {
-            List<GrantedAuthority> authorities = new ArrayList<>(List.of(new SimpleGrantedAuthority("User")));
-            if(tokenValidator.userFromToken((String) incoming.getCredentials()).getIsDriver()){
-                authorities.add(new SimpleGrantedAuthority("Driver"));
-            }
-
-            Authentication auth = new PreAuthenticatedAuthenticationToken("",
-                    incoming.getCredentials(), authorities);
-            auth.setAuthenticated(true);
-
-            return auth;
-        });
-        return authenticationFilter;
+        return new OrRequestMatcher(matchers);
     }
 }

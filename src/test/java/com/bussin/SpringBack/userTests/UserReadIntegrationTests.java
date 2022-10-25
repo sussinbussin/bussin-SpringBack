@@ -55,6 +55,8 @@ public class UserReadIntegrationTests {
 
     private String idToken;
 
+    private User user;
+
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
 
@@ -64,7 +66,7 @@ public class UserReadIntegrationTests {
     @BeforeEach
     private void setUp() throws IOException {
         idToken = "Bearer " + cognitoLogin.getAuthToken(false);
-        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+        user = userService.createNewUser(TestObjects.COGNITO_USER_DTO);
     }
 
     /**
@@ -111,10 +113,6 @@ public class UserReadIntegrationTests {
      */
     @Test
     public void getFullUserById_userExists_success() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-
-        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users"
                 + "/full/" + user.getId());
         request.setHeader(AUTHORIZATION_HEADER, idToken);
@@ -134,10 +132,6 @@ public class UserReadIntegrationTests {
      */
     @Test
     public void getUserById_userExists_success() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-
-        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users/"
                 + user.getId());
         request.setHeader(AUTHORIZATION_HEADER, idToken);
@@ -152,10 +146,10 @@ public class UserReadIntegrationTests {
     }
 
     /**
-     * Get user by ID when user doesn't exist throws 404 NOT_FOUND
+     * Get user by ID when user doesn't exist throws 403 FORBIDDEN
      */
     @Test
-    public void getUserById_userDoesntExist_404() throws IOException {
+    public void getUserById_userDoesntExist_403() throws IOException {
         HttpUriRequest request =
                 new HttpGet(baseUrl + port
                         + "/api/v1/users/" + UUID.randomUUID());
@@ -164,7 +158,7 @@ public class UserReadIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(404, httpResponse.getCode());
+        assertEquals(403, httpResponse.getCode());
     }
 
     /**
@@ -187,10 +181,6 @@ public class UserReadIntegrationTests {
      */
     @Test
     public void getUserByEmail_userExists_success() throws IOException {
-        UserDTO userDTO = TestObjects.USER_DTO.clone();
-        userDTO.setIsDriver(false);
-
-        User user = userService.createNewUser(userDTO);
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
                 "/byEmail/"
                 + user.getEmail());
@@ -206,10 +196,10 @@ public class UserReadIntegrationTests {
     }
 
     /**
-     * Get user by email when user doesn't exist throws 404 NOT_FOUND
+     * Get user by email when user doesn't exist throws 403 FORBIDDEN
      */
     @Test
-    public void getUserByEmail_userDoesntExist_404() throws IOException {
+    public void getUserByEmail_userDoesntExist_403() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users" +
                 "/byEmail/Robert@gmail.com");
         request.setHeader(AUTHORIZATION_HEADER, idToken);
@@ -217,6 +207,6 @@ public class UserReadIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(404, httpResponse.getCode());
+        assertEquals(403, httpResponse.getCode());
     }
 }
