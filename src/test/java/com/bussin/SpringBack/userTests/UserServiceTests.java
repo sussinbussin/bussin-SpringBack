@@ -64,7 +64,7 @@ public class UserServiceTests {
 
         userService = new UserService(userRepository, modelMapper);
         userService.setAmazonCognitoClient(cognitoIdentityProvider);
-        userService.setClientID("4pv7rad4vqjk19j50hlpg6jleo");
+        userService.setClientID(clientID);
     }
 
     @Test
