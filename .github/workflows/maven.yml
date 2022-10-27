@@ -1,13 +1,10 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "coveralls_and_readme" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "coveralls_and_readme" ]
 
 jobs:
   build:
@@ -41,3 +38,5 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: root
         run: |
           mvn clean install
+      - name: Coveralls Coverage Report Submission
+        run: mvn coveralls:report --define repoToken=${{ secrets.COVERALL_REPO_TOKEN }}
