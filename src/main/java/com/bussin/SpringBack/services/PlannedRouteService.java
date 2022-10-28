@@ -1,6 +1,5 @@
 package com.bussin.SpringBack.services;
 
-import com.bussin.SpringBack.exception.CannotConnectToDistanceServerException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.models.PlannedRoute;
@@ -8,21 +7,11 @@ import com.bussin.SpringBack.models.PlannedRouteDTO;
 import com.bussin.SpringBack.models.UserPublicDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.net.URIBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +22,6 @@ public class PlannedRouteService {
     private final ModelMapper modelMapper;
     private final PlannedRoutesRepository plannedRoutesRepository;
     private final DriverRepository driverRepository;
-
-    @Value("distance.serverUrl")
-    private String distanceUrl;
-
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     @Autowired
     public PlannedRouteService(ModelMapper modelMapper,
@@ -94,38 +73,6 @@ public class PlannedRouteService {
      */
     public List<PlannedRoute> getPlannedRouteAfterTime(LocalDateTime dateTime) {
         return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime);
-    }
-
-    /**
-     * Get distance between the trip starts and trip ends
-     * @param tripStart The String
-     * @param tripEnd The String
-     * @return The distance of between the start and end of trip
-     */
-    public BigDecimal getDistanceBetween(String tripStart, String tripEnd) {
-        try{
-            URI uri = new URIBuilder(distanceUrl+"/distance")
-                    .addParameter("tripStart", tripStart)
-                    .addParameter("tripEnd", tripEnd)
-                    .build();
-
-            HttpGet request = new HttpGet(uri);
-
-            request.setHeader("Accept", "application/json");
-            request.setHeader("Content-type", "application/json");
-
-            CloseableHttpResponse httpResponse =
-                    HttpClientBuilder.create().build().execute(request);
-
-            return objectMapper.readValue(httpResponse.getEntity().getContent(),
-                    BigDecimal.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException("Something went wrong while finding " +
-                    "distance", e);
-        } catch (IOException e) {
-            throw new CannotConnectToDistanceServerException("Could not " +
-                    "connect to google maps API");
-        }
     }
 
     /**

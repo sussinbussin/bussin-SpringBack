@@ -1,7 +1,6 @@
 package com.bussin.SpringBack.controllers;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.bussin.SpringBack.exception.CannotConnectToDistanceServerException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.exception.RideException;
@@ -202,22 +201,6 @@ public class ExceptionHandling {
             final RideNotFoundException e) {
         String devMessage = "404 caused by RideNotFoundException";
         return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * Handles CannotConnectToDistanceServerException.
-     *
-     * @param e CannotConnectToDistanceServerException
-     * @return Response entity with ApiError message and HTTP code 500
-     */
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(CannotConnectToDistanceServerException.class)
-    public ResponseEntity<ApiError> handleCannotConnectToDistanceServerException(
-            final CannotConnectToDistanceServerException e) {
-        String userMessage = "Unable to authenticate";
-        String devMessage = "500 caused by CannotConnectToDistanceServerException";
-        return new ResponseEntity<>(new ApiError(userMessage, devMessage, e.getStackTrace()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
