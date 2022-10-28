@@ -1,5 +1,7 @@
 package com.bussin.SpringBack.controllers;
 
+import com.amazonaws.services.cognitoidp.model.InvalidPasswordException;
+import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
@@ -38,7 +40,7 @@ public class ExceptionHandling {
     public ResponseEntity<ApiError> handleDataIntegrityViolationException(
             final DataIntegrityViolationException e) {
         String userMessage = "Invalid input, please try again";
-        String devMessage = "400 caused by DataIntegrityViolationException";
+        String devMessage = "400 caused by " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
     }
 
@@ -53,7 +55,7 @@ public class ExceptionHandling {
     public ResponseEntity<ApiError> handleHttpMessageNotReadableException(
             final HttpMessageNotReadableException e) {
         String userMessage = "Unable to read input";
-        String devMessage = "400 caused by HttpMessageNotReadableException";
+        String devMessage = "400 caused by " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
     }
 
@@ -68,7 +70,7 @@ public class ExceptionHandling {
     public ResponseEntity<ApiError> handleMethodArgumentTypeMismatchException(
             final MethodArgumentTypeMismatchException e) {
         String userMessage = "Invalid inputs";
-        String devMessage = "400 caused by MethodArgumentTypeMismatchException";
+        String devMessage = "400 caused by " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
     }
 
@@ -83,7 +85,7 @@ public class ExceptionHandling {
     public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
             final MethodArgumentNotValidException e) {
         String userMessage = "Fields are not in correct format";
-        String devMessage = "400 caused by MethodArgumentNotValidException";
+        String devMessage = "400 caused by " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
     }
 
@@ -97,7 +99,7 @@ public class ExceptionHandling {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiError> handleConstraintViolationException(
             final ConstraintViolationException e) {
-        String devMessage = "400 caused by ConstraintViolationException";
+        String devMessage = "400 caused by " + e;
         return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
     }
 
@@ -111,7 +113,35 @@ public class ExceptionHandling {
     @ExceptionHandler(RideException.class)
     public ResponseEntity<ApiError> handleRideException(
             final RideException e) {
-        String devMessage = "400 caused by RideException";
+        String devMessage = "400 caused by " + e;
+        return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles InvalidPasswordException.
+     *
+     * @param e InvalidPasswordException
+     * @return Response entity with ApiError message and HTTP code 400
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ApiError> handleInvalidPasswordException(
+            final InvalidPasswordException e) {
+        String devMessage = "400 caused by " + e;
+        return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles UsernameExistsException.
+     *
+     * @param e UsernameExistsException
+     * @return Response entity with ApiError message and HTTP code 400
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UsernameExistsException.class)
+    public ResponseEntity<ApiError> handleUsernameExistsException(
+            final UsernameExistsException e) {
+        String devMessage = "400 caused by " + e;
         return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.BAD_REQUEST);
     }
 
@@ -126,7 +156,7 @@ public class ExceptionHandling {
     public ResponseEntity<ApiError> handleJWTVerificationException(
             final JWTVerificationException e) {
         String userMessage = "Unable to verify user";
-        String devMessage = "401 caused by JWTVerificationException";
+        String devMessage = "401 caused by " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage, e.getStackTrace()), HttpStatus.UNAUTHORIZED);
     }
 
@@ -142,7 +172,7 @@ public class ExceptionHandling {
             final WrongUserException e) {
         String userMessage = "You are not allowed to view this page";
         String devMessage = "403 caused by WrongUserException. The UUID of " +
-                "the requesting user and target user don't match";
+                "the requesting user and target user don't match " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage,
                 e.getStackTrace()), HttpStatus.FORBIDDEN);
     }
@@ -157,7 +187,7 @@ public class ExceptionHandling {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFoundException(
             final UserNotFoundException e) {
-        String devMessage = "404 caused by UserNotFoundException";
+        String devMessage = "404 caused by " + e;
         return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.NOT_FOUND);
     }
 
@@ -171,7 +201,7 @@ public class ExceptionHandling {
     @ExceptionHandler(DriverNotFoundException.class)
     public ResponseEntity<ApiError> handleDriverNotFoundException(
             final DriverNotFoundException e) {
-        String devMessage = "404 caused by DriverNotFoundException";
+        String devMessage = "404 caused by " + e;
         return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.NOT_FOUND);
     }
 
@@ -185,7 +215,7 @@ public class ExceptionHandling {
     @ExceptionHandler(PlannedRouteNotFoundException.class)
     public ResponseEntity<ApiError> handlePlannedRouteNotFoundException(
             final PlannedRouteNotFoundException e) {
-        String devMessage = "404 caused by PlannedRouteNotFoundException";
+        String devMessage = "404 caused by " + e;
         return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.NOT_FOUND);
     }
 
@@ -199,7 +229,7 @@ public class ExceptionHandling {
     @ExceptionHandler(RideNotFoundException.class)
     public ResponseEntity<ApiError> handleRideNotFoundException(
             final RideNotFoundException e) {
-        String devMessage = "404 caused by RideNotFoundException";
+        String devMessage = "404 caused by " + e;
         return new ResponseEntity<>(new ApiError(e.getMessage(), devMessage, e.getStackTrace()), HttpStatus.NOT_FOUND);
     }
 
@@ -213,7 +243,7 @@ public class ExceptionHandling {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleException(final Exception e) {
         String userMessage = "Something went wrong";
-        String devMessage = "500 caused by Exception. Error!";
+        String devMessage = "500 caused by " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage, e.getStackTrace()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
