@@ -70,19 +70,6 @@ public class PlannedRouteController {
     }
 
     /**
-     * Get distance between the trip starts and trip ends
-     * @param tripStart The String
-     * @param tripEnd The String
-     * @return The distance of between the start and end of trip
-     */
-    @Operation(summary = "Gets distance between two addresses")
-    @GetMapping("/distance")
-    public BigDecimal getDistanceBetween(@Pattern(regexp = "^[0-9]{6}$") @PathVariable String tripStart,
-            @Pattern(regexp = "^[0-9]{6}$") @PathVariable String tripEnd) {
-        return plannedRouteService.getDistanceBetween(tripStart, tripEnd);
-    }
-
-    /**
      * Create a new planned route
      * @param plannedRouteDTO The PlannedRouteDTO with details to create
      * @param carPlate The String of driver that created the planned route
