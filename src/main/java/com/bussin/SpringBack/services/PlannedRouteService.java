@@ -123,7 +123,8 @@ public class PlannedRouteService {
             throw new IllegalStateException("Something went wrong while finding " +
                     "distance", e);
         } catch (IOException e) {
-            throw new CannotConnectToDistanceServerException();
+            throw new CannotConnectToDistanceServerException("Could not " +
+                    "connect to google maps API");
         }
     }
 

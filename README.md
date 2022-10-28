@@ -1,6 +1,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/sussinbussin/bussin-SpringBack/badge.svg?branch=main)](https://coveralls.io/github/sussinbussin/bussin-SpringBack?branch=main)
 </br>
-#Bussin
+## Bussin
 Bussin is a carpooling service that serves to bridge the gap between public transport and ride-hailing services
 through better utilisation of privately owned cars through ride-sharing to reduce traffic volume, especially during peak
 hours. Bussin mainly serves those who have predictable travel schedules, and are able to book their rides ahead of
