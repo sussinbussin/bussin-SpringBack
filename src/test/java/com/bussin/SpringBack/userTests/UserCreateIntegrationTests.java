@@ -3,6 +3,7 @@ package com.bussin.SpringBack.userTests;
 import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.models.UserCreationDTO;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.services.UserService;
 import com.bussin.SpringBack.testConfig.H2JpaConfig;
@@ -111,6 +112,64 @@ public class UserCreateIntegrationTests {
 
         StringEntity entity =
                 new StringEntity(new ObjectMapper().writeValueAsString(userDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(400, httpResponse.getCode());
+    }
+
+    @Test
+    public void createNewUser_invalidPassword_400() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S1231233Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .email("uchawuhfa@gmail.com")
+                .mobile("81729365")
+                .isDriver(false)
+                .build();
+
+        UserCreationDTO userCreationDTO =
+                new UserCreationDTO("simple", "sdsdhfics", userDTO);
+
+        HttpUriRequest request = new HttpPost(baseUrl + port
+                + "/api/v1/users/wCognito/create");
+
+        StringEntity entity =
+                new StringEntity(new ObjectMapper().writeValueAsString(userCreationDTO));
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(400, httpResponse.getCode());
+    }
+
+    @Test
+    public void createNewUser_duplicatedUsername_400() throws IOException {
+        UserDTO userDTO = UserDTO.builder()
+                .nric("S1231233Z")
+                .name("Robert")
+                .dob(new Date(90000000))
+                .email("uchawuhfa@gmail.com")
+                .mobile("81729365")
+                .isDriver(false)
+                .build();
+
+        UserCreationDTO userCreationDTO =
+                new UserCreationDTO("P@ssw0rd", "SpringBackTest", userDTO);
+
+        HttpUriRequest request = new HttpPost(baseUrl + port
+                + "/api/v1/users/wCognito/create");
+
+        StringEntity entity =
+                new StringEntity(new ObjectMapper().writeValueAsString(userCreationDTO));
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
