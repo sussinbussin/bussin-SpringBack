@@ -17,11 +17,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
@@ -47,6 +49,10 @@ public class RideDTO implements Serializable, Cloneable {
     @Schema(description = "Number of seats booked", example = "2")
     private Integer passengers;
 
+    @DecimalMin("0")
+    @Schema(description = "Cost of the ride", example = "3.00")
+    private BigDecimal cost;
+
     @NotNull
     @Size(max = 512)
     @Schema(description = "Place ID of the passenger's journey start location",
@@ -71,11 +77,13 @@ public class RideDTO implements Serializable, Cloneable {
     public RideDTO(@JsonProperty("id") UUID id,
                    @JsonProperty("timestamp") Timestamp timestamp,
                    @JsonProperty("passengers") Integer passengers,
+                   @JsonProperty("cost") BigDecimal cost,
                    @JsonProperty("rideFrom") String rideFrom,
                    @JsonProperty("rideTo") String rideTo) {
         this.id = id;
         this.timestamp = timestamp;
         this.passengers = passengers;
+        this.cost = cost;
         this.rideFrom = rideFrom;
         this.rideTo = rideTo;
     }
