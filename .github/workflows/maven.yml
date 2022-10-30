@@ -26,7 +26,6 @@ jobs:
           mysql database: 'bussin'
       - name: Build with Maven
         env:
-          gmapsapiKey: ${{ secrets.gmapsapiKey }}
           COGNITO_PASSWORD: ${{secrets.COGNITO_PASSWORD}}
           COGNITO_USERNAME: ${{secrets.COGNITO_USERNAME}}
           COGNITO_DRIVERNAME: ${{secrets.COGNITO_DRIVERNAME}}
