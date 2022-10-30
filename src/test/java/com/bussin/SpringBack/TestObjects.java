@@ -105,6 +105,7 @@ public class TestObjects {
     public static final RideDTO RIDE_DTO = RideDTO.builder()
             .timestamp(new Timestamp(System.currentTimeMillis()))
             .passengers(1)
+            .cost(new BigDecimal("6.90"))
             .rideTo("place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
             .rideFrom("place_id:ChIJGddBg6MZ2jERACsxW7Ovm_4")
             .build();

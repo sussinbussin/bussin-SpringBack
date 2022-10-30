@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -50,6 +52,7 @@ public class RideDTO implements Serializable, Cloneable {
     private Integer passengers;
 
     @DecimalMin("0")
+    @Digits(integer=6, fraction=2)
     @Schema(description = "Cost of the ride", example = "3.00")
     private BigDecimal cost;
 
