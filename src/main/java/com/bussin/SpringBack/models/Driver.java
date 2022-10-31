@@ -49,7 +49,7 @@ public class Driver implements Serializable, Cloneable {
     @NotNull
     private String fuelType;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
