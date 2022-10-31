@@ -31,4 +31,13 @@ public class RideCreationDTO implements Serializable {
         this.plannedRouteUUID = plannedRouteUUID;
         this.rideDTO = rideDTO;
     }
+
+    @Override
+    public String toString() {
+        return "RideCreationDTO{" +
+                "userUUID=" + userUUID +
+                ", plannedRouteUUID=" + plannedRouteUUID +
+                ", rideDTO=" + rideDTO +
+                '}';
+    }
 }

@@ -101,4 +101,16 @@ public class RideDTO implements Serializable, Cloneable {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return "RideDTO{" +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                ", passengers=" + passengers +
+                ", cost=" + cost +
+                ", rideFrom='" + rideFrom + '\'' +
+                ", rideTo='" + rideTo + '\'' +
+                '}';
+    }
 }
