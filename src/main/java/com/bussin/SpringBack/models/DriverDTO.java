@@ -78,4 +78,14 @@ public class DriverDTO implements Serializable, Cloneable {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return "DriverDTO{" +
+                "carPlate='" + carPlate + '\'' +
+                ", modelAndColour='" + modelAndColour + '\'' +
+                ", capacity=" + capacity +
+                ", fuelType='" + fuelType + '\'' +
+                '}';
+    }
 }
