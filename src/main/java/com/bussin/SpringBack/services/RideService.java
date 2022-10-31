@@ -69,15 +69,7 @@ public class RideService {
 
         ride.setUser(found);
 
-        int passengersOnBoard = ride.getPassengers();
-
-        if(plannedRoute.getRides() != null) {
-            for (Ride rideFound : plannedRoute.getRides()) {
-                passengersOnBoard += rideFound.getPassengers();
-            }
-        }
-
-        if (passengersOnBoard > plannedRoute.getCapacity()) {
+        if (ride.getPassengers() + plannedRoute.getPassengerCount() > plannedRoute.getCapacity()) {
             throw new RideException("Passenger is over the car's capacity");
         }
 

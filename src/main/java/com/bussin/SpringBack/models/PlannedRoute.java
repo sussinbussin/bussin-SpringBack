@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,6 +110,11 @@ public class PlannedRoute implements Serializable, Cloneable {
         this.destLongitude = plannedRouteDTO.getDestLongitude();
     }
 
+    @JsonIgnore
+    public int getPassengerCount() {
+        return rides == null ? 0 : rides.stream().mapToInt(Ride::getPassengers).sum();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -130,7 +136,7 @@ public class PlannedRoute implements Serializable, Cloneable {
             return objectMapper.readValue(
                     objectMapper.writeValueAsString(this), PlannedRoute.class);
         } catch (JsonProcessingException e) {
-            return null;
+            throw new IllegalStateException(e);
         }
     }
 }
