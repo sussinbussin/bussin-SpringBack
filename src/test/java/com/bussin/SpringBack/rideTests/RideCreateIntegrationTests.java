@@ -61,9 +61,6 @@ public class RideCreateIntegrationTests {
     private PlannedRouteService plannedRouteService;
 
     @Autowired
-    private RideService rideService;
-
-    @Autowired
     private CognitoLogin cognitoLogin;
 
     private String idToken;

@@ -11,8 +11,6 @@ import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
 import com.bussin.SpringBack.repositories.RideRepository;
-import com.bussin.SpringBack.services.GasPriceService;
-import com.bussin.SpringBack.services.PricingService;
 import com.bussin.SpringBack.services.RideService;
 import com.bussin.SpringBack.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,12 +50,6 @@ public class RideServiceTests {
     @Mock
     private UserService userService;
 
-    @Mock
-    private GasPriceService gasPriceService;
-
-    @Mock
-    private PricingService pricingService;
-
     private ModelMapper modelMapper;
 
     @InjectMocks
@@ -73,8 +65,7 @@ public class RideServiceTests {
             }
         });
         rideService = new RideService(modelMapper, rideRepository,
-                plannedRoutesRepository, userService,
-                pricingService);
+                plannedRoutesRepository, userService);
     }
 
     @Test
@@ -179,9 +170,6 @@ public class RideServiceTests {
 
         when(plannedRoutesRepository.findPlannedRouteById(plannedRoute.getId()))
                 .thenReturn(Optional.of(plannedRoute));
-
-        when(pricingService.getPriceOfRide(plannedRoute))
-                .thenReturn(BigDecimal.ONE);
 
         assertThrows(DataIntegrityViolationException.class,
                 () -> rideService

@@ -23,17 +23,15 @@ public class RideService {
     private final RideRepository rideRepository;
     private final PlannedRoutesRepository plannedRoutesRepository;
     private final UserService userService;
-    private final PricingService pricingService;
 
     @Autowired
     public RideService(ModelMapper modelMapper, RideRepository rideRepository,
                        PlannedRoutesRepository plannedRoutesRepository,
-                       UserService userService, PricingService pricingService) {
+                       UserService userService) {
         this.modelMapper = modelMapper;
         this.rideRepository = rideRepository;
         this.plannedRoutesRepository = plannedRoutesRepository;
         this.userService = userService;
-        this.pricingService = pricingService;
     }
 
     /**
@@ -69,7 +67,6 @@ public class RideService {
                 .findPlannedRouteById(plannedRouteId)
                 .orElseThrow(() -> new PlannedRouteNotFoundException("No planned route with id " + plannedRouteId));
 
-        ride.setCost(pricingService.getPriceOfRide(plannedRoute));
         ride.setUser(found);
 
         int passengersOnBoard = ride.getPassengers();

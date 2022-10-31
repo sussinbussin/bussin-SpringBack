@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -54,8 +55,8 @@ public class Ride implements Serializable, Cloneable{
     @Schema(description = "Number of seats booked", example = "2")
     private Integer passengers;
 
-    @NotNull
     @DecimalMin("0")
+    @Digits(integer=6, fraction=2)
     @Schema(description = "Cost of the ride", example = "3.00")
     private BigDecimal cost;
 

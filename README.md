@@ -17,9 +17,7 @@ make app, Bussin, possible.
 ## Requirements
  - MySQL
  - AWS Cognito
- - Bussin Gas Price Scraper
  - Bussin Frontends
  - Bussin Route Recommender
- - Google Maps API
 
 
