@@ -115,4 +115,17 @@ public class UserDTO implements Serializable, Cloneable {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", nric='" + nric + '\'' +
+                ", name='" + name + '\'' +
+                ", dob=" + dob +
+                ", mobile='" + mobile + '\'' +
+                ", email='" + email + '\'' +
+                ", isDriver=" + isDriver +
+                '}';
+    }
 }

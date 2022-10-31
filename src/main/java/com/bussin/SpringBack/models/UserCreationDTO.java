@@ -22,4 +22,13 @@ public class UserCreationDTO implements Serializable {
     private String username;
 
     private UserDTO userDTO;
+
+    @Override
+    public String toString() {
+        return "UserCreationDTO{" +
+                "password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", userDTO=" + userDTO +
+                '}';
+    }
 }
