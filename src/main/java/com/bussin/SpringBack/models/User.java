@@ -76,9 +76,7 @@ public class User implements Serializable, Cloneable {
     @Schema(description = "Is this user a driver?", example = "true")
     private Boolean isDriver;
 
-    @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL
-    )
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Driver driver;
 
     @OneToMany(mappedBy = "user")
