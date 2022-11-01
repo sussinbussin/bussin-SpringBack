@@ -7,16 +7,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -89,12 +89,10 @@ public class PlannedRoute implements Serializable, Cloneable {
     @Column(scale = 6, precision = 9)
     private BigDecimal destLongitude;
 
-    @OneToMany(mappedBy = "plannedRoute")
+    @OneToMany(mappedBy = "plannedRoute", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Ride> rides;
 
     @ManyToOne
-    @Fetch(FetchMode.JOIN)
-    @Cascade({ CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DELETE })
     @JoinColumn(name = "carPlate")
     private Driver driver;
 

@@ -31,7 +31,6 @@ import java.util.UUID;
 @Setter
 @Builder
 @NoArgsConstructor
-@ToString
 public class PlannedRouteDTO implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -136,5 +135,20 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getPlannedFrom(), getPlannedTo(), getDateTime(), getCapacity());
+    }
+
+    @Override
+    public String toString() {
+        return "PlannedRouteDTO{" +
+                "id=" + id +
+                ", plannedFrom='" + plannedFrom + '\'' +
+                ", plannedTo='" + plannedTo + '\'' +
+                ", dateTime=" + dateTime +
+                ", capacity=" + capacity +
+                ", originLatitude=" + originLatitude +
+                ", originLongitude=" + originLongitude +
+                ", destLatitude=" + destLatitude +
+                ", destLongitude=" + destLongitude +
+                '}';
     }
 }

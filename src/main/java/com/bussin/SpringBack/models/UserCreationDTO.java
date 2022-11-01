@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -17,9 +18,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class UserCreationDTO implements Serializable {
+    @NotNull
     private String password;
 
+    @NotNull
     private String username;
 
+    @NotNull
     private UserDTO userDTO;
+
+    @Override
+    public String toString() {
+        return "UserCreationDTO{" +
+                "password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", userDTO=" + userDTO +
+                '}';
+    }
 }

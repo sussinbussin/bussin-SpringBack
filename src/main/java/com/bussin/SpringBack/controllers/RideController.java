@@ -4,6 +4,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/ride")
 public class RideController {
@@ -37,6 +39,7 @@ public class RideController {
     @Operation(summary = "Gets the details of all rides")
     @GetMapping
     public List<Ride> getAllRides() {
+        log.info("Retrieving all rides");
         return rideService.getAllRides();
     }
 
@@ -48,6 +51,7 @@ public class RideController {
     @Operation(summary = "Gets a ride by its ID")
     @GetMapping("/{rideId}")
     public Ride getRideById(@Valid @PathVariable UUID rideId) {
+        log.info(String.format("Retrieving ride %s", rideId));
         return rideService.getRideById(rideId);
     }
 
@@ -60,6 +64,7 @@ public class RideController {
     @Transactional
     @PostMapping
     public Ride createNewRide(@Valid @RequestBody RideCreationDTO creationDTO) {
+        log.info(String.format("Creating ride %s", creationDTO));
         return rideService.createNewRide(creationDTO.getRideDTO(),
                 creationDTO.getUserUUID(), creationDTO.getPlannedRouteUUID());
     }
@@ -76,6 +81,7 @@ public class RideController {
     public Ride updateRideById
             (@Valid @PathVariable UUID rideId,
             @Valid @RequestBody RideDTO rideDTO) {
+        log.info(String.format("Updating ride %s: %s", rideId, rideDTO));
         return rideService.updateRideById(rideId, rideDTO);
     }
 
@@ -88,6 +94,7 @@ public class RideController {
     @Transactional
     @DeleteMapping("/{rideId}")
     public Ride deleteRideById(@Valid @PathVariable UUID rideId) {
+        log.info(String.format("Deleting ride %s", rideId));
         return rideService.deleteRideById(rideId);
     }
 }

@@ -5,6 +5,7 @@ import com.bussin.SpringBack.models.PlannedRouteDTO;
 import com.bussin.SpringBack.models.UserPublicDTO;
 import com.bussin.SpringBack.services.PlannedRouteService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/planned")
 public class PlannedRouteController {
@@ -33,6 +35,7 @@ public class PlannedRouteController {
     @Operation(summary = "Gets all planned routes")
     @GetMapping
     public List<PlannedRoute> getAllPlannedRoutes() {
+        log.info("Retrieving all planned routes");
         return plannedRouteService.getAllPlannedRoutes();
     }
 
@@ -44,6 +47,7 @@ public class PlannedRouteController {
     @Operation(summary = "Gets planned route by ID")
     @GetMapping("/{routeId}")
     public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID routeId) {
+        log.info(String.format("Retrieving planned route %s", routeId));
         return plannedRouteService.getPlannedRouteById(routeId);
     }
 
@@ -55,6 +59,8 @@ public class PlannedRouteController {
     @Operation(summary = "Gets passengers on planned route")
     @GetMapping("/{routeId}/passengers")
     public List<UserPublicDTO> getPassengersOnRoute(@Valid @PathVariable UUID routeId) {
+        log.info(String.format("Retrieving passengers on planned route %s",
+                routeId));
         return plannedRouteService.getPassengersOnRoute(routeId);
     }
 
@@ -66,6 +72,7 @@ public class PlannedRouteController {
     @Operation(summary = "Gets all routes after specific time")
     @GetMapping("/after/{dateTime}")
     public List<PlannedRoute> getPlannedRouteAfterTime(@Valid @PathVariable LocalDateTime dateTime) {
+        log.info(String.format("Retrieving planned routes after %s", dateTime));
         return plannedRouteService.getPlannedRouteAfterTime(dateTime);
     }
 
@@ -80,6 +87,7 @@ public class PlannedRouteController {
     @PostMapping("/{carPlate}")
     public PlannedRoute createNewPlannedRoute(@RequestBody @Valid PlannedRouteDTO plannedRouteDTO,
             @PathVariable String carPlate) {
+        log.info(String.format("Creating planned route %s", plannedRouteDTO));
         return plannedRouteService.createNewPlannedRoute(plannedRouteDTO,
                 carPlate);
     }
@@ -95,6 +103,8 @@ public class PlannedRouteController {
     @PutMapping("/{routeId}")
     public PlannedRoute updatePlannedRouteById(@Valid @PathVariable UUID routeId,
             @Valid @RequestBody PlannedRouteDTO plannedRouteDTO) {
+        log.info(String.format("Updating planned route %s: %s",
+                routeId, plannedRouteDTO));
         return plannedRouteService.updatePlannedRouteById(routeId,
                 plannedRouteDTO);
     }
@@ -108,6 +118,7 @@ public class PlannedRouteController {
     @Transactional
     @DeleteMapping("/{routeId}")
     public PlannedRoute deletePlannedRouteById(@Valid @PathVariable UUID routeId) {
+        log.info(String.format("Deleting planned route %s", routeId));
         return plannedRouteService.deletePlannedRouteByID(routeId);
     }
 }

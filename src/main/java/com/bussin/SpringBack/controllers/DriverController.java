@@ -5,6 +5,7 @@ import com.bussin.SpringBack.models.DriverDTO;
 import com.bussin.SpringBack.models.PlannedRouteDTO;
 import com.bussin.SpringBack.services.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/driver")
 public class DriverController {
@@ -31,6 +33,7 @@ public class DriverController {
     @Operation(summary = "Gets all drivers")
     @GetMapping
     public List<Driver> getAllDrivers() {
+        log.info(String.format("Retrieving all drivers"));
         return driverService.getAllDrivers();
     }
 
@@ -43,6 +46,7 @@ public class DriverController {
     @Operation(summary = "Gets a Driver by their Car Plate")
     @GetMapping("/{carPlate}")
     public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate) {
+        log.info(String.format("Retrieving driver %s", carPlate));
         return driverService.getDriverByCarPlate(carPlate);
     }
 
@@ -54,6 +58,8 @@ public class DriverController {
     @Operation
     @GetMapping("/{carPlate}/plannedRoutes")
     public Set<PlannedRouteDTO> getAllPlannedRoutesByDriver(@Valid @PathVariable String carPlate){
+        log.info(String.format("Retrieving planned routes from driver %s",
+                carPlate));
         return driverService.getAllPlannedRoutesByDriver(carPlate);
     }
 
@@ -67,6 +73,7 @@ public class DriverController {
     @PostMapping("/{userUUID}")
     public Driver addNewDriver(@Valid @PathVariable UUID userUUID,
                                @Valid @RequestBody DriverDTO driverDTO) {
+        log.info(String.format("Creating new driver for %s: %s", userUUID, driverDTO));
         return driverService.addNewDriver(userUUID, driverDTO);
     }
 
@@ -81,6 +88,8 @@ public class DriverController {
     @PutMapping("/{carPlate}")
     public Driver updateDriverByCarPlate(@Valid @PathVariable String carPlate,
                                          @Valid @RequestBody DriverDTO driverDTO) {
+        log.info(String.format("Updating driver for %s: %s", carPlate,
+                driverDTO));
         return driverService.updateDriver(carPlate, driverDTO);
     }
 
@@ -93,6 +102,7 @@ public class DriverController {
     @Operation(summary = "Converts a Driver into User")
     @DeleteMapping("/{carPlate}")
     public Driver deleteDriverByCarPlate(@Valid @PathVariable String carPlate) {
+        log.info(String.format("Deleting driver %s", carPlate));
         return driverService.deleteDriver(carPlate);
     }
 }
