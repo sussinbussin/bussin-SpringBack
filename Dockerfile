@@ -1,4 +1,4 @@
-FROM openjdk:17-slim
+FROM openjdk:18.0.2.1-slim
 ARG uid=1009
 
 RUN groupadd --gid ${uid} -r app \
