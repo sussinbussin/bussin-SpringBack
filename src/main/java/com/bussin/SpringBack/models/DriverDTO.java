@@ -43,7 +43,7 @@ public class DriverDTO implements Serializable, Cloneable {
     private Integer capacity;
 
     @Schema(description = "Type of fuel the car uses, follow example values",
-            example = "TypeDiesel | Type92 | Type95 | Type98 | Type Premium")
+            example = "Diesel | 92 | 95 | 98 | Premium")
     @NotNull
     private String fuelType;
 
