@@ -69,14 +69,14 @@ public class TestObjects {
             .carPlate("SAA1234A")
             .modelAndColour("Yellow Submarine")
             .capacity(4)
-            .fuelType("TypePremium")
+            .fuelType("Premium")
             .build();
 
     public static final DriverDTO DRIVER_DTO = DriverDTO.builder()
             .carPlate("SAA1234A")
             .modelAndColour("Yellow Submarine")
             .capacity(4)
-            .fuelType("TypePremium")
+            .fuelType("Premium")
             .build();
 
     public static final PlannedRoute PLANNED_ROUTE = PlannedRoute.builder()
