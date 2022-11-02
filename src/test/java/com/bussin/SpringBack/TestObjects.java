@@ -58,7 +58,7 @@ public class TestObjects {
     public static final UserDTO COGNITO_DRIVER_DTO = UserDTO.builder()
             .id(UUID.randomUUID())
             .nric("S1337420Z")
-            .name("Robert The Driver")
+            .name("robertthetester")
             .dob(new Date(System.currentTimeMillis()))
             .mobile("94201337")
             .email("Robert@gmail.com")
