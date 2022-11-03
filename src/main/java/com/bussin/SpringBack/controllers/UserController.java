@@ -1,6 +1,5 @@
 package com.bussin.SpringBack.controllers;
 
-import com.bussin.SpringBack.exception.WrongUserException;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserCreationDTO;
 import com.bussin.SpringBack.models.user.UserDTO;
@@ -8,13 +7,15 @@ import com.bussin.SpringBack.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import java.util.List;
 import java.util.UUID;
+
+import static com.bussin.SpringBack.utils.NotAuthorizedUtil.isSameUserEmail;
+import static com.bussin.SpringBack.utils.NotAuthorizedUtil.isSameUserId;
 
 @Slf4j
 @RestController
@@ -48,7 +49,7 @@ public class UserController {
     @GetMapping("/{userId}")
     @Operation(summary = "Gets a user by their ID")
     public UserDTO getUserById(@Valid @PathVariable UUID userId) {
-        isSameUser(userId);
+        isSameUserId(userId);
         log.info(String.format("Retrieving user %s", userId));
         return userService.getUserById(userId);
     }
@@ -62,7 +63,7 @@ public class UserController {
     @Operation(summary = "Gets a user and all their related info by their ID")
     @GetMapping("/full/{userId}")
     public User getFullUserById(@Valid @PathVariable UUID userId) {
-        isSameUser(userId);
+        isSameUserId(userId);
         log.info(String.format("Retrieving full user %s", userId));
         return userService.getFullUserById(userId);
     }
@@ -76,7 +77,7 @@ public class UserController {
     @Operation(summary = "Gets a user by their email")
     @GetMapping("/byEmail/{email}")
     public UserDTO getUserByEmail(@Valid @Email @PathVariable String email) {
-        isSameUser(email);
+        isSameUserEmail(email);
         log.info(String.format("Retrieving user with email %s", email));
         return userService.getUserByEmail(email);
     }
@@ -120,7 +121,7 @@ public class UserController {
     @PutMapping("/{userId}")
     public User updateUserById(@Valid @PathVariable UUID userId,
                                @Valid @RequestBody UserDTO userDTO) {
-        isSameUser(userId);
+        isSameUserId(userId);
         log.info(String.format("Updating user %s with %s", userId, userDTO));
         return userService.updateUser(userId, userDTO);
     }
@@ -134,44 +135,8 @@ public class UserController {
     @Operation(summary = "Deletes a user by their ID")
     @DeleteMapping("/{userId}")
     public UserDTO deleteUserById(@Valid @PathVariable UUID userId) {
-        isSameUser(userId);
+        isSameUserId(userId);
         log.info(String.format("Deleting user %s", userId));
         return userService.deleteUser(userId);
-    }
-
-    /**
-     * Check if the User querying for the method is the same user using UserID
-     * @param userID The UUID of the User to be accessed
-     */
-    private void isSameUser(UUID userID) {
-        User loggedIn =
-                (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!loggedIn.getId().toString().equals(userID.toString())){
-            wrongUserResponse(loggedIn.getId().toString(), userID.toString());
-        }
-    }
-
-    /**
-     * Check if the User querying for the method is the same user using Email
-     * @param email The email of the User to be accessed
-     */
-    private void isSameUser(String email) {
-        User loggedIn =
-                (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!loggedIn.getEmail().equals(email)){
-            wrongUserResponse(loggedIn.getEmail(), email);
-        }
-    }
-
-    /**
-     * Throw new WrongUserException when User is not the same
-     * @param loggedIn The UUID of User
-     * @param attempted The UUID of the User to be accessed
-     */
-    private void wrongUserResponse(String loggedIn, String attempted) {
-        String response = String.format("Attempted modification of another user! " +
-                        "%s tried to modify %s", loggedIn, attempted);
-        log.warn(response);
-        throw new WrongUserException(response);
     }
 }

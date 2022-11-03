@@ -3,8 +3,6 @@ package com.bussin.SpringBack.controllers;
 import com.amazonaws.services.cognitoidp.model.InvalidPasswordException;
 import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-
-
 import com.bussin.SpringBack.exception.RideException;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.exception.WrongDriverException;
