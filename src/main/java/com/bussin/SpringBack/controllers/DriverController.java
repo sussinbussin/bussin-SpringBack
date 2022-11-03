@@ -1,18 +1,20 @@
 package com.bussin.SpringBack.controllers;
 
+import com.bussin.SpringBack.exception.DriverNotFoundException;
+import com.bussin.SpringBack.exception.WrongDriverException;
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.services.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -47,21 +49,23 @@ public class DriverController {
     @Operation(summary = "Gets a Driver by their Car Plate")
     @GetMapping("/{carPlate}")
     public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate) {
+        isSameDriver(carPlate);
         log.info(String.format("Retrieving driver %s", carPlate));
         return driverService.getDriverByCarPlate(carPlate);
     }
 
     /**
      * Gets all the planned routes by driver's car plate
+     *
      * @param carPlate The String
      * @return A set of planned routes if  found, else null
      */
     @Operation
     @GetMapping("/{carPlate}/plannedRoutes")
     public List<PlannedRoutePublicDTO> getAllPlannedRoutesByDriver(@Valid @PathVariable String carPlate){
+        isSameDriver(carPlate);
         log.info(String.format("Retrieving planned routes from driver %s",
                 carPlate));
-
         return driverService.getAllPlannedRoutesByDriver(carPlate);
     }
 
@@ -90,6 +94,7 @@ public class DriverController {
     @PutMapping("/{carPlate}")
     public Driver updateDriverByCarPlate(@Valid @PathVariable String carPlate,
                                          @Valid @RequestBody DriverDTO driverDTO) {
+        isSameDriver(carPlate);
         log.info(String.format("Updating driver for %s: %s", carPlate,
                 driverDTO));
         return driverService.updateDriver(carPlate, driverDTO);
@@ -104,7 +109,34 @@ public class DriverController {
     @Operation(summary = "Converts a Driver into User")
     @DeleteMapping("/{carPlate}")
     public Driver deleteDriverByCarPlate(@Valid @PathVariable String carPlate) {
+        isSameDriver(carPlate);
         log.info(String.format("Deleting driver %s", carPlate));
         return driverService.deleteDriver(carPlate);
+    }
+
+    /**
+     * Check if the User querying for the method is the same user using Email
+     * @param carPlate Car plate of the Driver to be accessed
+     */
+    private void isSameDriver(String carPlate) {
+        User loggedIn =
+                (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (loggedIn.getDriver() == null) {
+            throw new DriverNotFoundException("No car plate found with " + carPlate);
+        } else if(!loggedIn.getDriver().getCarPlate().equals(carPlate)) {
+            wrongDriverResponse(loggedIn.getDriver().getCarPlate(), carPlate);
+        }
+    }
+
+    /**
+     * Throw new WrongDriverException when Driver is not the same
+     * @param loggedIn Car plate of the Driver
+     * @param attempted Car plate of the Driver to be accessed
+     */
+    private void wrongDriverResponse(String loggedIn, String attempted) {
+        String response = String.format("Attempted modification of another driver! " +
+                "%s tried to modify %s", loggedIn, attempted);
+        log.warn(response);
+        throw new WrongDriverException(response);
     }
 }
