@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.exception.DriverNotFoundException;
+import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.exception.WrongDriverException;
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
@@ -79,6 +80,7 @@ public class DriverController {
     @PostMapping("/{userUUID}")
     public Driver addNewDriver(@Valid @PathVariable UUID userUUID,
                                @Valid @RequestBody DriverDTO driverDTO) {
+        isSameUser(userUUID);
         log.info(String.format("Creating new driver for %s: %s", userUUID, driverDTO));
         return driverService.addNewDriver(userUUID, driverDTO);
     }
@@ -138,5 +140,29 @@ public class DriverController {
                 "%s tried to modify %s", loggedIn, attempted);
         log.warn(response);
         throw new WrongDriverException(response);
+    }
+
+    /**
+     * Check if the User querying for the method is the same user using UserID
+     * @param userUUID The UUID of the User to be accessed
+     */
+    private void isSameUser(UUID userUUID) {
+        User loggedIn =
+                (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!loggedIn.getId().toString().equals(userUUID.toString())) {
+            wrongUserResponse(loggedIn.getId().toString(), userUUID.toString());
+        }
+    }
+
+    /**
+     * Throw new WrongUserException when User is not the same
+     * @param loggedIn The UUID of User
+     * @param attempted The UUID of the User to be accessed
+     */
+    private void wrongUserResponse(String loggedIn, String attempted) {
+        String response = String.format("Attempted modification of another user! " +
+                "%s tried to modify %s", loggedIn, attempted);
+        log.warn(response);
+        throw new WrongUserException(response);
     }
 }

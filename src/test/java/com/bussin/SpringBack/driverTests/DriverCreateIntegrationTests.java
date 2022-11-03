@@ -28,6 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,6 +55,9 @@ public class DriverCreateIntegrationTests {
 
     @Autowired
     private CognitoLogin cognitoLogin;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private String idToken;
 
@@ -82,7 +86,7 @@ public class DriverCreateIntegrationTests {
         request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity =
-                new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
+                new StringEntity(objectMapper.writeValueAsString(driverDTO));
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
@@ -90,7 +94,7 @@ public class DriverCreateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        Driver driver = new ObjectMapper()
+        Driver driver = objectMapper
                 .readValue(httpResponse.getEntity().getContent(), Driver.class);
 
         DriverDTO dest = DriverDTO.builder().build();
@@ -104,7 +108,7 @@ public class DriverCreateIntegrationTests {
      * Create a new driver with no user found throws 404 NOT_FOUND
      */
     @Test
-    public void addNewDriver_noUser_404() throws IOException {
+    public void addNewDriver_noUser_403() throws IOException {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
@@ -112,7 +116,7 @@ public class DriverCreateIntegrationTests {
         request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity =
-                new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
+                new StringEntity(objectMapper.writeValueAsString(driverDTO));
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
@@ -120,7 +124,7 @@ public class DriverCreateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(404, httpResponse.getCode());
+        assertEquals(403, httpResponse.getCode());
     }
 
     /**
@@ -136,7 +140,7 @@ public class DriverCreateIntegrationTests {
         request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         StringEntity entity =
-                new StringEntity(new ObjectMapper().writeValueAsString(driverDTO));
+                new StringEntity(objectMapper.writeValueAsString(driverDTO));
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
