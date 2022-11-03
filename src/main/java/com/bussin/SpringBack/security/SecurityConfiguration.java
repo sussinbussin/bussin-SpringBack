@@ -1,6 +1,6 @@
 package com.bussin.SpringBack.security;
 
-import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.models.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

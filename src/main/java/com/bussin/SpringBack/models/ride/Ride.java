@@ -1,23 +1,25 @@
-package com.bussin.SpringBack.models;
+package com.bussin.SpringBack.models.ride;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
@@ -27,19 +29,23 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Builder
-@EqualsAndHashCode
-public class RideDTO implements Serializable, Cloneable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id")
+public class Ride implements Serializable, Cloneable{
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
     @Schema(description = "UUID of the ride.",
-            example = "UUID of the ride.")
+            example = "844b8d14-ef82-4b27-b9b5-a5e765c1254f")
     private UUID id;
 
     @Schema(description = "Time when the passenger started riding")
@@ -68,49 +74,44 @@ public class RideDTO implements Serializable, Cloneable {
             "location", example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String rideTo;
 
-    public void validate() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<RideDTO>> violations = validator.validate(this);
-        if (violations.size() > 0) {
-            throw new ConstraintViolationException(violations);
-        }
-    }
+    @ManyToOne
+    @JoinColumn(name = "planned_route_id")
+    private PlannedRoute plannedRoute;
 
-    @JsonCreator
-    public RideDTO(@JsonProperty("id") UUID id,
-                   @JsonProperty("timestamp") Timestamp timestamp,
-                   @JsonProperty("passengers") Integer passengers,
-                   @JsonProperty("cost") BigDecimal cost,
-                   @JsonProperty("rideFrom") String rideFrom,
-                   @JsonProperty("rideTo") String rideTo) {
-        this.id = id;
-        this.timestamp = timestamp;
-        this.passengers = passengers;
-        this.cost = cost;
-        this.rideFrom = rideFrom;
-        this.rideTo = rideTo;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public void updateFromDTO(RideDTO rideDTO) {
+        this.id = rideDTO.getId();
+        this.timestamp = rideDTO.getTimestamp();
+        this.passengers = rideDTO.getPassengers();
+        this.rideTo = rideDTO.getRideTo();
+        this.rideFrom = rideDTO.getRideFrom();
     }
 
     @Override
-    public RideDTO clone() {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        Ride ride = (Ride) o;
+        return id != null && Objects.equals(id, ride.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public Ride clone() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(
-                    objectMapper.writeValueAsString(this), RideDTO.class);
+                    objectMapper.writeValueAsString(this), Ride.class);
         } catch (JsonProcessingException e) {
             return null;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "RideDTO{" +
-                "id=" + id +
-                ", timestamp=" + timestamp +
-                ", passengers=" + passengers +
-                ", cost=" + cost +
-                ", rideFrom='" + rideFrom + '\'' +
-                ", rideTo='" + rideTo + '\'' +
-                '}';
     }
 }

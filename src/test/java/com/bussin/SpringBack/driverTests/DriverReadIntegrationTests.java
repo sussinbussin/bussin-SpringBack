@@ -2,11 +2,14 @@ package com.bussin.SpringBack.driverTests;
 
 import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
-import com.bussin.SpringBack.models.Driver;
-import com.bussin.SpringBack.models.DriverDTO;
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.driver.Driver;
+import com.bussin.SpringBack.models.driver.DriverDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.services.DriverService;
+import com.bussin.SpringBack.services.PlannedRouteService;
 import com.bussin.SpringBack.services.UserService;
 import com.bussin.SpringBack.testConfig.H2JpaConfig;
 import com.bussin.SpringBack.testConfig.TestContextConfig;
@@ -21,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -29,8 +33,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
@@ -45,10 +55,16 @@ public class DriverReadIntegrationTests {
     private final String baseUrl = "http://localhost:";
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
     private DriverService driverService;
+
+    @Autowired
+    private PlannedRouteService plannedRouteService;
 
     @Autowired
     private UserService userService;
@@ -148,5 +164,45 @@ public class DriverReadIntegrationTests {
                 HttpClientBuilder.create().build().execute(request);
 
         assertEquals(404, httpResponse.getCode());
+    }
+
+    @Test
+    public void getPlannedRoutesFromDriver_success() throws IOException {
+        ModelMapper modelMapper
+                = new ModelMapper();
+        modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRoutePublicDTO>() {
+            @Override
+            protected void configure() {
+                map().setCarPlate(source.getDriver().getCarPlate());
+            }
+        });
+
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        PlannedRouteDTO plannedRouteDTO1 =
+                TestObjects.PLANNED_ROUTE_DTO.clone();
+        PlannedRouteDTO plannedRouteDTO2 =
+                TestObjects.PLANNED_ROUTE_DTO.clone();
+        plannedRouteDTO2.setDateTime(LocalDateTime.of(2021, 6, 6, 6, 6));
+
+        driverService.addNewDriver(user.getId(), driverDTO);
+        PlannedRoute plannedRoute =
+                plannedRouteService.createNewPlannedRoute(plannedRouteDTO1,
+                driverDTO.getCarPlate());
+
+        HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/driver" +
+                "/"+driverDTO.getCarPlate()+"/plannedRoutes");
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        List<PlannedRoutePublicDTO> publicDTOS =
+                objectMapper.readValue(httpResponse.getEntity().getContent(),
+                        new TypeReference<>() {
+                        });
+
+        assertEquals(
+                        modelMapper.map(plannedRoute, PlannedRoutePublicDTO.class),
+                publicDTOS.get(0));
     }
 }

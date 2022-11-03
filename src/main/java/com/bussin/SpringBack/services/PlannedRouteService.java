@@ -2,9 +2,9 @@ package com.bussin.SpringBack.services;
 
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
-import com.bussin.SpringBack.models.PlannedRoute;
-import com.bussin.SpringBack.models.PlannedRouteDTO;
-import com.bussin.SpringBack.models.UserPublicDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.user.UserPublicDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
 import org.modelmapper.ModelMapper;

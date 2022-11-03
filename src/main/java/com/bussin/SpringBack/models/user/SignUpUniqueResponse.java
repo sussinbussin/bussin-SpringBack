@@ -1,4 +1,4 @@
-package com.bussin.SpringBack.models;
+package com.bussin.SpringBack.models.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

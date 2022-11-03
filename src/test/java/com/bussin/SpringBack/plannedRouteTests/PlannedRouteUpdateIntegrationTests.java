@@ -2,7 +2,11 @@ package com.bussin.SpringBack.plannedRouteTests;
 
 import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
-import com.bussin.SpringBack.models.*;
+import com.bussin.SpringBack.models.driver.DriverDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.PlannedRouteService;
 import com.bussin.SpringBack.services.RideService;

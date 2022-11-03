@@ -1,13 +1,14 @@
 package com.bussin.SpringBack.driverTests;
 
 import com.bussin.SpringBack.TestObjects;
-import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
-import com.bussin.SpringBack.models.Driver;
-import com.bussin.SpringBack.models.DriverDTO;
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
-import com.bussin.SpringBack.models.PlannedRoute;
+import com.bussin.SpringBack.exception.UserNotFoundException;
+import com.bussin.SpringBack.models.driver.Driver;
+import com.bussin.SpringBack.models.driver.DriverDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.UserService;
@@ -21,16 +22,20 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 
 import javax.validation.ConstraintViolationException;
-
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DriverServiceTests {
@@ -144,16 +149,30 @@ public class DriverServiceTests {
      public void getAllPlannedRoutesByDriver_success() {
          Driver driver = TestObjects.DRIVER.clone();
 
+         List<PlannedRoutePublicDTO> plannedRoutePublicResult = new ArrayList<>();
          Set<PlannedRoute> plannedRouteResult = new HashSet<>();
 
+         ModelMapper modelMapper
+                 = new ModelMapper();
+         modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRoutePublicDTO>() {
+             @Override
+             protected void configure() {
+                 map().setCarPlate(source.getDriver().getCarPlate());
+             }
+         });
+
          PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
-         plannedRoute.setDriver(driver);
+         plannedRoutePublicResult.add(modelMapper.map(plannedRoute,
+                 PlannedRoutePublicDTO.class));
+
          plannedRouteResult.add(plannedRoute);
          driver.setPlannedRoutes(plannedRouteResult);
+         plannedRoute.setDriver(driver);
 
          when(driverRepository.findDriverByCarPlate(driver.getCarPlate())).thenReturn(Optional.of(driver));
 
-         assertEquals(driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()), plannedRouteResult);
+         assertEquals(plannedRoutePublicResult.get(0).getCarPlate(),
+                 driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()).get(0).getCarPlate());
 
          verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
      }

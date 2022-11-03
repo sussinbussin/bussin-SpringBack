@@ -1,4 +1,4 @@
-package com.bussin.SpringBack.models;
+package com.bussin.SpringBack.models.ride;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

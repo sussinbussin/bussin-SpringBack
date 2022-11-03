@@ -1,6 +1,6 @@
 package com.bussin.SpringBack.repositories;
 
-import com.bussin.SpringBack.models.Driver;
+import com.bussin.SpringBack.models.driver.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
