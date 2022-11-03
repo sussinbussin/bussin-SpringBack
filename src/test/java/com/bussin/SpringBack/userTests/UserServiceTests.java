@@ -7,6 +7,8 @@ import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.models.Ride;
+import com.bussin.SpringBack.models.SignUpUniqueRequest;
+import com.bussin.SpringBack.models.SignUpUniqueResponse;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserDTO;
 import com.bussin.SpringBack.repositories.UserRepository;
@@ -274,6 +276,71 @@ public class UserServiceTests {
 
         verify(userRepository, times(1)).findUserById(uuid);
         verify(userRepository, never()).deleteById(uuid);
+    }
+
+    @Test
+    public void isUniqueCheck_unique() {
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        when(userRepository.existsByNric(userDTO.getNric())).thenReturn(false);
+        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(false);
+        when(userRepository.existsByMobile(userDTO.getMobile())).thenReturn(false);
+
+        assertEquals(SignUpUniqueResponse.builder()
+                        .nricUnique(true)
+                        .emailUnique(true)
+                        .mobileUnique(true)
+                        .build(),
+                userService.isUniqueCheck(SignUpUniqueRequest.builder()
+                        .nric(userDTO.getNric())
+                        .email(userDTO.getEmail())
+                        .mobile(userDTO.getMobile())
+                        .build()));
+
+        verify(userRepository, times(1)).existsByNric(userDTO.getNric());
+        verify(userRepository, times(1)).existsByEmail(userDTO.getEmail());
+        verify(userRepository, times(1)).existsByMobile(userDTO.getMobile());
+    }
+
+    @Test
+    public void isUniqueCheck_conflicts() {
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        when(userRepository.existsByNric(userDTO.getNric())).thenReturn(false);
+        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(false);
+        when(userRepository.existsByMobile(userDTO.getMobile())).thenReturn(true);
+
+        assertEquals(SignUpUniqueResponse.builder()
+                        .nricUnique(true)
+                        .emailUnique(true)
+                        .mobileUnique(false)
+                        .build(),
+                userService.isUniqueCheck(SignUpUniqueRequest.builder()
+                        .nric(userDTO.getNric())
+                        .email(userDTO.getEmail())
+                        .mobile(userDTO.getMobile())
+                        .build()));
+
+        verify(userRepository, times(1)).existsByNric(userDTO.getNric());
+        verify(userRepository, times(1)).existsByEmail(userDTO.getEmail());
+        verify(userRepository, times(1)).existsByMobile(userDTO.getMobile());
+    }
+
+    @Test
+    public void isUniqueCheck_voidFields() {
+        UserDTO userDTO = TestObjects.USER_DTO.clone();
+        when(userRepository.existsByMobile(userDTO.getMobile())).thenReturn(true);
+
+        assertEquals(SignUpUniqueResponse.builder()
+                        .nricUnique(true)
+                        .emailUnique(true)
+                        .mobileUnique(false)
+                        .build(),
+                userService.isUniqueCheck(SignUpUniqueRequest.builder()
+                        .mobile(userDTO.getMobile())
+                        .build()));
+
+        verify(userRepository, never()).existsByNric(userDTO.getNric());
+        verify(userRepository, never()).existsByEmail(userDTO.getEmail());
+        verify(userRepository, times(1)).existsByMobile(userDTO.getMobile());
     }
 }
 

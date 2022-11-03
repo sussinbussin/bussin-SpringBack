@@ -1,0 +1,32 @@
+package com.bussin.SpringBack.models;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+@Getter
+@Setter
+@Builder
+@ToString
+public class SignUpUniqueResponse implements Serializable {
+    private boolean nricUnique;
+    private boolean mobileUnique;
+    private boolean emailUnique;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SignUpUniqueResponse that = (SignUpUniqueResponse) o;
+        return isNricUnique() == that.isNricUnique() && isMobileUnique() == that.isMobileUnique() && isEmailUnique() == that.isEmailUnique();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isNricUnique(), isMobileUnique(), isEmailUnique());
+    }
+}
