@@ -1,10 +1,13 @@
 package com.bussin.SpringBack.services;
 
 import com.bussin.SpringBack.exception.DriverNotFoundException;
+import com.bussin.SpringBack.exception.WrongDriverException;
 import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.repositories.DriverRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class DriverService {
     private final ModelMapper modelMapper;
@@ -43,19 +47,19 @@ public class DriverService {
 
     /**
      * Create a new driver
-     * @param uuid The UUID of User
+     * @param userUUID The UUID of User
      * @param driverDTO The driver DTO of car details
      * @return The driver if created
      */
     @Transactional
-    public Driver addNewDriver(UUID uuid, DriverDTO driverDTO) {
+    public Driver addNewDriver(UUID userUUID, DriverDTO driverDTO) {
         driverDTO.validate();
-        UserDTO foundUser = userService.getUserById(uuid);
+        UserDTO foundUser = userService.getUserById(userUUID);
 
         foundUser.setIsDriver(true);
 
         Driver driver = modelMapper.map(driverDTO, Driver.class);
-        driver.setUser(userService.updateUser(uuid, foundUser));
+        driver.setUser(userService.updateUser(userUUID, foundUser));
 
         return driverRepository.save(driver);
     }
@@ -115,8 +119,8 @@ public class DriverService {
             modelMapper.map(found.getUser(), toUpdate);
             toUpdate.setIsDriver(false);
 
-            UUID uuid = found.getUser().getId();
-            userService.updateUser(uuid, toUpdate);
+            UUID userUUID = found.getUser().getId();
+            userService.updateUser(userUUID, toUpdate);
             driverRepository.deleteByCarPlate(carPlate);
             return found;
         }).orElseThrow(() -> new DriverNotFoundException(

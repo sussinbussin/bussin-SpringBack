@@ -139,6 +139,10 @@ public class UserController {
         return userService.deleteUser(userId);
     }
 
+    /**
+     * Check if the User querying for the method is the same user using UserID
+     * @param userID The UUID of the User to be accessed
+     */
     private void isSameUser(UUID userID) {
         User loggedIn =
                 (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -147,6 +151,10 @@ public class UserController {
         }
     }
 
+    /**
+     * Check if the User querying for the method is the same user using Email
+     * @param email The email of the User to be accessed
+     */
     private void isSameUser(String email) {
         User loggedIn =
                 (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -155,6 +163,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Throw new WrongUserException when User is not the same
+     * @param loggedIn The UUID of User
+     * @param attempted The UUID of the User to be accessed
+     */
     private void wrongUserResponse(String loggedIn, String attempted) {
         String response = String.format("Attempted modification of another user! " +
                         "%s tried to modify %s", loggedIn, attempted);
