@@ -4,6 +4,8 @@ import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AttributeType;
 import com.amazonaws.services.cognitoidp.model.SignUpRequest;
 import com.bussin.SpringBack.exception.UserNotFoundException;
+import com.bussin.SpringBack.models.SignUpUniqueRequest;
+import com.bussin.SpringBack.models.SignUpUniqueResponse;
 import com.bussin.SpringBack.models.User;
 import com.bussin.SpringBack.models.UserCreationDTO;
 import com.bussin.SpringBack.models.UserDTO;
@@ -158,5 +160,18 @@ public class UserService {
             userRepository.deleteById(uuid);
             return found;
         }).orElseThrow(() -> new UserNotFoundException("No user with id " + uuid));
+    }
+
+    /**
+     * Checks if the provided credentials are unique
+     * @param request The credentials to check
+     * @return
+     */
+    public SignUpUniqueResponse isUniqueCheck(SignUpUniqueRequest request) {
+        return SignUpUniqueResponse.builder()
+                .nricUnique(request.getNric() == null || !userRepository.existsByNric(request.getNric()))
+                .emailUnique(request.getEmail() == null || !userRepository.existsByEmail(request.getEmail()))
+                .mobileUnique(request.getMobile() == null || !userRepository.existsByMobile(request.getMobile()))
+                .build();
     }
 }
