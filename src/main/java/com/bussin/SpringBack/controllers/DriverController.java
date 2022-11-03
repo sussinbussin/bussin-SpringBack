@@ -1,9 +1,12 @@
 package com.bussin.SpringBack.controllers;
 
-
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.exception.DriverNotFoundException;
+import com.bussin.SpringBack.exception.WrongDriverException;
+import com.bussin.SpringBack.exception.WrongUserException;
+import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.services.DriverService;
 import static com.bussin.SpringBack.utils.NotAuthorizedUtil.isSameDriver;
 import static com.bussin.SpringBack.utils.NotAuthorizedUtil.isSameUserId;
@@ -11,6 +14,7 @@ import static com.bussin.SpringBack.utils.NotAuthorizedUtil.isSameUserId;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -114,5 +118,55 @@ public class DriverController {
         isSameDriver(carPlate);
         log.info(String.format("Deleting driver %s", carPlate));
         return driverService.deleteDriver(carPlate);
+    }
+
+    /**
+     * Check if the User querying for the method is the same user using Email
+     * @param carPlate Car plate of the Driver to be accessed
+     */
+    private void isSameDriver(String carPlate) {
+        User loggedIn =
+                (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (loggedIn.getDriver() == null) {
+            throw new DriverNotFoundException("No car plate found with " + carPlate);
+        } else if(!loggedIn.getDriver().getCarPlate().equals(carPlate)) {
+            wrongDriverResponse(loggedIn.getDriver().getCarPlate(), carPlate);
+        }
+    }
+
+    /**
+     * Throw new WrongDriverException when Driver is not the same
+     * @param loggedIn Car plate of the Driver
+     * @param attempted Car plate of the Driver to be accessed
+     */
+    private void wrongDriverResponse(String loggedIn, String attempted) {
+        String response = String.format("Attempted modification of another driver! " +
+                "%s tried to modify %s", loggedIn, attempted);
+        log.warn(response);
+        throw new WrongDriverException(response);
+    }
+
+    /**
+     * Check if the User querying for the method is the same user using UserID
+     * @param userUUID The UUID of the User to be accessed
+     */
+    private void isSameUser(UUID userUUID) {
+        User loggedIn =
+                (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!loggedIn.getId().toString().equals(userUUID.toString())) {
+            wrongUserResponse(loggedIn.getId().toString(), userUUID.toString());
+        }
+    }
+
+    /**
+     * Throw new WrongUserException when User is not the same
+     * @param loggedIn The UUID of User
+     * @param attempted The UUID of the User to be accessed
+     */
+    private void wrongUserResponse(String loggedIn, String attempted) {
+        String response = String.format("Attempted modification of another user! " +
+                "%s tried to modify %s", loggedIn, attempted);
+        log.warn(response);
+        throw new WrongUserException(response);
     }
 }

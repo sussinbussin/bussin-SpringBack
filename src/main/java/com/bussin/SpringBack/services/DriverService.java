@@ -6,6 +6,7 @@ import com.bussin.SpringBack.models.driver.DriverDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class DriverService {
     private final ModelMapper modelMapper;
