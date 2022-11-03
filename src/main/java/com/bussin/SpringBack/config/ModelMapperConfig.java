@@ -1,7 +1,9 @@
 package com.bussin.SpringBack.config;
 
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.user.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,14 @@ public class ModelMapperConfig {
             @Override
             protected void configure() {
                 skip(destination.getDriver());
+            }
+        });
+
+        // Configure where to derive car plate from for PlannedRoutePublicDTO
+        modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRoutePublicDTO>() {
+            @Override
+            protected void configure() {
+                map().setCarPlate(source.getDriver().getCarPlate());
             }
         });
 

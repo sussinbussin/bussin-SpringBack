@@ -2,8 +2,8 @@ package com.bussin.SpringBack.userTests;
 
 import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.testConfig.H2JpaConfig;
 import com.bussin.SpringBack.testConfig.TestContextConfig;
 import com.fasterxml.jackson.core.type.TypeReference;

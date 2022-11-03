@@ -1,4 +1,4 @@
-package com.bussin.SpringBack.models;
+package com.bussin.SpringBack.models.driver;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

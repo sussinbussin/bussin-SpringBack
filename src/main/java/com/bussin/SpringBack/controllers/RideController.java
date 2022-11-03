@@ -3,13 +3,15 @@ package com.bussin.SpringBack.controllers;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.bussin.SpringBack.models.ride.Ride;
+import com.bussin.SpringBack.models.ride.RideCreationDTO;
+import com.bussin.SpringBack.models.ride.RideDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 import com.bussin.SpringBack.services.RideService;
-import com.bussin.SpringBack.models.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

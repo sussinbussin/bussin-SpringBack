@@ -1,9 +1,10 @@
 package com.bussin.SpringBack.repositories;
 
+import com.bussin.SpringBack.models.ride.Ride;
+import com.bussin.SpringBack.models.ride.RideDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bussin.SpringBack.models.*;
 import java.util.*;
 
 @Repository

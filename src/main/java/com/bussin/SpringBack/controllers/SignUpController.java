@@ -1,8 +1,7 @@
 package com.bussin.SpringBack.controllers;
 
-import com.bussin.SpringBack.models.SignUpUniqueRequest;
-import com.bussin.SpringBack.models.SignUpUniqueResponse;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.user.SignUpUniqueRequest;
+import com.bussin.SpringBack.models.user.SignUpUniqueResponse;
 import com.bussin.SpringBack.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;

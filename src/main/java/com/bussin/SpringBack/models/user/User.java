@@ -1,25 +1,19 @@
-package com.bussin.SpringBack.models;
+package com.bussin.SpringBack.models.user;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.bussin.SpringBack.models.driver.Driver;
+import com.bussin.SpringBack.models.ride.Ride;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -27,18 +21,23 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import java.util.Objects;
 import java.util.UUID;
 
-@Table(uniqueConstraints = {
+@Entity(name = "bussinuser")
+@Table(name = "bussinuser", uniqueConstraints = {
         @UniqueConstraint(name = "user_email_unique", columnNames = "email"),
         @UniqueConstraint(name = "mobile_unique", columnNames = "mobile"),
         @UniqueConstraint(name = "nric_unique", columnNames = "nric")
 })
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@EqualsAndHashCode
-public class UserDTO implements Serializable, Cloneable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+public class User implements Serializable, Cloneable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -47,7 +46,8 @@ public class UserDTO implements Serializable, Cloneable {
     private UUID id;
 
     @NotNull(message = "NRIC should not be empty")
-    @Pattern(regexp = "^[a-zA-Z][0-9]{7}[a-zA-Z]$", message = "Nric must be in this format: T6969696A")
+    @Pattern(regexp = "^[a-zA-Z][0-9]{7}[a-zA-Z]$",
+            message = "Nric must be in this format: T6969696A")
     @Schema(description = "NRIC of the User.", example = "S9912345A")
     private String nric;
 
@@ -69,8 +69,8 @@ public class UserDTO implements Serializable, Cloneable {
     private String mobile;
 
     @NotNull(message = "Email should not be empty")
-    @Email(regexp = "^[A-Z0-9._-]+@[A-Z0-9]+.[A-Z]{2,6}$",
-            flags = Pattern.Flag.CASE_INSENSITIVE,
+    @Email(regexp = "^[A-Z0-9._-]+@[A-Z0-9]+.[A-Z]{2,6}$", 
+            flags = Pattern.Flag.CASE_INSENSITIVE, 
             message = "Email should be valid format: johnsus@email.xyz")
     @Schema(description = "User's email", example = "robert@gmail.com")
     private String email;
@@ -78,54 +78,43 @@ public class UserDTO implements Serializable, Cloneable {
     @Schema(description = "Is this user a driver?", example = "true")
     private Boolean isDriver;
 
-    public void validate() {
-        Validator validator =
-                Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<UserDTO>> violations =
-                validator.validate(this);
-        if (violations.size() > 0) {
-            throw new ConstraintViolationException(violations);
-        }
-    }
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Driver driver;
 
-    @JsonCreator
-    public UserDTO(@JsonProperty("id") UUID id,
-                   @JsonProperty("nric") String nric,
-                   @JsonProperty("name") String name,
-                   @JsonProperty("dob") Date dob,
-                   @JsonProperty("mobile") String mobile,
-                   @JsonProperty("email") String email,
-                   @JsonProperty("isDriver") Boolean isDriver) {
-        this.id = id;
-        this.nric = nric;
-        this.name = name;
-        this.dob = dob;
-        this.mobile = mobile;
-        this.email = email;
-        this.isDriver = isDriver;
+    @OneToMany(mappedBy = "user")
+    private Set<Ride> rides;
+
+    public void updateFromDTO(UserDTO userDTO) {
+        this.nric = userDTO.getNric();
+        this.name = userDTO.getName();
+        this.dob = userDTO.getDob();
+        this.mobile = userDTO.getMobile();
+        this.email = userDTO.getEmail();
+        this.isDriver = userDTO.getIsDriver();
     }
 
     @Override
-    public UserDTO clone() {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public User clone() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(
-                    objectMapper.writeValueAsString(this), UserDTO.class);
+                    objectMapper.writeValueAsString(this), User.class);
         } catch (JsonProcessingException e) {
             return null;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "id=" + id +
-                ", nric='" + nric + '\'' +
-                ", name='" + name + '\'' +
-                ", dob=" + dob +
-                ", mobile='" + mobile + '\'' +
-                ", email='" + email + '\'' +
-                ", isDriver=" + isDriver +
-                '}';
     }
 }

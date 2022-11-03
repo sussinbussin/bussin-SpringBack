@@ -1,7 +1,7 @@
 package com.bussin.SpringBack.repositories;
 
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.user.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

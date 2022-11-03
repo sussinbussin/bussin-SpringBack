@@ -1,9 +1,9 @@
 package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.exception.WrongUserException;
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserCreationDTO;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.user.UserCreationDTO;
+import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;

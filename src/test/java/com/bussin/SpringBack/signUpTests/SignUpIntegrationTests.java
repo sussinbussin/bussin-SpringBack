@@ -1,9 +1,9 @@
 package com.bussin.SpringBack.signUpTests;
 
 import com.bussin.SpringBack.TestObjects;
-import com.bussin.SpringBack.models.SignUpUniqueRequest;
-import com.bussin.SpringBack.models.SignUpUniqueResponse;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.user.SignUpUniqueRequest;
+import com.bussin.SpringBack.models.user.SignUpUniqueResponse;
+import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.services.UserService;
 import com.bussin.SpringBack.testConfig.H2JpaConfig;
 import com.bussin.SpringBack.testConfig.TestContextConfig;

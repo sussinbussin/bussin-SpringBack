@@ -1,13 +1,13 @@
 package com.bussin.SpringBack;
 
-import com.bussin.SpringBack.models.Driver;
-import com.bussin.SpringBack.models.DriverDTO;
-import com.bussin.SpringBack.models.PlannedRoute;
-import com.bussin.SpringBack.models.PlannedRouteDTO;
-import com.bussin.SpringBack.models.Ride;
-import com.bussin.SpringBack.models.RideDTO;
-import com.bussin.SpringBack.models.User;
-import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.driver.Driver;
+import com.bussin.SpringBack.models.driver.DriverDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.ride.Ride;
+import com.bussin.SpringBack.models.ride.RideDTO;
+import com.bussin.SpringBack.models.user.User;
+import com.bussin.SpringBack.models.user.UserDTO;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

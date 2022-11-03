@@ -1,4 +1,4 @@
-package com.bussin.SpringBack.models;
+package com.bussin.SpringBack.models.plannedRoute;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,7 +31,6 @@ import java.util.UUID;
 @Setter
 @Builder
 @NoArgsConstructor
-@ToString
 public class PlannedRouteDTO implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")

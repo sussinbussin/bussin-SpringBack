@@ -1,8 +1,8 @@
 package com.bussin.SpringBack.controllers;
 
-import com.bussin.SpringBack.models.PlannedRoute;
-import com.bussin.SpringBack.models.PlannedRouteDTO;
-import com.bussin.SpringBack.models.UserPublicDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.user.UserPublicDTO;
 import com.bussin.SpringBack.services.PlannedRouteService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;

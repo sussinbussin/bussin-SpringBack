@@ -2,7 +2,7 @@ package com.bussin.SpringBack.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.bussin.SpringBack.models.PlannedRoute;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
