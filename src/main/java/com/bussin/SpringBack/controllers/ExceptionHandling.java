@@ -3,8 +3,15 @@ package com.bussin.SpringBack.controllers;
 import com.amazonaws.services.cognitoidp.model.InvalidPasswordException;
 import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.bussin.SpringBack.exception.*;
 
+
+import com.bussin.SpringBack.exception.RideException;
+import com.bussin.SpringBack.exception.UserNotFoundException;
+import com.bussin.SpringBack.exception.WrongDriverException;
+import com.bussin.SpringBack.exception.WrongUserException;
+import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
+import com.bussin.SpringBack.exception.RideNotFoundException;
+import com.bussin.SpringBack.exception.DriverNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -172,6 +179,12 @@ public class ExceptionHandling {
                 e.getStackTrace()), HttpStatus.FORBIDDEN);
     }
 
+    /**
+     * Handles WrongDriverException.
+     *
+     * @param e WrongDriverException
+     * @return Response entity with ApiError message and HTTP code 403
+     */
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(WrongDriverException.class)
     public ResponseEntity<ApiError> handleWrongDriverException(
