@@ -3,7 +3,7 @@ package com.bussin.SpringBack.utils;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.WrongDriverException;
 import com.bussin.SpringBack.exception.WrongUserException;
-import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.models.user.User;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
