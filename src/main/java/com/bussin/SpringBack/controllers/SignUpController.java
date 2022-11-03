@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,8 +29,8 @@ public class SignUpController {
      * @return Whether the credentials can be used to create a unique user
      */
     @Operation(summary = "Checks if a set of credentials can be used to create a unique user")
-    @GetMapping("/unique")
-    public SignUpUniqueResponse isUniqueCheck(SignUpUniqueRequest request) {
+    @GetMapping
+    public SignUpUniqueResponse isUniqueCheck(@RequestBody SignUpUniqueRequest request) {
         return userService.isUniqueCheck(request);
     }
 }
