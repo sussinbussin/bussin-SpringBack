@@ -3,7 +3,11 @@ package com.bussin.SpringBack.driverTests;
 import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
-import com.bussin.SpringBack.models.*;
+import com.bussin.SpringBack.models.Driver;
+import com.bussin.SpringBack.models.DriverDTO;
+import com.bussin.SpringBack.models.User;
+import com.bussin.SpringBack.models.UserDTO;
+import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.UserService;
@@ -23,7 +27,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -148,13 +151,9 @@ public class DriverServiceTests {
          plannedRouteResult.add(plannedRoute);
          driver.setPlannedRoutes(plannedRouteResult);
 
-         Set<PlannedRouteDTO> plannedRouteDTOResult = plannedRouteResult.stream().map(found -> {
-             return modelMapper.map(found, PlannedRouteDTO.class);
-         }).collect(Collectors.toSet());
-
          when(driverRepository.findDriverByCarPlate(driver.getCarPlate())).thenReturn(Optional.of(driver));
 
-         assertEquals(driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()), plannedRouteDTOResult);
+         assertEquals(driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()), plannedRouteResult);
 
          verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
      }
