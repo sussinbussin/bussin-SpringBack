@@ -31,6 +31,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @NoArgsConstructor
+@ToString
 public class PlannedRouteDTO implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")

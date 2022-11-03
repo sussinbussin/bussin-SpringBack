@@ -2,7 +2,7 @@ package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.Driver;
 import com.bussin.SpringBack.models.DriverDTO;
-import com.bussin.SpringBack.models.PlannedRouteDTO;
+import com.bussin.SpringBack.models.PlannedRoute;
 import com.bussin.SpringBack.services.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -57,9 +57,10 @@ public class DriverController {
      */
     @Operation
     @GetMapping("/{carPlate}/plannedRoutes")
-    public Set<PlannedRouteDTO> getAllPlannedRoutesByDriver(@Valid @PathVariable String carPlate){
+    public Set<PlannedRoute> getAllPlannedRoutesByDriver(@Valid @PathVariable String carPlate){
         log.info(String.format("Retrieving planned routes from driver %s",
                 carPlate));
+
         return driverService.getAllPlannedRoutesByDriver(carPlate);
     }
 
