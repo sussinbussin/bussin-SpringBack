@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.services;
 
 import com.bussin.SpringBack.exception.DriverNotFoundException;
+import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.exception.WrongDriverException;
 import com.bussin.SpringBack.models.*;
 import com.bussin.SpringBack.repositories.DriverRepository;

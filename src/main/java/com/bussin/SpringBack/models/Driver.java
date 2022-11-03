@@ -1,6 +1,7 @@
 package com.bussin.SpringBack.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,7 @@ import java.util.Set;
 @Builder
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "carPlate")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Driver implements Serializable, Cloneable {
     @Id
     @NotNull(message = "Car Plate should not be empty")
