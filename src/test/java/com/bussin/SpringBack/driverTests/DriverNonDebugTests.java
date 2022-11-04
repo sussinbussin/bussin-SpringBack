@@ -68,6 +68,6 @@ public class DriverNonDebugTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 403);
+        assertEquals(403, httpResponse.getCode());
     }
 }

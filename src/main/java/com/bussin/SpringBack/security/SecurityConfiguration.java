@@ -93,6 +93,10 @@ public class SecurityConfiguration {
 
                 .mvcMatchers(HttpMethod.GET, "/planned/*")
                     .authenticated()
+                .mvcMatchers(HttpMethod.GET, "/planned/*/passengers")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.GET, "/planned/after/*")
+                    .authenticated()
                 .mvcMatchers(HttpMethod.PUT, "/planned/*")
                     .hasAuthority("Driver")
                 .mvcMatchers(HttpMethod.POST, "/planned/*")
