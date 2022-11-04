@@ -88,7 +88,7 @@ public class SecurityConfiguration {
                     .hasAuthority("Driver")
                 .mvcMatchers(HttpMethod.DELETE, "/driver/*")
                     .hasAuthority("Driver")
-                .mvcMatchers(HttpMethod.GET, "/driver/*/planned")
+                .mvcMatchers(HttpMethod.GET, "/driver/*/plannedRoutes")
                     .hasAuthority("Driver")
 
                 .mvcMatchers(HttpMethod.GET, "/planned/*")
