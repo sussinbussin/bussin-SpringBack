@@ -104,7 +104,7 @@ public class DriverCreateIntegrationTests {
      * Create a new driver with no user found throws 404 NOT_FOUND
      */
     @Test
-    public void addNewDriver_noUser_404() throws IOException {
+    public void addNewDriver_noUser_403() throws IOException {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
@@ -120,7 +120,7 @@ public class DriverCreateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(404, httpResponse.getCode());
+        assertEquals(403, httpResponse.getCode());
     }
 
     /**
