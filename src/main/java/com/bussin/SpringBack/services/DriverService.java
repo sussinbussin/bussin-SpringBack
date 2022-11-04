@@ -3,7 +3,7 @@ package com.bussin.SpringBack.services;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import org.modelmapper.ModelMapper;
@@ -79,11 +79,11 @@ public class DriverService {
      * @param carPlate The String of Driver's car plate
      * @return A set of planned routes, if found
      */
-    public List<PlannedRoutePublicDTO> getAllPlannedRoutesByDriver(String carPlate) {
+    public List<PlannedRouteResultDTO> getAllPlannedRoutesByDriver(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate)
                 .map(driver -> driver.getPlannedRoutes().stream()
                         .map(plannedRoute -> modelMapper
-                                .map(plannedRoute, PlannedRoutePublicDTO.class))
+                                .map(plannedRoute, PlannedRouteResultDTO.class))
                         .collect(Collectors.toList())).orElseThrow(()
                 -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
