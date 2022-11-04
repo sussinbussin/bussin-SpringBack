@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A class of UserPublicDTO object for Users to necessary information.
+ * A subset of User without sensitive information.
  */
 @Getter
 @Setter
