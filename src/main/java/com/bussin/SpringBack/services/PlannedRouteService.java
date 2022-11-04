@@ -4,6 +4,7 @@ import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.user.UserPublicDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
 import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
@@ -45,10 +46,12 @@ public class PlannedRouteService {
      * @param uuid The UUID of planned route
      * @return Planned route if found
      */
-    public PlannedRoute getPlannedRouteById(UUID uuid) {
-        return plannedRoutesRepository.findById(uuid)
+    public PlannedRoutePublicDTO getPlannedRouteById(UUID uuid) {
+        PlannedRoute plannedRoute = plannedRoutesRepository.findById(uuid)
                 .orElseThrow(() -> new PlannedRouteNotFoundException("No " +
                         "planned route with ID " + uuid));
+        return modelMapper.map(plannedRoute,
+                        PlannedRoutePublicDTO.class);
     }
 
     /**

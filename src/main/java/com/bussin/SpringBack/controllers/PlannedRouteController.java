@@ -2,6 +2,7 @@ package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.user.UserPublicDTO;
 import com.bussin.SpringBack.services.PlannedRouteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +45,7 @@ public class PlannedRouteController {
      */
     @Operation(summary = "Gets planned route by ID")
     @GetMapping("/{routeId}")
-    public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID routeId) {
+    public PlannedRoutePublicDTO getPlannedRouteById(@Valid @PathVariable UUID routeId) {
         log.info(String.format("Retrieving planned route %s", routeId));
         return plannedRouteService.getPlannedRouteById(routeId);
     }

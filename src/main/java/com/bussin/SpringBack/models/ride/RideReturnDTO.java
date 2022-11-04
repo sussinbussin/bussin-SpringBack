@@ -1,28 +1,18 @@
 package com.bussin.SpringBack.models.ride;
 
-import com.bussin.SpringBack.models.driver.DriverPublicDTO;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
-import com.bussin.SpringBack.models.user.User;
-import com.bussin.SpringBack.models.user.UserPublicDTO;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
@@ -32,7 +22,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -78,5 +67,5 @@ public class RideReturnDTO implements Serializable{
 
     private PlannedRoutePublicDTO plannedRoute;
 
-    private DriverPublicDTO driverPublicDTO;
+    private UUID userId;
 }

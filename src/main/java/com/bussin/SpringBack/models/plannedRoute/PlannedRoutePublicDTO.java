@@ -2,8 +2,9 @@ package com.bussin.SpringBack.models.plannedRoute;
 
 import com.bussin.SpringBack.models.driver.DriverPublicDTO;
 import com.bussin.SpringBack.models.ride.RideReturnDTO;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +15,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class PlannedRoutePublicDTO extends PlannedRouteDTO {
     private List<RideReturnDTO> rides;
 
