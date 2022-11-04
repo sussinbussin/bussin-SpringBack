@@ -29,6 +29,9 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * A subset of User for modifications and insertions
+ */
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "user_email_unique", columnNames = "email"),
         @UniqueConstraint(name = "mobile_unique", columnNames = "mobile"),
@@ -78,6 +81,9 @@ public class UserDTO implements Serializable, Cloneable {
     @Schema(description = "Is this user a driver?", example = "true")
     private Boolean isDriver;
 
+    /**
+     * Check if there is any constraint violations during input
+     */
     public void validate() {
         Validator validator =
                 Validation.buildDefaultValidatorFactory().getValidator();

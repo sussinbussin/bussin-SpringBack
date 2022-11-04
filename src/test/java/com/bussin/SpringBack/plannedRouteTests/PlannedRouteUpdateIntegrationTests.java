@@ -85,6 +85,7 @@ public class PlannedRouteUpdateIntegrationTests {
 
     /**
      * Update a planned route with valid parameters success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updatePlannedRoute_success() throws IOException {
@@ -133,6 +134,7 @@ public class PlannedRouteUpdateIntegrationTests {
 
     /**
      * Update a planned route with invalid parameters throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updatePlannedRoute_invalidParams_400() throws IOException {
@@ -172,6 +174,7 @@ public class PlannedRouteUpdateIntegrationTests {
 
     /**
      * Update a planned route with no route found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updatePlannedRoute_noRoute_404() throws IOException {

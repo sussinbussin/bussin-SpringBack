@@ -44,6 +44,12 @@ public class UserServiceTests {
     @Value("${clientid}")
     private String clientID;
 
+    /**
+     * Initializes new model mapper,
+     * application properties,
+     * AWSCognitoIdentityProvider,
+     * and user service before each unit test
+     */
     @BeforeEach
     private void setUp() {
         modelMapper = new ModelMapper();
@@ -69,6 +75,9 @@ public class UserServiceTests {
         userService.setClientID(clientID);
     }
 
+    /**
+     * Get all users when there are no users
+     */
     @Test
     public void getAllUsers_noUsers_success() {
         when(userRepository.findAll()).thenReturn(new ArrayList<>());
@@ -78,6 +87,9 @@ public class UserServiceTests {
         verify(userRepository, times(1)).findAll();
     }
 
+    /**
+     * Get all users
+     */
     @Test
     public void getAllUsers_success() {
         User user = TestObjects.USER.clone();
@@ -93,6 +105,9 @@ public class UserServiceTests {
         verify(userRepository, times(1)).findAll();
     }
 
+    /**
+     * Create new user with valid parameters
+     */
     @Test
     public void createNewUser_success() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -106,6 +121,9 @@ public class UserServiceTests {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
+    /**
+     * Create new user with invalid parameters
+     */
     @Test
     public void createNewUser_invalidParams_exception() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -119,6 +137,9 @@ public class UserServiceTests {
         verify(userRepository, never()).save(any(User.class));
     }
 
+    /**
+     * Create new user when user exists
+     */
     @Test
     public void createNewUser_alreadyExists_exception() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -135,9 +156,8 @@ public class UserServiceTests {
     }
 
     /**
-     * This test cannot be replicated because it adds to the user pool
+     * Update a user
      */
-
     @Test
     public void updateUser_success() {
         UUID uuid = UUID.randomUUID();
@@ -179,6 +199,9 @@ public class UserServiceTests {
                 .save(any(User.class));
     }
 
+    /**
+     * Update a user when user doesn't exist
+     */
     @Test
     public void updateUser_doesntExist_exception() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -195,6 +218,9 @@ public class UserServiceTests {
         verify(userRepository, never()).save(any(User.class));
     }
 
+    /**
+     * Update user with invalid parameters
+     */
     @Test
     public void updateUser_invalidParams_exception() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -208,6 +234,9 @@ public class UserServiceTests {
         verify(userRepository, never()).save(any(User.class));
     }
 
+    /**
+     * Update user with non unique parameters
+     */
     @Test
     public void updateUser_nonUniqueParams_exception() {
 
@@ -250,6 +279,9 @@ public class UserServiceTests {
                 .save(any(User.class));
     }
 
+    /**
+     * Delete a user
+     */
     @Test
     public void deleteUser_success() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -265,6 +297,9 @@ public class UserServiceTests {
                 .deleteById(userDTO.getId());
     }
 
+    /**
+     * Delete a user when user doesn't exist
+     */
     @Test
     public void deleteUser_doesntExist_exception() {
         UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");
@@ -278,6 +313,9 @@ public class UserServiceTests {
         verify(userRepository, never()).deleteById(uuid);
     }
 
+    /**
+     * Check user with unique parameters
+     */
     @Test
     public void isUniqueCheck_unique() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -301,6 +339,9 @@ public class UserServiceTests {
         verify(userRepository, times(1)).existsByMobile(userDTO.getMobile());
     }
 
+    /**
+     * Check user with duplicated parameters
+     */
     @Test
     public void isUniqueCheck_conflicts() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -324,6 +365,9 @@ public class UserServiceTests {
         verify(userRepository, times(1)).existsByMobile(userDTO.getMobile());
     }
 
+    /**
+     * Check user with empty parameters
+     */
     @Test
     public void isUniqueCheck_voidFields() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();

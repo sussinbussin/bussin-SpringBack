@@ -19,6 +19,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * A subset of Driver for modifications and insertions
+ */
 @Getter
 @Setter
 @Builder
@@ -47,6 +50,9 @@ public class DriverDTO implements Serializable, Cloneable {
     @NotNull
     private String fuelType;
 
+    /**
+     * Check if there is any constraint violations during input
+     */
     public void validate() {
         Validator validator =
                 Validation.buildDefaultValidatorFactory().getValidator();

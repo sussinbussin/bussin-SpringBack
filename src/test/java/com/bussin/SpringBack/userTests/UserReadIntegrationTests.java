@@ -71,6 +71,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get no users when there are no users success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getAllUsers_noUsers_success() throws IOException {
@@ -85,6 +86,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get all users when there are users success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getAllUsers_success() throws IOException {
@@ -110,6 +112,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get all details of a specific user if user exists success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getFullUserById_userExists_success() throws IOException {
@@ -129,6 +132,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get details of a specific user if user exists success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getUserById_userExists_success() throws IOException {
@@ -147,6 +151,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by ID when user doesn't exist throws 403 FORBIDDEN
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getUserById_userDoesntExist_403() throws IOException {
@@ -163,6 +168,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by ID when bad UUID is provided throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getUserById_badUUID_400() throws IOException {
@@ -178,6 +184,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by email when user exist success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getUserByEmail_userExists_success() throws IOException {
@@ -197,6 +204,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by email when user doesn't exist throws 403 FORBIDDEN
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getUserByEmail_userDoesntExist_403() throws IOException {

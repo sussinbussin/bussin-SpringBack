@@ -41,6 +41,10 @@ public class SignUpIntegrationTests {
     @Autowired
     private UserService userService;
 
+    /**
+     * Check user with a valid and unique parameters when creating account success
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void uniqueCheck_validUser_success() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -73,6 +77,10 @@ public class SignUpIntegrationTests {
                         httpResponse.getEntity().getContent(), SignUpUniqueResponse.class));
     }
 
+    /**
+     * Check user with duplicated parameters when creating account returns all false
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void uniqueCheck_duplicateUser_allFalse() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -106,6 +114,10 @@ public class SignUpIntegrationTests {
                         httpResponse.getEntity().getContent(), SignUpUniqueResponse.class));
     }
 
+    /**
+     * Check user with any parameters that is duplicated when creating account will return false
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void uniqueCheck_nulls_mixed() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();

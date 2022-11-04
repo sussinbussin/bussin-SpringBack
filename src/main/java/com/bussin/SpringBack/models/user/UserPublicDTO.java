@@ -22,6 +22,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * A subset of User without sensitive information.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,6 +42,9 @@ public class UserPublicDTO implements Serializable {
     @Pattern(regexp = "^[8-9][0-9]{7}$", message = "Mobile must be in this format: 86969696")
     private String mobile;
 
+    /**
+     * Check if there is any constraint violations during input
+     */
     public void validate() {
         Validator validator =
                 Validation.buildDefaultValidatorFactory().getValidator();

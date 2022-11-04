@@ -67,6 +67,7 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with valid credentials success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewUser_validUser_success() throws IOException {
@@ -95,6 +96,7 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with invalid credentials throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewUser_invalidUser_400() throws IOException {
@@ -122,6 +124,10 @@ public class UserCreateIntegrationTests {
         assertEquals(400, httpResponse.getCode());
     }
 
+    /**
+     * Create a new user with invalid password throws 400 BAD REQUEST
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void createNewUser_invalidPassword_400() throws IOException {
         UserDTO userDTO = UserDTO.builder()
@@ -151,6 +157,10 @@ public class UserCreateIntegrationTests {
         assertEquals(400, httpResponse.getCode());
     }
 
+    /**
+     * Create a new user with duplicated username throws 400 BAD REQUEST
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void createNewUser_duplicatedUsername_400() throws IOException {
         UserDTO userDTO = UserDTO.builder()

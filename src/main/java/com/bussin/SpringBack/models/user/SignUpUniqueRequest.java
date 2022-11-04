@@ -9,6 +9,9 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * A query checking if the provided credentials are unique
+ */
 @Getter
 @Setter
 @Builder

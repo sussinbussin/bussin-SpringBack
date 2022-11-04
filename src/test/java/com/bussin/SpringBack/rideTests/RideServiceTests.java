@@ -55,6 +55,9 @@ public class RideServiceTests {
     @InjectMocks
     private RideService rideService;
 
+    /**
+     * Initializes new model mapper and driver service before each unit test
+     */
     @BeforeEach
     private void setUp() {
         modelMapper = new ModelMapper();
@@ -68,6 +71,9 @@ public class RideServiceTests {
                 plannedRoutesRepository, userService);
     }
 
+    /**
+     * Get rides when there are no rides
+     */
     @Test
     public void getAllRides_noRides_success() {
         when(rideRepository.findAll()).thenReturn(new ArrayList<>());
@@ -77,6 +83,9 @@ public class RideServiceTests {
         verify(rideRepository, times(1)).findAll();
     }
 
+    /**
+     * Get all rides
+     */
     @Test
     public void getAllRides_success() {
         ArrayList<Ride> rides = new ArrayList<>();
@@ -89,6 +98,9 @@ public class RideServiceTests {
         verify(rideRepository, times(1)).findAll();
     }
 
+    /**
+     * Create a new ride with invalid parameters
+     */
     @Test
     public void createNewRide_invalidParams_exception() {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
@@ -105,6 +117,9 @@ public class RideServiceTests {
         verify(rideRepository, never()).save(any(Ride.class));
     }
 
+    /**
+     * Create a new ride when passengers are over the capacity
+     */
     @Test
     public void createNewRide_passengersOverCapacity_exception() {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
@@ -123,6 +138,9 @@ public class RideServiceTests {
         verify(rideRepository, never()).save(any(Ride.class));
     }
 
+    /**
+     * Create a new ride when multiple rides are over the capacity
+     */
     @Test
     public void createNewRide_multipleRidesOverCapacity_exception() {
         Ride ride = TestObjects.RIDE.clone();
@@ -148,6 +166,9 @@ public class RideServiceTests {
         verify(rideRepository, never()).save(any(Ride.class));
     }
 
+    /**
+     * Create a new ride when ride already exist
+     */
     @Test
     public void createNewRide_alreadyExists_exception() {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
@@ -178,6 +199,9 @@ public class RideServiceTests {
         verify(rideRepository, times(1)).save(any(Ride.class));
     }
 
+    /**
+     * Update a ride with valid parameters
+     */
     @Test
     public void updateRide_success() {
         Ride ride = TestObjects.RIDE.clone();
@@ -200,6 +224,9 @@ public class RideServiceTests {
         verify(rideRepository, times(1)).save(any(Ride.class));
     }
 
+    /**
+     * Update a ride when ride doesn't exist
+     */
     @Test
     public void updateRide_doesntExist_exception() {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
@@ -216,6 +243,9 @@ public class RideServiceTests {
         verify(rideRepository, never()).save(any(Ride.class));
     }
 
+    /**
+     * Update a ride with invalid parameters
+     */
     @Test
     public void updateRide_invalidParams_exception() {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
@@ -229,8 +259,11 @@ public class RideServiceTests {
         verify(rideRepository, never()).save(any(Ride.class));
     }
 
+    /**
+     * Update a user with non unique parameters
+     */
     @Test
-    public void updateUser_nonUniqueParams_exception() {
+    public void updateRide_nonUniqueParams_exception() {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
         Ride ride = TestObjects.RIDE.clone();
 
@@ -249,6 +282,9 @@ public class RideServiceTests {
                 .save(any(Ride.class));
     }
 
+    /**
+     * Delete a ride
+     */
     @Test
     public void deleteRide_success() {
         Ride ride = TestObjects.RIDE.clone();
@@ -266,7 +302,9 @@ public class RideServiceTests {
                 .deleteById(ride.getId());
     }
 
-
+    /**
+     * Delete a ride when ride doesn't exist
+     */
     @Test
     public void deleteRide_doesntExist_exception() {
         UUID uuid = UUID.randomUUID();

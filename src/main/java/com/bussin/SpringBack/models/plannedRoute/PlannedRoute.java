@@ -35,6 +35,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Planned Route model with route information
+ */
 @Entity
 @Getter
 @Setter
@@ -98,6 +101,11 @@ public class PlannedRoute implements Serializable, Cloneable {
     @JoinColumn(name = "carPlate")
     private Driver driver;
 
+    /**
+     * Updates a PlannedRoute with PlannedRouteDTO object
+     *
+     * @param plannedRouteDTO The PlannedRouteDTO object to be updated
+     */
     public void updateFromDTO(PlannedRouteDTO plannedRouteDTO) {
         this.id = plannedRouteDTO.getId();
         this.plannedFrom = plannedRouteDTO.getPlannedFrom();
@@ -110,6 +118,11 @@ public class PlannedRoute implements Serializable, Cloneable {
         this.destLongitude = plannedRouteDTO.getDestLongitude();
     }
 
+    /**
+     * Count the number of passengers in a planned route
+     *
+     * @return The total number of passengers in a planned route
+     */
     @JsonIgnore
     public int getPassengerCount() {
         return rides == null ? 0 : rides.stream().mapToInt(Ride::getPassengers).sum();

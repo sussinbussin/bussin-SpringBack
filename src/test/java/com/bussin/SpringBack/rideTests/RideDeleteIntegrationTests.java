@@ -85,6 +85,7 @@ public class RideDeleteIntegrationTests {
 
     /**
      * Delete a ride by its ID when ride is found success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deleteRideByID_success() throws IOException {
@@ -128,6 +129,7 @@ public class RideDeleteIntegrationTests {
 
     /**
      * Delete a ride by ID when ride is not found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deleteRideByID_noRide_404() throws IOException {

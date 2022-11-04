@@ -32,6 +32,10 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Model with ride information for users participating
+ * in a planned route
+ */
 @Entity
 @Builder
 @NoArgsConstructor
@@ -82,6 +86,11 @@ public class Ride implements Serializable, Cloneable{
     @JoinColumn(name = "user_id")
     private User user;
 
+    /**
+     * Updates a Ride with RideDTO object
+     *
+     * @param rideDTO The RideDTO object to be updated
+     */
     public void updateFromDTO(RideDTO rideDTO) {
         this.id = rideDTO.getId();
         this.timestamp = rideDTO.getTimestamp();

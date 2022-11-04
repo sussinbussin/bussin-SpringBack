@@ -56,6 +56,10 @@ public class RbacUserSecurityTests {
         userService.createNewUser(TestObjects.COGNITO_DRIVER_DTO);
     }
 
+    /**
+     * Get a driver by car plate when user is unauthorized throws 403 FORBIDDEN
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getDriverByCarPlate_unauthorized_403() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +

@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/health")
 public class HealthController {
+    /**
+     * Check if backend service is reachable
+     * @return 200 HTTPStatus.OK
+     */
     @GetMapping
     @Operation(summary = "Health check")
     public ResponseEntity<Void> getHealthCheck() {

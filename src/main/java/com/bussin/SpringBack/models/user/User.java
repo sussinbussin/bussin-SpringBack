@@ -24,6 +24,9 @@ import java.util.Set;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * User model with all user information
+ */
 @Entity(name = "bussinuser")
 @Table(name = "bussinuser", uniqueConstraints = {
         @UniqueConstraint(name = "user_email_unique", columnNames = "email"),
@@ -84,6 +87,11 @@ public class User implements Serializable, Cloneable {
     @OneToMany(mappedBy = "user")
     private Set<Ride> rides;
 
+    /**
+     * Update a User with UserDTO object
+     *
+     * @param userDTO The UserDTO object to be updated
+     */
     public void updateFromDTO(UserDTO userDTO) {
         this.nric = userDTO.getNric();
         this.name = userDTO.getName();

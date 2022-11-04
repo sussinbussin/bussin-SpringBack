@@ -9,6 +9,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * A model for creating a new Ride record
+ */
 @Getter
 @Setter
 @Builder

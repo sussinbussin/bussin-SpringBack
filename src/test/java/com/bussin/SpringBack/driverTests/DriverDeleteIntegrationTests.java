@@ -70,6 +70,7 @@ public class DriverDeleteIntegrationTests {
 
     /**
      * Delete a driver when car plate exist success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deleteDriver_success() throws IOException {
@@ -97,6 +98,7 @@ public class DriverDeleteIntegrationTests {
 
     /**
      * Delete a driver when car plate is not found throw 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deleteDriver_noDriver_404() throws IOException {

@@ -33,6 +33,10 @@ public class RouteSecurityTests {
 
     private final String baseUrl = "http://localhost:";
 
+    /**
+     * Get user by id when user is unauthorized throws 401 UNAUTHORIZED
+     * @throws IOException
+     */
     @Test
     public void getUserById_Unauthorized_401() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/users/"
@@ -44,8 +48,12 @@ public class RouteSecurityTests {
         assertEquals(401, httpResponse.getCode());
     }
 
+    /**
+     * Create user with cognito with invalid parameters throws 400 BAD REQUEST
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
-    public void createUserWCognito_invalid_400() throws IOException {
+    public void createUserWCognito_invalidParams_400() throws IOException {
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1/users" +
                 "/wCognito/create");
 
@@ -55,6 +63,10 @@ public class RouteSecurityTests {
         assertEquals(400, httpResponse.getCode());
     }
 
+    /**
+     * Get driver by car plate when unauthorized throws 401 UNAUTHORIZED
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getDriverByCarPlate_Unauthorized_401() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port
@@ -66,6 +78,10 @@ public class RouteSecurityTests {
         assertEquals(401, httpResponse.getCode());
     }
 
+    /**
+     * Get planned route by id when unauthorized throws 401 UNAUTHORIZED
+     * @throws IOException
+     */
     @Test
     public void getPlannedRouteById_Unauthorized_401() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
@@ -77,6 +93,10 @@ public class RouteSecurityTests {
         assertEquals(401, httpResponse.getCode());
     }
 
+    /**
+     * Get ride by id when unauthorized throws 401 UNAUTHORIZED
+     * @throws IOException
+     */
     @Test
     public void getRideById_Unauthorized_401() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +

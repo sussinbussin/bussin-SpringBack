@@ -57,10 +57,11 @@ public class DriverNonDebugTests {
     }
 
     /**
-     * Get all drivers when no rides are found success
+     * Get all drivers when debug mode off throws 403 FORBIDDEN
+     * @throws IOException If an input or output exception occurred
      */
     @Test
-    public void getAllPlannedRoutes_403() throws IOException {
+    public void getAllDriver_403() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
                 "/driver");
         request.setHeader(AUTHORIZATION_HEADER, idToken);

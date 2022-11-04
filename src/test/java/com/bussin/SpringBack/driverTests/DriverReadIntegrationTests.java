@@ -86,6 +86,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get no drivers when there are no drivers success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getAllDrivers_noDrivers_200() throws IOException {
@@ -100,6 +101,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get all drivers when there are drivers success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getAllDrivers_success() throws IOException {
@@ -125,6 +127,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get driver by car plate when car plate exist success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getDriverByCarPlate_success() throws IOException {
@@ -150,6 +153,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get driver by car plate when no car plate exist throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getDriverByCarPlate_noDriver_404() throws IOException {
@@ -163,6 +167,10 @@ public class DriverReadIntegrationTests {
         assertEquals(404, httpResponse.getCode());
     }
 
+    /**
+     * Get all planned routes from a driver success
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getPlannedRoutesFromDriver_success() throws IOException {
         ModelMapper modelMapper

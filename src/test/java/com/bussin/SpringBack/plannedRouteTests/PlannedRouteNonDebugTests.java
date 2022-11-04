@@ -57,7 +57,7 @@ public class PlannedRouteNonDebugTests {
     }
 
     /**
-     * Get all planned routes with debug mode off, 403
+     * Get all planned routes when debug mode off throws 403 FORBIDDEN
      */
     @Test
     public void getAllPlannedRoutes_403() throws IOException {

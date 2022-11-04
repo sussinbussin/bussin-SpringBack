@@ -92,6 +92,11 @@ public class ModelMapperConfig {
         return modelMapper;
     }
 
+    /**
+     * Creates an object mapper that deserializes JSON to objects
+     *
+     * @return an object mapper
+     */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -11,6 +11,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * A subset of PlannedRoute with sensitive information
+ */
 
 @Getter
 @Setter

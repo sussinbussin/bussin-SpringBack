@@ -89,7 +89,8 @@ public class PlannedRouteReadIntegrationTests {
     }
 
     /**
-     *
+     * Get all routes when no routes exist success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getAllRoutes_noRoutes_Success() throws IOException {
@@ -103,6 +104,10 @@ public class PlannedRouteReadIntegrationTests {
         assertEquals(200, httpResponse.getCode());
     }
 
+    /**
+     * Get all planned routes success
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getAllPlannedRoutes_success() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -136,6 +141,10 @@ public class PlannedRouteReadIntegrationTests {
         assertEquals(dest, plannedRouteDTO);
     }
 
+    /**
+     * Get a planned route by id success
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getPlannedRouteById_success() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -170,6 +179,10 @@ public class PlannedRouteReadIntegrationTests {
         assertEquals(plannedRouteDTO, dest);
     }
 
+    /**
+     * Get a planned route by id when planned route doesn't exist throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getPlannedRouteById_doesntExist_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +
@@ -182,6 +195,10 @@ public class PlannedRouteReadIntegrationTests {
         assertEquals(404, httpResponse.getCode());
     }
 
+    /**
+     * Get all passengers on a planned route success
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getPassengersOnRoute_Success() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
@@ -228,6 +245,10 @@ public class PlannedRouteReadIntegrationTests {
         assertThat(result).hasSameElementsAs(expected);
     }
 
+    /**
+     * Get passengers on a planned route when planned route doesn't exist throws 404 NOT_FOUND
+     * @throws IOException
+     */
     @Test
     public void getPassengersOnRoute_noRoute_404() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +

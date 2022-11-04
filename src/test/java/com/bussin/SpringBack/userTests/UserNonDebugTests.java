@@ -57,7 +57,7 @@ public class UserNonDebugTests {
     }
 
     /**
-     * Get all users with debug mode off, 403
+     * Get all users when debug mode off throws 403 FORBIDDEN
      */
     @Test
     public void getAllUsers_403() throws IOException {

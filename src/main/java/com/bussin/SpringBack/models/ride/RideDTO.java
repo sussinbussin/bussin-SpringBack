@@ -29,6 +29,9 @@ import java.sql.Timestamp;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * A subset of Ride for modifications and insertions
+ */
 @Getter
 @Setter
 @Builder
@@ -67,6 +70,9 @@ public class RideDTO implements Serializable, Cloneable {
             "location", example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String rideTo;
 
+    /**
+     * Check if there is any constraint violations during input
+     */
     public void validate() {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<RideDTO>> violations = validator.validate(this);

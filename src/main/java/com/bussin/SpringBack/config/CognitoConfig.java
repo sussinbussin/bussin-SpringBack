@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CognitoConfig {
+    /**
+     * Configure Amazon Cognito path and credentials using application.properties.
+     *
+     * @return AWSCognitoIdentityProvider The AWSCognitoIdentityProvider
+     */
     @Bean
     public AWSCognitoIdentityProvider getAmazonCognitoIdentityClient() {
         ClasspathPropertiesFileCredentialsProvider propertiesFileCredentialsProvider =

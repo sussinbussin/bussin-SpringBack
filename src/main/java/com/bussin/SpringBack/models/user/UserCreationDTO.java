@@ -10,6 +10,9 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * Model used to create a User object
+ */
 @Getter
 @Setter
 @Builder

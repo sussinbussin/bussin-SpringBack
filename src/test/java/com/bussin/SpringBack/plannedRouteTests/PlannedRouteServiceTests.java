@@ -47,6 +47,9 @@ public class PlannedRouteServiceTests {
     @InjectMocks
     private PlannedRouteService plannedRouteService;
 
+    /**
+     * Initializes new model mapper and planned route service before each unit test
+     */
     @BeforeEach
     private void setUp() {
         modelMapper = new ModelMapper();
@@ -61,6 +64,9 @@ public class PlannedRouteServiceTests {
                 plannedRoutesRepository, driverRepository);
     }
 
+    /**
+     * Get all planned routes when there are no routes
+     */
     @Test
     public void getAllPlannedRoutes_noRoutes_success() {
         when(plannedRoutesRepository.findAll()).thenReturn(new ArrayList<>());
@@ -72,6 +78,9 @@ public class PlannedRouteServiceTests {
                 .findAll();
     }
 
+    /**
+     * Get all planned routes
+     */
     @Test
     public void getAllPlannedRoutes_success() {
         ArrayList<PlannedRoute> plannedRoutes = new ArrayList<>();
@@ -85,6 +94,9 @@ public class PlannedRouteServiceTests {
         verify(plannedRoutesRepository, times(1)).findAll();
     }
 
+    /**
+     * Create a new planned route with invalid parameters
+     */
     @Test
     public void createNewPlannedRoute_invalidParams_exception() {
         //No capacity
@@ -98,6 +110,9 @@ public class PlannedRouteServiceTests {
         verify(plannedRoutesRepository, never()).save(any(PlannedRoute.class));
     }
 
+    /**
+     * Get all passengers on a route
+     */
     @Test
     public void getPassengersOnRoute_success() {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
@@ -137,7 +152,9 @@ public class PlannedRouteServiceTests {
                 .findById(plannedRoute.getId());
     }
 
-
+    /**
+     * Get passengers on a planned route when planned route doesn't exist
+     */
     @Test
     public void getPassengersOnRoute_noRoute_failure() {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
@@ -152,6 +169,9 @@ public class PlannedRouteServiceTests {
                 .findById(plannedRoute.getId());
     }
 
+    /**
+     * Create a new planned route when planned route already exist
+     */
     @Test
     public void createNewPlannedRoute_alreadyExists_exception() {
         PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
@@ -171,6 +191,9 @@ public class PlannedRouteServiceTests {
                 .save(any(PlannedRoute.class));
     }
 
+    /**
+     * Get all planned routes after a particular time
+     */
     @Test
     public void getAllPlannedRoutesAfterTime_success() {
         List<PlannedRoute> plannedRouteResult = new ArrayList<>();
@@ -190,6 +213,9 @@ public class PlannedRouteServiceTests {
                 .findPlannedRouteByDateTime(plannedRoute.getDateTime());
     }
 
+    /**
+     * Update a planned route with valid parameters
+     */
     @Test
     public void updatePlannedRoute_success() {
         Driver driver = TestObjects.DRIVER.clone();
@@ -220,6 +246,9 @@ public class PlannedRouteServiceTests {
                 .save(any(PlannedRoute.class));
     }
 
+    /**
+     * Update a planned route that doesn't exist
+     */
     @Test
     public void updatePlannedRoute_doesntExist_exception() {
         PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
@@ -238,6 +267,9 @@ public class PlannedRouteServiceTests {
         verify(plannedRoutesRepository, never()).save(any(PlannedRoute.class));
     }
 
+    /**
+     * Update a planned route with non unique parameters
+     */
     @Test
     public void updatePlannedRoute_nonUniqueParams_exception() {
         PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
@@ -261,6 +293,9 @@ public class PlannedRouteServiceTests {
                 .save(any(PlannedRoute.class));
     }
 
+    /**
+     * Delete a planned route
+     */
     @Test
     public void deletePlannedRoute_success() {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
@@ -277,6 +312,9 @@ public class PlannedRouteServiceTests {
                 .deleteById(plannedRoute.getId());
     }
 
+    /**
+     * Delete a planned route that doesn't exist
+     */
     @Test
     public void deletePlannedRoute_doesntExist_exception() {
         UUID uuid = UUID.fromString("a6bb7dc3-5cbb-4408-a749-514e0b4a05d3");

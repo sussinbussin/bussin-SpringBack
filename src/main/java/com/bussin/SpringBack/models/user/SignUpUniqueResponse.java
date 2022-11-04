@@ -10,6 +10,9 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Response to a query checking if the provided credentials are unique
+ */
 @Getter
 @Setter
 @Builder
