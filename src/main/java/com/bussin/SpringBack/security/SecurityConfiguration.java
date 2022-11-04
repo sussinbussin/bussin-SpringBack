@@ -68,16 +68,47 @@ public class SecurityConfiguration {
                 )
                 .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
                 .authorizeRequests()
-                .mvcMatchers(
-                        "/users/*",
-                        "/users/full/*",
-                        "/users/byEmail/*",
-                        "/planned/**",
-                        "/ride/**")
-                .authenticated()
-                .mvcMatchers(HttpMethod.POST,"/driver/*").authenticated()
-                .mvcMatchers("/driver/**")
-                .hasAuthority("Driver")
+
+                .mvcMatchers(HttpMethod.GET, "/users/*")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.PUT, "/users/*")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.DELETE, "/users/*")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.GET, "/users/full/*")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.GET, "/users/byEmail/*")
+                    .authenticated()
+
+                .mvcMatchers(HttpMethod.GET, "/driver/*")
+                    .hasAuthority("Driver")
+                .mvcMatchers(HttpMethod.POST, "/driver/*")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.PUT, "/driver/*")
+                    .hasAuthority("Driver")
+                .mvcMatchers(HttpMethod.DELETE, "/driver/*")
+                    .hasAuthority("Driver")
+                .mvcMatchers(HttpMethod.GET, "/driver/*/planned")
+                    .hasAuthority("Driver")
+
+                .mvcMatchers(HttpMethod.GET, "/planned/*")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.PUT, "/planned/*")
+                    .hasAuthority("Driver")
+                .mvcMatchers(HttpMethod.POST, "/planned/*")
+                    .hasAuthority("Driver")
+                .mvcMatchers(HttpMethod.DELETE, "/planned/*")
+                    .hasAuthority("Driver")
+
+                .mvcMatchers(HttpMethod.GET, "/ride/*")
+                    .authenticated()
+                .mvcMatchers(HttpMethod.POST,"/ride")
+                    .hasAuthority("Driver")
+                .mvcMatchers(HttpMethod.PUT, "/ride/*")
+                    .hasAuthority("Driver")
+                .mvcMatchers(HttpMethod.DELETE, "/ride/*")
+                    .hasAuthority("Driver")
+
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
@@ -88,10 +119,12 @@ public class SecurityConfiguration {
         return http.authorizeRequests()
                 .mvcMatchers(HttpMethod.GET,
                         "/users",
-                                    "/driver",
-                                    "/planned",
-                                    "/ride")
-                .denyAll()
+                        "/driver",
+                        "/planned",
+                        "/ride")
+                    .denyAll()
+                .mvcMatchers(HttpMethod.POST, "/users")
+                    .denyAll()
                 .and();
     }
 
@@ -120,6 +153,7 @@ public class SecurityConfiguration {
 
     private RequestMatcher getMatcher() {
         ArrayList<RequestMatcher> matchers = new ArrayList<>();
+        matchers.add(new AntPathRequestMatcher("/users"));
         matchers.add(new AntPathRequestMatcher("/users/*"));
         matchers.add(new AntPathRequestMatcher( "/users/full/*"));
         matchers.add(new AntPathRequestMatcher("/users/byEmail/*"));

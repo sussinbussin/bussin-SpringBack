@@ -91,14 +91,14 @@ public class DriverReadIntegrationTests {
      * Get no drivers when there are no drivers success
      */
     @Test
-    public void getAllDrivers_noDrivers_success() throws IOException {
+    public void getAllDrivers_noDrivers_200() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/driver");
         request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        assertEquals(httpResponse.getCode(), 200);
+        assertEquals(200, httpResponse.getCode());
     }
 
     /**

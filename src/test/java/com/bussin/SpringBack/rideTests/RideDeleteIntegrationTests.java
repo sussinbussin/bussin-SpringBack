@@ -78,8 +78,8 @@ public class RideDeleteIntegrationTests {
      */
     @BeforeEach
     private void setUp() throws IOException {
-        idToken = "Bearer " + cognitoLogin.getAuthToken(false);
-        userService.createNewUser(TestObjects.COGNITO_USER_DTO);
+        idToken = "Bearer " + cognitoLogin.getAuthToken(true);
+        userService.createNewUser(TestObjects.COGNITO_DRIVER_DTO.clone());
     }
 
     /**
