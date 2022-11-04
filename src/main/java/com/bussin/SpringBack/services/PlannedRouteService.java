@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PlannedRouteService {
@@ -74,8 +75,10 @@ public class PlannedRouteService {
      * @param dateTime The LocalDateTime
      * @return List of planned routes after datetime
      */
-    public List<PlannedRoute> getPlannedRouteAfterTime(LocalDateTime dateTime) {
-        return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime);
+    public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(LocalDateTime dateTime) {
+        return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime)
+                .stream().map(plannedRoute -> modelMapper.map(plannedRoute, PlannedRoutePublicDTO.class))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -104,15 +107,15 @@ public class PlannedRouteService {
      * @return Updated Planned Route if found
      */
     @Transactional
-    public PlannedRoute updatePlannedRouteById(UUID uuid,
+    public PlannedRoutePublicDTO updatePlannedRouteById(UUID uuid,
                                                PlannedRouteDTO plannedRouteDTO) {
         plannedRouteDTO.setId(uuid);
         plannedRouteDTO.validate();
-        return plannedRoutesRepository.findById(uuid).map(found -> {
+        return modelMapper.map(plannedRoutesRepository.findById(uuid).map(found -> {
             found.updateFromDTO(plannedRouteDTO);
             return plannedRoutesRepository.save(found);
         }).orElseThrow(() -> new PlannedRouteNotFoundException("No " +
-                "planned route with ID " + uuid));
+                "planned route with ID " + uuid)), PlannedRoutePublicDTO.class);
     }
 
     /**
@@ -121,11 +124,11 @@ public class PlannedRouteService {
      * @return Deleted Planned Route if found
      */
     @Transactional
-    public PlannedRoute deletePlannedRouteByID(UUID uuid) {
-        return plannedRoutesRepository.findById(uuid).map(found -> {
+    public PlannedRoutePublicDTO deletePlannedRouteByID(UUID uuid) {
+        return modelMapper.map(plannedRoutesRepository.findById(uuid).map(found -> {
             plannedRoutesRepository.deleteById(uuid);
             return found;
         }).orElseThrow(() -> new PlannedRouteNotFoundException("No " +
-                "planned route with ID " + uuid));
+                "planned route with ID " + uuid)), PlannedRoutePublicDTO.class);
     }
 }

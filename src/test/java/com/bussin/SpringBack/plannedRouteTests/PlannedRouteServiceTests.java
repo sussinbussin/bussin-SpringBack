@@ -182,11 +182,12 @@ public class PlannedRouteServiceTests {
                         plannedRoute.getDateTime()))
                         .thenReturn(plannedRouteResult);
 
-        assertEquals(plannedRouteService.getPlannedRouteAfterTime(
-                        plannedRoute.getDateTime()), plannedRouteResult); 
+        assertEquals(plannedRouteResult.get(0).getId(),
+                plannedRouteService.getPlannedRouteAfterTime(
+                        plannedRoute.getDateTime()).get(0).getId());
                         
-        verify(plannedRoutesRepository, times(1)).findPlannedRouteByDateTime(
-                        plannedRoute.getDateTime());
+        verify(plannedRoutesRepository, times(1))
+                .findPlannedRouteByDateTime(plannedRoute.getDateTime());
     }
 
     @Test
@@ -211,7 +212,7 @@ public class PlannedRouteServiceTests {
 
         assertEquals(plannedRouteService
                 .updatePlannedRouteById(plannedRoute.getId(),
-                        plannedRouteDTO), plannedRouteResult);
+                        plannedRouteDTO).getId(), plannedRouteResult.getId());
 
         verify(plannedRoutesRepository, times(1))
                 .findById(plannedRouteDTO.getId());
@@ -267,8 +268,8 @@ public class PlannedRouteServiceTests {
         when(plannedRoutesRepository.findById(plannedRoute.getId()))
                 .thenReturn(Optional.of(plannedRoute));
 
-        assertEquals(plannedRoute, plannedRouteService
-                .deletePlannedRouteByID(plannedRoute.getId()));
+        assertEquals(plannedRoute.getId(), plannedRouteService
+                .deletePlannedRouteByID(plannedRoute.getId()).getId());
 
         verify(plannedRoutesRepository, times(1))
                 .findById(plannedRoute.getId());

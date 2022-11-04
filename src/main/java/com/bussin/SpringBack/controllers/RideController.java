@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import com.bussin.SpringBack.models.ride.Ride;
 import com.bussin.SpringBack.models.ride.RideCreationDTO;
 import com.bussin.SpringBack.models.ride.RideDTO;
+import com.bussin.SpringBack.models.ride.RideReturnDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class RideController {
      */
     @Operation(summary = "Gets a ride by its ID")
     @GetMapping("/{rideId}")
-    public Ride getRideById(@Valid @PathVariable UUID rideId) {
+    public RideReturnDTO getRideById(@Valid @PathVariable UUID rideId) {
         log.info(String.format("Retrieving ride %s", rideId));
         return rideService.getRideById(rideId);
     }
@@ -65,7 +66,7 @@ public class RideController {
     @Operation(summary = "Create a new ride")
     @Transactional
     @PostMapping
-    public Ride createNewRide(@Valid @RequestBody RideCreationDTO creationDTO) {
+    public RideReturnDTO createNewRide(@Valid @RequestBody RideCreationDTO creationDTO) {
         log.info(String.format("Creating ride %s", creationDTO));
         return rideService.createNewRide(creationDTO.getRideDTO(),
                 creationDTO.getUserUUID(), creationDTO.getPlannedRouteUUID());
@@ -80,7 +81,7 @@ public class RideController {
     @Operation(summary = "Update a ride by its ID")
     @Transactional
     @PutMapping("/{rideId}")
-    public Ride updateRideById
+    public RideReturnDTO updateRideById
             (@Valid @PathVariable UUID rideId,
             @Valid @RequestBody RideDTO rideDTO) {
         log.info(String.format("Updating ride %s: %s", rideId, rideDTO));
@@ -95,7 +96,7 @@ public class RideController {
     @Operation(summary = "Delete a ride by its ID")
     @Transactional
     @DeleteMapping("/{rideId}")
-    public Ride deleteRideById(@Valid @PathVariable UUID rideId) {
+    public RideReturnDTO deleteRideById(@Valid @PathVariable UUID rideId) {
         log.info(String.format("Deleting ride %s", rideId));
         return rideService.deleteRideById(rideId);
     }
