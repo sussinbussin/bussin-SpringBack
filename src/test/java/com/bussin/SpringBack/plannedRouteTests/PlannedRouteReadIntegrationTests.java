@@ -5,6 +5,7 @@ import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.driver.DriverDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.ride.RideDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
@@ -167,15 +168,15 @@ public class PlannedRouteReadIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        PlannedRoute plannedRouteResult =
+        PlannedRoutePublicDTO plannedRouteResult =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        PlannedRoute.class);
+                        PlannedRoutePublicDTO.class);
 
         plannedRouteDTO.setId(plannedRoute.getId());
 
         PlannedRouteDTO dest = PlannedRouteDTO.builder().build();
         modelMapper.map(plannedRouteResult, dest);
-        assertEquals(dest, plannedRouteDTO);
+        assertEquals(plannedRouteDTO, dest);
     }
 
     /**

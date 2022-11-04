@@ -2,6 +2,7 @@ package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.user.UserPublicDTO;
 import com.bussin.SpringBack.services.PlannedRouteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +45,7 @@ public class PlannedRouteController {
      */
     @Operation(summary = "Gets planned route by ID")
     @GetMapping("/{routeId}")
-    public PlannedRoute getPlannedRouteById(@Valid @PathVariable UUID routeId) {
+    public PlannedRoutePublicDTO getPlannedRouteById(@Valid @PathVariable UUID routeId) {
         log.info(String.format("Retrieving planned route %s", routeId));
         return plannedRouteService.getPlannedRouteById(routeId);
     }
@@ -69,7 +70,7 @@ public class PlannedRouteController {
      */
     @Operation(summary = "Gets all routes after specific time")
     @GetMapping("/after/{dateTime}")
-    public List<PlannedRoute> getPlannedRouteAfterTime(@Valid @PathVariable LocalDateTime dateTime) {
+    public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(@Valid @PathVariable LocalDateTime dateTime) {
         log.info(String.format("Retrieving planned routes after %s", dateTime));
         return plannedRouteService.getPlannedRouteAfterTime(dateTime);
     }
@@ -99,7 +100,7 @@ public class PlannedRouteController {
     @Operation(summary = "Updates a planned route")
     @Transactional
     @PutMapping("/{routeId}")
-    public PlannedRoute updatePlannedRouteById(@Valid @PathVariable UUID routeId,
+    public PlannedRoutePublicDTO updatePlannedRouteById(@Valid @PathVariable UUID routeId,
             @Valid @RequestBody PlannedRouteDTO plannedRouteDTO) {
         log.info(String.format("Updating planned route %s: %s",
                 routeId, plannedRouteDTO));
@@ -115,7 +116,7 @@ public class PlannedRouteController {
     @Operation(summary = "Deletes a planned route by ID")
     @Transactional
     @DeleteMapping("/{routeId}")
-    public PlannedRoute deletePlannedRouteById(@Valid @PathVariable UUID routeId) {
+    public PlannedRoutePublicDTO deletePlannedRouteById(@Valid @PathVariable UUID routeId) {
         log.info(String.format("Deleting planned route %s", routeId));
         return plannedRouteService.deletePlannedRouteByID(routeId);
     }

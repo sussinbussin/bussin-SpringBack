@@ -7,6 +7,7 @@ import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
 import com.bussin.SpringBack.models.ride.Ride;
 import com.bussin.SpringBack.models.ride.RideDTO;
+import com.bussin.SpringBack.models.ride.RideReturnDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.services.DriverService;
@@ -105,7 +106,7 @@ public class RideDeleteIntegrationTests {
 
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
-        Ride ride = rideService.createNewRide(rideDTO, user.getId(),
+        RideReturnDTO ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
 
         HttpUriRequest request = new HttpDelete(baseUrl + port + "/api/v1" +
@@ -115,9 +116,9 @@ public class RideDeleteIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        Ride rideResult =
+        RideReturnDTO rideResult =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        Ride.class);
+                        RideReturnDTO.class);
 
         rideDTO.setId(ride.getId());
 

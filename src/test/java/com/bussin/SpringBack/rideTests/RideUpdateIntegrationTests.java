@@ -7,6 +7,7 @@ import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
 import com.bussin.SpringBack.models.ride.Ride;
 import com.bussin.SpringBack.models.ride.RideDTO;
+import com.bussin.SpringBack.models.ride.RideReturnDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.services.DriverService;
@@ -108,7 +109,7 @@ public class RideUpdateIntegrationTests {
         RideDTO updatedRideDTO = TestObjects.RIDE_DTO.clone();
         updatedRideDTO.setPassengers(2);
 
-        Ride ride = rideService.createNewRide(rideDTO, user.getId(),
+        RideReturnDTO ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +
@@ -125,9 +126,9 @@ public class RideUpdateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        Ride rideResult =
+        RideReturnDTO rideResult =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        Ride.class);
+                        RideReturnDTO.class);
 
         updatedRideDTO.setId(ride.getId());
 
@@ -164,7 +165,7 @@ public class RideUpdateIntegrationTests {
                 .timestamp(rideDTO.getTimestamp())
                 .build();
 
-        Ride ride = rideService.createNewRide(rideDTO, user.getId(),
+        RideReturnDTO ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
 
         HttpUriRequest request = new HttpPut(baseUrl + port + "/api/v1" +

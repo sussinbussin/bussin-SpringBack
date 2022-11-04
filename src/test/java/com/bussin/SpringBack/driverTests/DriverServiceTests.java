@@ -6,7 +6,7 @@ import com.bussin.SpringBack.exception.UserNotFoundException;
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
@@ -170,12 +170,12 @@ public class DriverServiceTests {
      public void getAllPlannedRoutesByDriver_success() {
          Driver driver = TestObjects.DRIVER.clone();
 
-         List<PlannedRoutePublicDTO> plannedRoutePublicResult = new ArrayList<>();
+         List<PlannedRouteResultDTO> plannedRoutePublicResult = new ArrayList<>();
          Set<PlannedRoute> plannedRouteResult = new HashSet<>();
 
          ModelMapper modelMapper
                  = new ModelMapper();
-         modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRoutePublicDTO>() {
+         modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRouteResultDTO>() {
              @Override
              protected void configure() {
                  map().setCarPlate(source.getDriver().getCarPlate());
@@ -184,7 +184,7 @@ public class DriverServiceTests {
 
          PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
          plannedRoutePublicResult.add(modelMapper.map(plannedRoute,
-                 PlannedRoutePublicDTO.class));
+                 PlannedRouteResultDTO.class));
 
          plannedRouteResult.add(plannedRoute);
          driver.setPlannedRoutes(plannedRouteResult);

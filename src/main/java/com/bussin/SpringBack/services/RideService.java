@@ -6,6 +6,7 @@ import com.bussin.SpringBack.exception.RideNotFoundException;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.ride.Ride;
 import com.bussin.SpringBack.models.ride.RideDTO;
+import com.bussin.SpringBack.models.ride.RideReturnDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.repositories.PlannedRoutesRepository;
 import com.bussin.SpringBack.repositories.RideRepository;
@@ -47,8 +48,10 @@ public class RideService {
      * @param uuid The UUID of Ride
      * @return Ride details
      */
-    public Ride getRideById(UUID uuid) {
-        return rideRepository.findById(uuid).orElseThrow(() -> new RideNotFoundException("No ride with id " + uuid));
+    public RideReturnDTO getRideById(UUID uuid) {
+        return modelMapper.map(rideRepository.findById(uuid)
+                .orElseThrow(() -> new RideNotFoundException("No ride with id "
+                        + uuid)), RideReturnDTO.class);
     }
 
     /**
@@ -59,7 +62,8 @@ public class RideService {
      * @return Ride details created
      */
     @Transactional
-    public Ride createNewRide(RideDTO rideDTO, UUID userId, UUID plannedRouteId) {
+    public RideReturnDTO createNewRide(RideDTO rideDTO, UUID userId,
+                               UUID plannedRouteId) {
         rideDTO.validate();
         User found = userService.getFullUserById(userId);
         Ride ride = modelMapper.map(rideDTO, Ride.class);
@@ -74,7 +78,7 @@ public class RideService {
         }
 
         ride.setPlannedRoute(plannedRoute);
-        return rideRepository.save(ride);
+        return modelMapper.map(rideRepository.save(ride), RideReturnDTO.class);
     }
 
     /**
@@ -84,13 +88,13 @@ public class RideService {
      * @return Updated Ride
      */
     @Transactional
-    public Ride updateRideById(UUID rideId, RideDTO rideDTO) {
+    public RideReturnDTO updateRideById(UUID rideId, RideDTO rideDTO) {
         rideDTO.setId(rideId);
         rideDTO.validate();
-        return rideRepository.findById(rideId).map(found -> {
+        return modelMapper.map(rideRepository.findById(rideId).map(found -> {
             found.updateFromDTO(rideDTO);
             return rideRepository.save(found);
-        }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId));
+        }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId)), RideReturnDTO.class);
     }
 
     /**
@@ -99,10 +103,10 @@ public class RideService {
      * @return Deleted Ride
      */
     @Transactional
-    public Ride deleteRideById(UUID rideId) {
-        return rideRepository.findById(rideId).map(found -> {
+    public RideReturnDTO deleteRideById(UUID rideId) {
+        return modelMapper.map(rideRepository.findById(rideId).map(found -> {
             rideRepository.deleteById(rideId);
             return found;
-        }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId));
+        }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId)), RideReturnDTO.class);
     }
 }
