@@ -10,6 +10,9 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * A class of SignUpUniqueResponse to check if inputs are unique
+ */
 @Getter
 @Setter
 @Builder

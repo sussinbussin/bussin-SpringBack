@@ -3,13 +3,8 @@ package com.bussin.SpringBack.controllers;
 import com.amazonaws.services.cognitoidp.model.InvalidPasswordException;
 import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.bussin.SpringBack.exception.DriverNotFoundException;
-import com.bussin.SpringBack.exception.PlannedRouteNotFoundException;
-import com.bussin.SpringBack.exception.RideException;
-import com.bussin.SpringBack.exception.RideNotFoundException;
-import com.bussin.SpringBack.exception.UserNotFoundException;
+import com.bussin.SpringBack.exception.*;
 
-import com.bussin.SpringBack.exception.WrongUserException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -168,11 +163,28 @@ public class ExceptionHandling {
      */
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(WrongUserException.class)
-    public ResponseEntity<ApiError> handleJWTVerificationException(
+    public ResponseEntity<ApiError> handleWrongUserException(
             final WrongUserException e) {
         String userMessage = "You are not allowed to view this page";
         String devMessage = "403 caused by WrongUserException. The UUID of " +
                 "the requesting user and target user don't match " + e;
+        return new ResponseEntity<>(new ApiError(userMessage, devMessage,
+                e.getStackTrace()), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Handles WrongDriverException.
+     *
+     * @param e WrongDriverException
+     * @return Response entity with ApiError message and HTTP code 403
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(WrongUserException.class)
+    public ResponseEntity<ApiError> handleWrongDriverException(
+            final WrongDriverException e) {
+        String userMessage = "You are not allowed to view this page";
+        String devMessage = "403 caused by WrongDriverException. The UUID of " +
+                "the requesting driver and target driver don't match " + e;
         return new ResponseEntity<>(new ApiError(userMessage, devMessage,
                 e.getStackTrace()), HttpStatus.FORBIDDEN);
     }

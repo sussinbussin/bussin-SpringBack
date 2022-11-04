@@ -27,6 +27,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * A class of PlannedRouteDTO object for modifying PlannedRoute object
+ */
 @Getter
 @Setter
 @Builder
@@ -79,6 +82,9 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
     @Column(scale = 6, precision = 9)
     private BigDecimal destLongitude;
 
+    /**
+     * Check if there is any constraint violations during input
+     */
     public void validate() {
         Validator validator =
                 Validation.buildDefaultValidatorFactory().getValidator();

@@ -9,6 +9,9 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * A class SignUpUniqueRequest object
+ */
 @Getter
 @Setter
 @Builder

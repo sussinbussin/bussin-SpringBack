@@ -42,6 +42,13 @@ public class CognitoLogin {
     @Value("${cognito.password}")
     private String cognitoPassword;
 
+    /**
+     * Gets the authentication ID token of the authenticated user
+     *
+     * @param isDriver A boolean to check if user is a driver
+     * @return A string of authenticated ID token
+     * @throws IOException If an input or output exception occurred
+     */
     public String getAuthToken(boolean isDriver) throws IOException {
         AuthParameters authParameters = isDriver?
                 new AuthParameters(cognitoDriverName, cognitoPassword) :

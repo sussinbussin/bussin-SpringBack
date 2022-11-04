@@ -10,6 +10,9 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * A class of UserCreationDTO object to create a User object
+ */
 @Getter
 @Setter
 @Builder

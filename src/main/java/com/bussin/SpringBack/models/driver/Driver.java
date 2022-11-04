@@ -19,6 +19,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * A class of Driver object
+ */
 @Entity(name = "driver")
 @Getter
 @Setter
@@ -27,6 +30,7 @@ import java.util.Set;
 @Builder
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "carPlate")
+
 public class Driver implements Serializable, Cloneable {
     @Id
     @NotNull(message = "Car Plate should not be empty")
@@ -58,6 +62,12 @@ public class Driver implements Serializable, Cloneable {
     @OneToMany(mappedBy = "driver", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<PlannedRoute> plannedRoutes;
 
+    /**
+     * Updates a Driver with DriverDTO object
+     *
+     * @param driverDTO The DriverDTO object to be updated
+     * @return An updated Driver object
+     */
     public Driver updateFromDTO(DriverDTO driverDTO) {
         this.carPlate = driverDTO.getCarPlate();
         this.modelAndColour = driverDTO.getModelAndColour();
