@@ -106,8 +106,8 @@ public class UserController {
     @Operation(summary = "Creates a new user")
     @PostMapping("/wCognito/create")
     public User createNewUserWithCognito(@Valid @RequestBody UserCreationDTO userCreationDTO) {
-        log.info(String.format("Creating user with cognito %s",
-                userCreationDTO));
+        log.info(String.format("Creating user with cognito %s: %s",
+                userCreationDTO.getUsername(), userCreationDTO.getUserDTO()));
         return userService.createNewUserWithCognito(userCreationDTO);
     }
 
