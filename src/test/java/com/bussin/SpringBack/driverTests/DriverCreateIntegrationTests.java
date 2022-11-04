@@ -72,6 +72,7 @@ public class DriverCreateIntegrationTests {
 
     /**
      * Create a new driver with valid credentials success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void addNewDriver_success() throws IOException {
@@ -102,6 +103,7 @@ public class DriverCreateIntegrationTests {
 
     /**
      * Create a new driver with no user found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void addNewDriver_noUser_403() throws IOException {
@@ -124,10 +126,11 @@ public class DriverCreateIntegrationTests {
     }
 
     /**
-     * Create a new driver with invalid credentials throws 400 BAD_REQUEST
+     * Create a new driver with invalid parameters throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
-    public void addNewDriver_badParams_400() throws IOException {
+    public void addNewDriver_invalidParams_400() throws IOException {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
         driverDTO.setCapacity(1000);
 

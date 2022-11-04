@@ -60,6 +60,10 @@ public class RbacDriverSecurityTests {
                 TestObjects.COGNITO_DRIVER_DTO).getId(), TestObjects.DRIVER_DTO);
     }
 
+    /**
+     * Get a driver by car plate when driver is authorized success
+     * @throws IOException If an input or output exception occurred
+     */
     @Test
     public void getDriverByCarPlate_authorized_200() throws IOException {
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1" +

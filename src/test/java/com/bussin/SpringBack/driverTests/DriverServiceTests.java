@@ -50,6 +50,9 @@ public class DriverServiceTests {
     @InjectMocks
     private DriverService driverService;
 
+    /**
+     * Initializes new model mapper and driver service before each unit test
+     */
     @BeforeEach
     private void setUp() {
         modelMapper = new ModelMapper();
@@ -64,6 +67,9 @@ public class DriverServiceTests {
         driverService.setUserService(userService);
     }
 
+    /**
+     * Add new driver with valid parameters
+     */
     @Test
     public void addNewDriver_success() {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
@@ -96,6 +102,9 @@ public class DriverServiceTests {
         verify(driverRepository, times(1)).save(driverResult);
     }
 
+    /**
+     * Add new driver with invalid parameters
+     */
     @Test
     public void addNewDriver_invalidParams_exception() {
         UUID uuid = UUID.randomUUID();
@@ -109,6 +118,9 @@ public class DriverServiceTests {
         verify(userService, never()).getUserById(uuid);
     }
 
+    /**
+     * Add new driver when user is not found
+     */
     @Test
     public void addNewDriver_userNotFound_exception(){
         UUID uuid = UUID.randomUUID();
@@ -123,6 +135,9 @@ public class DriverServiceTests {
         verify(driverRepository, never()).save(any(Driver.class));
     }
 
+    /**
+     * Get all the drivers
+     */
     @Test
     public void getAllDrivers_success() {
         ArrayList<Driver> drivers = new ArrayList<>();
@@ -136,6 +151,9 @@ public class DriverServiceTests {
         verify(driverRepository, times(1)).findAll();
     }
 
+    /**
+     * Get all drivers when there are no drivers
+     */
     @Test
     public void getAllDrivers_noDrivers_success() {
         when(driverRepository.findAll()).thenReturn(new ArrayList<>());
@@ -145,6 +163,9 @@ public class DriverServiceTests {
         verify(driverRepository, times(1)).findAll();
     }
 
+    /**
+     * Get all planned routes by a driver
+     */
      @Test
      public void getAllPlannedRoutesByDriver_success() {
          Driver driver = TestObjects.DRIVER.clone();
@@ -177,7 +198,9 @@ public class DriverServiceTests {
          verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
      }
 
-
+    /**
+     * Update a driver with valid parameters
+     */
     @Test
     public void updateDriver_success() {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
@@ -208,6 +231,9 @@ public class DriverServiceTests {
                 .save(driverResult);
     }
 
+    /**
+     * Update a driver with not unique parameters
+     */
     @Test
     public void updateDriver_nonUniqueParams_exception() {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
@@ -236,6 +262,9 @@ public class DriverServiceTests {
         verify(driverRepository, times(1)).save(any(Driver.class));
     }
 
+    /**
+     * Delete a driver
+     */
     @Test
     public void deleteDriver_success() {
         UUID id = UUID.randomUUID();
@@ -274,6 +303,9 @@ public class DriverServiceTests {
                 .updateUser(any(UUID.class), any(UserDTO.class));
     }
 
+    /**
+     * Delete a driver that does not exist
+     */
      @Test
      public void deleteDriver_doesntExist_exception() {
         String carPlate = "SAA1234B";

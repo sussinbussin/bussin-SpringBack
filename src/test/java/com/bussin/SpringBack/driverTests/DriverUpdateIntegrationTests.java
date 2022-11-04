@@ -71,6 +71,7 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver with new valid credentials success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updateDriver_success() throws IOException {
@@ -108,6 +109,7 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver when car plate is not found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updateDriver_noDriver_404() throws IOException {
@@ -130,10 +132,11 @@ public class DriverUpdateIntegrationTests {
     }
 
     /**
-     * Update a driver with invalid credentials throws 400 BAD_REQUEST
+     * Update a driver with invalid parameters throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
-    public void updateDriver_badParams_400() throws IOException {
+    public void updateDriver_invalidParams_400() throws IOException {
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
 
         DriverDTO updatedDriverDTO = TestObjects.DRIVER_DTO.clone();

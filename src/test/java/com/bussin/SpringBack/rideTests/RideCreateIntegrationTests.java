@@ -84,6 +84,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with valid credentials and parameters success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewRide_success() throws IOException {
@@ -137,6 +138,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with invalid parameter throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewRide_invalidParams_400() throws IOException {
@@ -183,6 +185,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with passengers over capacity throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewRide_passengersOverCapacity_400() throws IOException {
@@ -230,6 +233,7 @@ public class RideCreateIntegrationTests {
     /**
      * Create a new ride on top of the current rides,
      * when added capacity more than the capacity will throw 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewRide_multipleRidesOverCapacity_400() throws IOException {
@@ -283,9 +287,10 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with no user found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
-    public void createNewRide_missingUser_404() throws IOException {
+    public void createNewRide_noUser_404() throws IOException {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
         userDTO.clone();
 
@@ -328,6 +333,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with no route found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewRide_noRoute_404() throws IOException {

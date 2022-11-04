@@ -84,6 +84,7 @@ public class RideUpdateIntegrationTests {
 
     /**
      * Update a ride by its ID with valid parameters success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updateRideById_success() throws IOException {
@@ -137,6 +138,7 @@ public class RideUpdateIntegrationTests {
 
     /**
      * Update a ride with invalid parameters throws 400 BAD_REQUEST
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updateRideById_invalidParams_400() throws IOException {
@@ -184,6 +186,7 @@ public class RideUpdateIntegrationTests {
 
     /**
      * Update ride by its ID when no ride is found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updateRideById_noRide_404() throws IOException {

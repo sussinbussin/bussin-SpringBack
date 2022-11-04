@@ -179,7 +179,7 @@ public class ExceptionHandling {
      * @return Response entity with ApiError message and HTTP code 403
      */
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(WrongUserException.class)
+    @ExceptionHandler(WrongDriverException.class)
     public ResponseEntity<ApiError> handleWrongDriverException(
             final WrongDriverException e) {
         String userMessage = "You are not allowed to view this page";

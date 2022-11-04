@@ -83,6 +83,7 @@ public class PlannedRouteDeleteIntegrationTests {
 
     /**
      * Delete a planned route with planned route found success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deletePlannedRoute_success() throws IOException {
@@ -120,6 +121,7 @@ public class PlannedRouteDeleteIntegrationTests {
 
     /**
      * Delete a planned route with no route found throws 404 NOT_FOUND
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deletePlannedRoute_noRoute_404() throws IOException {

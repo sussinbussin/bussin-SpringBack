@@ -66,6 +66,7 @@ public class UserDeleteIntegrationTests {
 
     /**
      * Delete a user when user exist success
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deleteUser_success() throws IOException {
@@ -83,7 +84,8 @@ public class UserDeleteIntegrationTests {
     }
 
     /**
-     * Delete a user when user does not exist throws 403 Forbidden
+     * Delete a user when user does not exist throws 403 FORBIDDEN
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void deleteUser_userDoesntExist_403() throws IOException {

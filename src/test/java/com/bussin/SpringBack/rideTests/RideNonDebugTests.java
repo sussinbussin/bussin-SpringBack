@@ -72,7 +72,8 @@ public class RideNonDebugTests {
     }
 
     /**
-     * Get all rides with debug mode off, 403
+     * Get all rides when debug mode off throws 403 FORBIDDEN
+     * @throws IOException If an input or output exception occurred
      */
     @Test
     public void getAllRides_403() throws IOException {
