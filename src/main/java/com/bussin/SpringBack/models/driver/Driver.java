@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * A class of Driver object
+ * Driver model with car and driver information
  */
 @Entity(name = "driver")
 @Getter

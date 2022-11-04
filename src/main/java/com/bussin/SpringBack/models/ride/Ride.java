@@ -33,7 +33,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * A class of Ride object
+ * Model with ride information for users participating
+ * in a planned route
  */
 @Entity
 @Builder

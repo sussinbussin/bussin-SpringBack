@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A class of RideDTO object for modifying Ride object
+ * A subset of Ride for modifications and insertions
  */
 @Getter
 @Setter

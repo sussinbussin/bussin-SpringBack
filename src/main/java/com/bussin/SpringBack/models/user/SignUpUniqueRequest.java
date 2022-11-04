@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A class SignUpUniqueRequest object
+ * A query checking if the provided credentials are unique
  */
 @Getter
 @Setter

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * A class of PlannedRoutePublicDTO object for Drivers to retrieve information by car plate.
+ * A subset of PlannedRoute with sensitive information
  */
 @Getter
 @Setter

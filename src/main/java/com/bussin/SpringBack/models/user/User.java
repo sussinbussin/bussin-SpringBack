@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * A class of User object
+ * User model with all user information
  */
 @Entity(name = "bussinuser")
 @Table(name = "bussinuser", uniqueConstraints = {

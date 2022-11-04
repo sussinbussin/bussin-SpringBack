@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A class of PlannedRoute object
+ * Planned Route model with route information
  */
 @Entity
 @Getter

@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * A class of DriverDTO object for modifying Driver object
+ * A subset of Driver for modifications and insertions
  */
 @Getter
 @Setter

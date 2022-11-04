@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A class of UserDTO object to update a User object
+ * A subset of User for modifications and insertions
  */
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "user_email_unique", columnNames = "email"),

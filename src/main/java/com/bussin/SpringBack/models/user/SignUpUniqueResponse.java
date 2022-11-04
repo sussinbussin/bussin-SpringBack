@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A class of SignUpUniqueResponse to check if inputs are unique
+ * Response to a query checking if the provided credentials are unique
  */
 @Getter
 @Setter

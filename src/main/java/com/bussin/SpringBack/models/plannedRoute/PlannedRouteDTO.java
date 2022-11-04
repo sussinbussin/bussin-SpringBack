@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * A class of PlannedRouteDTO object for modifying PlannedRoute object
+ * A subset of PlannedRouteDTO object for modifications and insertions
  */
 @Getter
 @Setter

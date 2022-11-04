@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * A class of RideCreationDTO object for creating a new Ride record
+ * A model for creating a new Ride record
  */
 @Getter
 @Setter
