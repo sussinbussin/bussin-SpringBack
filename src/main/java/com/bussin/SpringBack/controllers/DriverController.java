@@ -49,7 +49,7 @@ public class DriverController {
     /**
      * Gets a driver by their car plate
      *
-     * @param carPlate The String
+     * @param carPlate The String car plate to be found
      * @return The driver if found, else null
      */
     @Operation(summary = "Gets a Driver by their Car Plate")
@@ -62,8 +62,9 @@ public class DriverController {
 
     /**
      * Gets all the planned routes by driver's car plate
-     * @param carPlate The String
-     * @return A set of planned routes if  found, else null
+     *
+     * @param carPlate The String car plate to be found
+     * @return A set of planned routes if found, else null
      */
     @Operation
     @GetMapping("/{carPlate}/plannedRoutes")
@@ -75,7 +76,8 @@ public class DriverController {
     }
 
     /**
-     * Create a new driver
+     * Create a new driver by converting user to driver
+     *
      * @param userUUID The UUID of user that is going to be a driver
      * @param driverDTO The driver DTO to be created
      * @return The Driver that is created
@@ -90,9 +92,9 @@ public class DriverController {
     }
 
     /**
-     * Update a Driver Object.
+     * Updates a driver
      *
-     * @param carPlate  Car plate of the Driver to update
+     * @param carPlate  The String car plate of the Driver to update
      * @param driverDTO DriverDTO with the information to update
      * @return Updated Driver
      */
@@ -107,7 +109,7 @@ public class DriverController {
     }
 
     /**
-     * Delete a Driver and amend the User.
+     * Deletes a driver and convert it into normal user
      *
      * @param carPlate Car plate number of the Driver to delete
      * @return Deleted Driver
