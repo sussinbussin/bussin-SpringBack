@@ -1,8 +1,10 @@
 package com.bussin.SpringBack.security;
 
+import com.amazonaws.services.xray.model.Http;
 import com.bussin.SpringBack.models.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,6 +31,10 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
+
+    @Value("${debugMode}")
+    private boolean debugMode = false;
+
     private TokenValidator tokenValidator;
 
     @Autowired
@@ -45,33 +51,48 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            return (debugMode ? configureFilterChain(http) :
+                    configureFilterChain(debugRestrictions(http))).build();
+    }
+
+    private HttpSecurity configureFilterChain(HttpSecurity http) throws Exception {
         return http.
-                antMatcher("/**")
-                    .csrf()
-                    .disable()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                mvcMatcher("/**")
+                .csrf()
+                .disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .addFilterBefore(tokenAuthFilter(),
-                            UsernamePasswordAuthenticationFilter.class
-                    )
-                    .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
-                    .authorizeRequests()
-                    .antMatchers(
-                            "/users/*",
-                            "/users/full/*",
-                            "/users/byEmail/*",
-                            "/planned/**",
-                            "/ride/**")
-                    .authenticated()
-                    .antMatchers(HttpMethod.POST,"/driver/*").authenticated()
-                        .antMatchers("/driver/**")
-                        .hasAuthority("Driver")
-                    .and()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .addFilterBefore(tokenAuthFilter(),
+                        UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterBefore(filterChainExceptionHandler, LogoutFilter.class)
+                .authorizeRequests()
+                .mvcMatchers(
+                        "/users/*",
+                        "/users/full/*",
+                        "/users/byEmail/*",
+                        "/planned/**",
+                        "/ride/**")
+                .authenticated()
+                .mvcMatchers(HttpMethod.POST,"/driver/*").authenticated()
+                .mvcMatchers("/driver/**")
+                .hasAuthority("Driver")
                 .and()
-                .build();
+                .exceptionHandling()
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .and();
+    }
+
+    private HttpSecurity debugRestrictions(HttpSecurity http) throws Exception {
+        return http.authorizeRequests()
+                .mvcMatchers(HttpMethod.GET,
+                        "/users",
+                                    "/driver",
+                                    "/planned",
+                                    "/ride")
+                .denyAll()
+                .and();
     }
 
     @Bean
