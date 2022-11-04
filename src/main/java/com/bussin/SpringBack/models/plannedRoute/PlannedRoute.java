@@ -1,7 +1,7 @@
 package com.bussin.SpringBack.models.plannedRoute;
 
-import com.bussin.SpringBack.models.ride.Ride;
 import com.bussin.SpringBack.models.driver.Driver;
+import com.bussin.SpringBack.models.ride.Ride;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.CascadeType;

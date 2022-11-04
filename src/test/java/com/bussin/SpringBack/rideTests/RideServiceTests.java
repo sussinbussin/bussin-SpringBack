@@ -24,6 +24,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolationException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
@@ -182,15 +183,18 @@ public class RideServiceTests {
         Ride ride = TestObjects.RIDE.clone();
 
         Ride rideResult = TestObjects.RIDE.clone();
+        rideResult.setCost(BigDecimal.TEN);
 
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
+        rideDTO.setCost(BigDecimal.TEN);
 
         when(rideRepository.findById(ride.getId()))
                 .thenReturn(Optional.of(ride));
 
         when(rideRepository.save(rideResult)).thenReturn(rideResult);
 
-        assertEquals(rideService.updateRideById(ride.getId(), rideDTO), rideResult);
+        assertEquals(rideResult.getCost(),
+                rideService.updateRideById(ride.getId(), rideDTO).getCost());
 
         verify(rideRepository, times(1)).findById(rideDTO.getId());
         verify(rideRepository, times(1)).save(any(Ride.class));
@@ -252,8 +256,8 @@ public class RideServiceTests {
         when(rideRepository.findById(ride.getId()))
                 .thenReturn(Optional.of(ride));
 
-        assertEquals(ride, rideService
-                .deleteRideById(ride.getId()));
+        assertEquals(ride.getId(), rideService
+                .deleteRideById(ride.getId()).getId());
 
         verify(rideRepository, times(1))
                 .findById(ride.getId());

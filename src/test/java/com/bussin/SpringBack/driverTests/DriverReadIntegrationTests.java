@@ -6,7 +6,7 @@ import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.services.DriverService;
 import com.bussin.SpringBack.services.PlannedRouteService;
@@ -34,10 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -170,7 +167,7 @@ public class DriverReadIntegrationTests {
     public void getPlannedRoutesFromDriver_success() throws IOException {
         ModelMapper modelMapper
                 = new ModelMapper();
-        modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRoutePublicDTO>() {
+        modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRouteResultDTO>() {
             @Override
             protected void configure() {
                 map().setCarPlate(source.getDriver().getCarPlate());
@@ -196,13 +193,13 @@ public class DriverReadIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        List<PlannedRoutePublicDTO> publicDTOS =
+        List<PlannedRouteResultDTO> publicDTOS =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
                         new TypeReference<>() {
                         });
 
         assertEquals(
-                        modelMapper.map(plannedRoute, PlannedRoutePublicDTO.class),
+                        modelMapper.map(plannedRoute, PlannedRouteResultDTO.class),
                 publicDTOS.get(0));
     }
 }
