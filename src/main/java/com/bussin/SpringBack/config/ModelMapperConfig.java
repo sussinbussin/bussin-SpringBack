@@ -37,7 +37,10 @@ public class ModelMapperConfig {
                 .addMappings(mapper -> mapper.skip(User::setDriver))
                 .implicitMappings();
 
-        // Configure where to derive car plate from for PlannedRouteResultDTO
+        /**
+         * Map Planned Route's driver to the DTO's carPlate field
+         * Map Planned Route's rides to the DTO's planned route DTOs
+         */
         modelMapper.emptyTypeMap(PlannedRoute.class, PlannedRouteResultDTO.class)
                 .addMappings(mapper ->
                         mapper.map(src -> src.getDriver().getCarPlate(),
@@ -47,6 +50,10 @@ public class ModelMapperConfig {
                                 PlannedRouteResultDTO::setRides))
                 .implicitMappings();
 
+        /**
+         *  Map driver's planned routes to the DTO's planned route DTOs
+         *  Map Ride's userID to DTO's userID
+         */
         modelMapper.emptyTypeMap(Driver.class, DriverPublicDTO.class)
                 .addMappings(mapper -> mapper
                         .map(Driver::getPlannedRoutes,
@@ -54,6 +61,10 @@ public class ModelMapperConfig {
                 .addMappings(mapper -> mapper.map(src -> src.getUser().getId(), DriverPublicDTO::setUser))
                 .implicitMappings();
 
+        /**
+         * Map Ride's planned route to DTO's planned route DTO
+         * Map Ride's userID to DTO's userID
+         */
         modelMapper.emptyTypeMap(Ride.class, RidePublicDTO.class)
                 .addMappings(mapper -> mapper
                         .map(Ride::getPlannedRoute,
@@ -61,6 +72,11 @@ public class ModelMapperConfig {
                 .addMappings(mapper -> mapper.map(src -> src.getUser().getId(), RidePublicDTO::setUserId))
                 .implicitMappings();
 
+
+        /**
+         * Map Planned Route's driver to the DTO's carPlate field
+         * Map Planned Route's rides to the DTO's planned route DTOs
+         */
         modelMapper.emptyTypeMap(PlannedRoute.class, PlannedRoutePublicDTO.class)
                 .addMappings(mapper -> mapper
                         .map(PlannedRoute::getRides,
@@ -69,6 +85,9 @@ public class ModelMapperConfig {
                         .map(PlannedRoute::getDriver, PlannedRoutePublicDTO::setDriver))
                 .implicitMappings();
 
+        /**
+         * Converter from a set of Planned Routes to a List of DTOs
+         */
         Converter<Set<PlannedRoute>, List<PlannedRoutePublicDTO>> convertPRs
                 = new AbstractConverter<>() {
             @Override
@@ -78,6 +97,9 @@ public class ModelMapperConfig {
             }
         };
 
+        /**
+         * Converter from a List of Rides to a List of DTOs
+         */
         Converter<List<Ride>, List<RidePublicDTO>> convertRides
                 = new AbstractConverter<>() {
             @Override
