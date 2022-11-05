@@ -207,7 +207,8 @@ public class DriverReadIntegrationTests {
                         });
 
         assertEquals(
-                        modelMapper.map(plannedRoute, PlannedRouteResultDTO.class),
-                publicDTOS.get(0));
+                        modelMapper.map(plannedRoute,
+                                PlannedRouteResultDTO.class).getId(),
+                publicDTOS.get(0).getId());
     }
 }

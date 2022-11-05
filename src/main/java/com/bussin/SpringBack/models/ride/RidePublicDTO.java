@@ -1,7 +1,6 @@
 package com.bussin.SpringBack.models.ride;
 
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -33,7 +32,7 @@ import java.util.UUID;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id")
-public class RideReturnDTO implements Serializable{
+public class RidePublicDTO implements Serializable{
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
@@ -68,7 +67,7 @@ public class RideReturnDTO implements Serializable{
     private String rideTo;
 
     @JsonBackReference
-    private PlannedRouteResultDTO plannedRoute;
+    private PlannedRoutePublicDTO plannedRoute;
 
     private UUID userId;
 }

@@ -192,8 +192,8 @@ public class DriverServiceTests {
 
          when(driverRepository.findDriverByCarPlate(driver.getCarPlate())).thenReturn(Optional.of(driver));
 
-         assertEquals(plannedRoutePublicResult.get(0).getCarPlate(),
-                 driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()).get(0).getCarPlate());
+         assertEquals(plannedRoutePublicResult.get(0).getId(),
+                 driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()).get(0).getId());
 
          verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
      }

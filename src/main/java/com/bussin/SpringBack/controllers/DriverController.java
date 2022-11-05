@@ -2,6 +2,7 @@ package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
+import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.bussin.SpringBack.services.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
