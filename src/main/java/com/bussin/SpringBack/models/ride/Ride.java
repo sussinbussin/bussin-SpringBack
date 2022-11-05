@@ -84,19 +84,6 @@ public class Ride implements Serializable, Cloneable{
     @JoinColumn(name = "user_id")
     private User user;
 
-    /**
-     * Updates a Ride with RideDTO object
-     *
-     * @param rideDTO The RideDTO object to be updated
-     */
-    public void updateFromDTO(RideDTO rideDTO) {
-        this.id = rideDTO.getId();
-        this.timestamp = rideDTO.getTimestamp();
-        this.passengers = rideDTO.getPassengers();
-        this.rideTo = rideDTO.getRideTo();
-        this.rideFrom = rideDTO.getRideFrom();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

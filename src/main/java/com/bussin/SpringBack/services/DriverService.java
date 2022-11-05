@@ -99,7 +99,8 @@ public class DriverService {
         driverDTO.validate();
         return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
             driverDTO.setCarPlate(carPlate);
-            return driverRepository.save(found.updateFromDTO(driverDTO));
+            modelMapper.map(driverDTO, found);
+            return driverRepository.save(found);
         }).orElseThrow(() -> new DriverNotFoundException(
                 "No driver with car plate " + carPlate));
     }

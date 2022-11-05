@@ -145,7 +145,7 @@ public class UserService {
         userDTO.setId(uuid);
         userDTO.validate();
         return userRepository.findById(uuid).map(found -> {
-            found.updateFromDTO(userDTO);
+            modelMapper.map(userDTO, found);
             return userRepository.save(found);
         }).orElseThrow(() -> new UserNotFoundException("No user with id " + uuid));
     }

@@ -113,7 +113,7 @@ public class PlannedRouteService {
         plannedRouteDTO.setId(uuid);
         plannedRouteDTO.validate();
         return modelMapper.map(plannedRoutesRepository.findById(uuid).map(found -> {
-            found.updateFromDTO(plannedRouteDTO);
+            modelMapper.map(plannedRouteDTO, found);
             return plannedRoutesRepository.save(found);
         }).orElseThrow(() -> new PlannedRouteNotFoundException("No " +
                 "planned route with ID " + uuid)), PlannedRoutePublicDTO.class);
