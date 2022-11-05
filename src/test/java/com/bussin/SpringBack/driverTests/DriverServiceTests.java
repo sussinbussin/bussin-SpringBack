@@ -78,27 +78,29 @@ public class DriverServiceTests {
         userDTO.setIsDriver(false);
 
         User userResult = TestObjects.USER.clone();
-        userResult.setId(UUID.randomUUID());
         userResult.setIsDriver(true);
+        userResult.setId(UUID.randomUUID());
 
         Driver driverResult = TestObjects.DRIVER.clone();
         driverResult.setUser(userResult);
 
-        when(userService.getUserById(userDTO.getId()))
+        when(userService.getUserById(userResult.getId()))
                 .thenReturn(userDTO);
+
         when(userService.updateUser(any(UUID.class), any(UserDTO.class)))
                 .thenAnswer(invocationOnMock ->
                     ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
                             //Will end test if bad
                             userResult:null);
-        when(driverRepository.save(driverResult))
+        when(driverRepository.save(any(Driver.class)))
                 .thenReturn(driverResult);
 
-        assertEquals(driverService.addNewDriver(userDTO.getId(), driverDTO), driverResult);
+        assertEquals(driverResult, driverService.addNewDriver(userResult.getId(),
+                driverDTO));
 
-        verify(userService, times(1)).getUserById(userDTO.getId());
+        verify(userService, times(1)).getUserById(userResult.getId());
         verify(userService, times(1))
-                .updateUser(userDTO.getId(), userDTO);
+                .updateUser(userResult.getId(), userDTO);
         verify(driverRepository, times(1)).save(driverResult);
     }
 

@@ -111,10 +111,11 @@ public class UserServiceTests {
     @Test
     public void createNewUser_success() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
+        userDTO.setId(null);
         userDTO.setIsDriver(false);
 
         User saved = modelMapper.map(userDTO, User.class);
-        when(userRepository.save(saved)).thenReturn(saved);
+        when(userRepository.save(any(User.class))).thenReturn(saved);
 
         assert (userService.createNewUser(userDTO).equals(saved));
 
@@ -143,11 +144,11 @@ public class UserServiceTests {
     @Test
     public void createNewUser_alreadyExists_exception() {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
-        // userDTO.setId(null);
+        userDTO.setId(null);
         userDTO.setIsDriver(false);
 
-        User saved = modelMapper.map(userDTO, User.class);
-        when(userRepository.save(saved))
+        modelMapper.map(userDTO, User.class);
+        when(userRepository.save(any(User.class)))
                 .thenThrow(new DataIntegrityViolationException("Test"));
 
         assertThrows(DataIntegrityViolationException.class,

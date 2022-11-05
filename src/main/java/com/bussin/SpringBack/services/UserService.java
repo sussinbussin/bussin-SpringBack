@@ -78,8 +78,6 @@ public class UserService {
         User user = userRepository.save(modelMapper.map(userCreationDTO.getUserDTO(),
                 User.class));
 
-        System.out.println(user);
-
         List<AttributeType> attributeTypes = new ArrayList<>();
         attributeTypes.add(new AttributeType()
                 .withName("email")

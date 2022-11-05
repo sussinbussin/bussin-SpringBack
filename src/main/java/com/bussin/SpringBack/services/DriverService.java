@@ -59,7 +59,6 @@ public class DriverService {
 
         Driver driver = modelMapper.map(driverDTO, Driver.class);
         driver.setUser(userService.updateUser(uuid, foundUser));
-
         return driverRepository.save(driver);
     }
 

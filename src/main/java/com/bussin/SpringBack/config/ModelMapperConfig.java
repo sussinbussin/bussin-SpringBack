@@ -17,8 +17,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -39,7 +41,7 @@ public class ModelMapperConfig {
 
         /**
          * Map Planned Route's driver to the DTO's carPlate field
-         * Map Planned Route's rides to the DTO's planned route DTOs
+         * Map Planned Route's rides to the DTO's ride IDs
          */
         modelMapper.emptyTypeMap(PlannedRoute.class, PlannedRouteResultDTO.class)
                 .addMappings(mapper ->
@@ -109,8 +111,19 @@ public class ModelMapperConfig {
             }
         };
 
+        Converter<List<Ride>, List<UUID>> convertRideToUUID
+                = new AbstractConverter<>() {
+            @Override
+            protected List<UUID> convert(List<Ride> rides) {
+                return rides == null ? new ArrayList<>() :
+                        rides.stream().map(Ride::getId)
+                                .collect(Collectors.toList());
+            }
+        };
+
         modelMapper.addConverter(convertPRs);
         modelMapper.addConverter(convertRides);
+        modelMapper.addConverter(convertRideToUUID);
 
         return modelMapper;
     }
