@@ -87,20 +87,6 @@ public class User implements Serializable, Cloneable {
     @OneToMany(mappedBy = "user")
     private Set<Ride> rides;
 
-    /**
-     * Update a User with UserDTO object
-     *
-     * @param userDTO The UserDTO object to be updated
-     */
-    public void updateFromDTO(UserDTO userDTO) {
-        this.nric = userDTO.getNric();
-        this.name = userDTO.getName();
-        this.dob = userDTO.getDob();
-        this.mobile = userDTO.getMobile();
-        this.email = userDTO.getEmail();
-        this.isDriver = userDTO.getIsDriver();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

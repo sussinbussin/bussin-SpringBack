@@ -76,7 +76,7 @@ public class PlannedRouteService {
      * @return List of planned routes after datetime
      */
     public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(LocalDateTime dateTime) {
-        return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime)
+        return plannedRoutesRepository.findPlannedRouteByDateTimeAfter(dateTime)
                 .stream().map(plannedRoute -> modelMapper.map(plannedRoute, PlannedRoutePublicDTO.class))
                 .collect(Collectors.toList());
     }
@@ -91,6 +91,7 @@ public class PlannedRouteService {
     public PlannedRoute createNewPlannedRoute(PlannedRouteDTO plannedRouteDTO,
                                               String carPlate) {
         plannedRouteDTO.validate();
+        plannedRouteDTO.setId(null);
         return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
             PlannedRoute plannedRoute = modelMapper.map(plannedRouteDTO,
                     PlannedRoute.class);
@@ -112,7 +113,7 @@ public class PlannedRouteService {
         plannedRouteDTO.setId(uuid);
         plannedRouteDTO.validate();
         return modelMapper.map(plannedRoutesRepository.findById(uuid).map(found -> {
-            found.updateFromDTO(plannedRouteDTO);
+            modelMapper.map(plannedRouteDTO, found);
             return plannedRoutesRepository.save(found);
         }).orElseThrow(() -> new PlannedRouteNotFoundException("No " +
                 "planned route with ID " + uuid)), PlannedRoutePublicDTO.class);

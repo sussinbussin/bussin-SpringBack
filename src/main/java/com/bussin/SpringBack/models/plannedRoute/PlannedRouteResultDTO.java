@@ -1,7 +1,5 @@
 package com.bussin.SpringBack.models.plannedRoute;
 
-import com.bussin.SpringBack.models.ride.RidePublicDTO;
-import com.bussin.SpringBack.models.ride.RideReturnDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.EqualsAndHashCode;
@@ -10,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Getter
@@ -19,8 +18,7 @@ import java.util.List;
 public class PlannedRouteResultDTO extends PlannedRouteDTO {
     private String carPlate;
 
-    @JsonManagedReference
-    private List<RideReturnDTO> rides;
+    private List<UUID> rides;
 
     @JsonSetter
     public void setCarPlate(String carPlate) {

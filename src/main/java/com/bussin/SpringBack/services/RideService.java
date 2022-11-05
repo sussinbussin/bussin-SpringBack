@@ -65,6 +65,8 @@ public class RideService {
     public RidePublicDTO createNewRide(RideDTO rideDTO, UUID userId,
                                        UUID plannedRouteId) {
         rideDTO.validate();
+        rideDTO.setId(null);
+
         User found = userService.getFullUserById(userId);
         Ride ride = modelMapper.map(rideDTO, Ride.class);
         PlannedRoute plannedRoute = plannedRoutesRepository
@@ -92,7 +94,7 @@ public class RideService {
         rideDTO.setId(rideId);
         rideDTO.validate();
         return modelMapper.map(rideRepository.findById(rideId).map(found -> {
-            found.updateFromDTO(rideDTO);
+            modelMapper.map(rideDTO, found);
             return rideRepository.save(found);
         }).orElseThrow(() -> new RideNotFoundException("No ride with ID " + rideId)), RidePublicDTO.class);
     }

@@ -41,8 +41,7 @@ public class UserCognitoTests {
 
         UserCreationDTO userCreationDTO = new UserCreationDTO("Test",
                 "P@ssw0rd", TestObjects.COGNITO_USER_DTO);
-        when(userRepository.save(new ModelMapper().map(userCreationDTO.getUserDTO(),
-                User.class))).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
         userService.setAmazonCognitoClient(provider);
 
         assertEquals(user,

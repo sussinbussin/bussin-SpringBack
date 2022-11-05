@@ -62,20 +62,6 @@ public class Driver implements Serializable, Cloneable {
     @OneToMany(mappedBy = "driver", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<PlannedRoute> plannedRoutes;
 
-    /**
-     * Updates a Driver with DriverDTO object
-     *
-     * @param driverDTO The DriverDTO object to be updated
-     * @return An updated Driver object
-     */
-    public Driver updateFromDTO(DriverDTO driverDTO) {
-        this.carPlate = driverDTO.getCarPlate();
-        this.modelAndColour = driverDTO.getModelAndColour();
-        this.capacity = driverDTO.getCapacity();
-        this.fuelType = driverDTO.getFuelType();
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

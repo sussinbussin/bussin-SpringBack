@@ -49,6 +49,12 @@ public class SecurityConfiguration {
         this.filterChainExceptionHandler = filterChainExceptionHandler;
     }
 
+    /**
+     * Configures the filter chain based on whether debugMode is enabled
+     * @param http HttpSecurity instance to configure
+     * @return The configured HttpSecurity instance
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             return (debugMode ? configureFilterChain(http) :

@@ -102,23 +102,6 @@ public class PlannedRoute implements Serializable, Cloneable {
     private Driver driver;
 
     /**
-     * Updates a PlannedRoute with PlannedRouteDTO object
-     *
-     * @param plannedRouteDTO The PlannedRouteDTO object to be updated
-     */
-    public void updateFromDTO(PlannedRouteDTO plannedRouteDTO) {
-        this.id = plannedRouteDTO.getId();
-        this.plannedFrom = plannedRouteDTO.getPlannedFrom();
-        this.plannedTo = plannedRouteDTO.getPlannedTo();
-        this.dateTime = plannedRouteDTO.getDateTime();
-        this.capacity = plannedRouteDTO.getCapacity();
-        this.originLatitude = plannedRouteDTO.getOriginLatitude();
-        this.originLongitude = plannedRouteDTO.getOriginLongitude();
-        this.destLatitude = plannedRouteDTO.getDestLatitude();
-        this.destLongitude = plannedRouteDTO.getDestLongitude();
-    }
-
-    /**
      * Count the number of passengers in a planned route
      *
      * @return The total number of passengers in a planned route
