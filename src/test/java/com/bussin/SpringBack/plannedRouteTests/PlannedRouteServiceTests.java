@@ -201,7 +201,7 @@ public class PlannedRouteServiceTests {
         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
         plannedRouteResult.add(plannedRoute);
 
-        when(plannedRoutesRepository.findPlannedRouteByDateTime(
+        when(plannedRoutesRepository.findPlannedRouteByDateTimeAfter(
                         plannedRoute.getDateTime()))
                         .thenReturn(plannedRouteResult);
 
@@ -210,7 +210,7 @@ public class PlannedRouteServiceTests {
                         plannedRoute.getDateTime()).get(0).getId());
                         
         verify(plannedRoutesRepository, times(1))
-                .findPlannedRouteByDateTime(plannedRoute.getDateTime());
+                .findPlannedRouteByDateTimeAfter(plannedRoute.getDateTime());
     }
 
     /**

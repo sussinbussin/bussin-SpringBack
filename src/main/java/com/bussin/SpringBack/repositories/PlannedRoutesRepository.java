@@ -15,5 +15,5 @@ public interface PlannedRoutesRepository
         extends JpaRepository<PlannedRoute, UUID> {
         Optional<PlannedRoute> findPlannedRouteById(UUID uuid);
         Optional<PlannedRoute> findPlannedRouteByCapacity(Integer capacity);
-        List<PlannedRoute> findPlannedRouteByDateTime(LocalDateTime localDateTime);
+        List<PlannedRoute> findPlannedRouteByDateTimeAfter(LocalDateTime localDateTime);
 }

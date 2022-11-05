@@ -8,6 +8,7 @@ import com.bussin.SpringBack.services.PlannedRouteService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -70,7 +71,7 @@ public class PlannedRouteController {
      */
     @Operation(summary = "Gets all routes after specific time")
     @GetMapping("/after/{dateTime}")
-    public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(@Valid @PathVariable LocalDateTime dateTime) {
+    public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(@Valid @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
         log.info(String.format("Retrieving planned routes after %s", dateTime));
         return plannedRouteService.getPlannedRouteAfterTime(dateTime);
     }

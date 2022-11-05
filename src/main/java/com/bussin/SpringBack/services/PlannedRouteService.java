@@ -76,7 +76,7 @@ public class PlannedRouteService {
      * @return List of planned routes after datetime
      */
     public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(LocalDateTime dateTime) {
-        return plannedRoutesRepository.findPlannedRouteByDateTime(dateTime)
+        return plannedRoutesRepository.findPlannedRouteByDateTimeAfter(dateTime)
                 .stream().map(plannedRoute -> modelMapper.map(plannedRoute, PlannedRoutePublicDTO.class))
                 .collect(Collectors.toList());
     }
