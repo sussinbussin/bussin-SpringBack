@@ -91,6 +91,7 @@ public class PlannedRouteService {
     public PlannedRoute createNewPlannedRoute(PlannedRouteDTO plannedRouteDTO,
                                               String carPlate) {
         plannedRouteDTO.validate();
+        plannedRouteDTO.setId(null);
         return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
             PlannedRoute plannedRoute = modelMapper.map(plannedRouteDTO,
                     PlannedRoute.class);

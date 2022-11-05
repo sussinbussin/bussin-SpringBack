@@ -62,6 +62,7 @@ public class UserService {
     @Transactional
     public User createNewUser(UserDTO userDTO) {
         userDTO.validate();
+        userDTO.setId(null);
         return userRepository.save(modelMapper.map(userDTO, User.class));
     }
 
@@ -76,6 +77,8 @@ public class UserService {
 
         User user = userRepository.save(modelMapper.map(userCreationDTO.getUserDTO(),
                 User.class));
+
+        System.out.println(user);
 
         List<AttributeType> attributeTypes = new ArrayList<>();
         attributeTypes.add(new AttributeType()

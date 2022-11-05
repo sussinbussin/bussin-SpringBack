@@ -65,6 +65,8 @@ public class RideService {
     public RidePublicDTO createNewRide(RideDTO rideDTO, UUID userId,
                                        UUID plannedRouteId) {
         rideDTO.validate();
+        rideDTO.setId(null);
+
         User found = userService.getFullUserById(userId);
         Ride ride = modelMapper.map(rideDTO, Ride.class);
         PlannedRoute plannedRoute = plannedRoutesRepository
