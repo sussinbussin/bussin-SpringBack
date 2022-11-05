@@ -1,9 +1,8 @@
 package com.bussin.SpringBack.models.ride;
 
-import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.bussin.SpringBack.models.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,8 +41,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id")
 public class Ride implements Serializable, Cloneable{
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -80,6 +77,7 @@ public class Ride implements Serializable, Cloneable{
 
     @ManyToOne
     @JoinColumn(name = "planned_route_id")
+    @JsonBackReference
     private PlannedRoute plannedRoute;
 
     @ManyToOne

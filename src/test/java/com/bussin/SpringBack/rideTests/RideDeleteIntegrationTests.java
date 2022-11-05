@@ -5,9 +5,8 @@ import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.driver.DriverDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
-import com.bussin.SpringBack.models.ride.Ride;
 import com.bussin.SpringBack.models.ride.RideDTO;
-import com.bussin.SpringBack.models.ride.RideReturnDTO;
+import com.bussin.SpringBack.models.ride.RidePublicDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.services.DriverService;
@@ -106,7 +105,7 @@ public class RideDeleteIntegrationTests {
 
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
-        RideReturnDTO ride = rideService.createNewRide(rideDTO, user.getId(),
+        RidePublicDTO ride = rideService.createNewRide(rideDTO, user.getId(),
                 plannedRoute.getId());
 
         HttpUriRequest request = new HttpDelete(baseUrl + port + "/api/v1" +
@@ -116,9 +115,9 @@ public class RideDeleteIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        RideReturnDTO rideResult =
+        RidePublicDTO rideResult =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        RideReturnDTO.class);
+                        RidePublicDTO.class);
 
         rideDTO.setId(ride.getId());
 

@@ -1,14 +1,12 @@
 package com.bussin.SpringBack.models.driver;
 
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
-import com.bussin.SpringBack.models.ride.RideReturnDTO;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

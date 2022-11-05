@@ -6,7 +6,7 @@ import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.bussin.SpringBack.models.ride.Ride;
-import com.bussin.SpringBack.models.ride.RideReturnDTO;
+import com.bussin.SpringBack.models.ride.RidePublicDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +14,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,6 +42,9 @@ public class ModelMapperConfig {
                 .addMappings(mapper ->
                         mapper.map(src -> src.getDriver().getCarPlate(),
                                 PlannedRouteResultDTO::setCarPlate))
+                .addMappings(mapper ->
+                        mapper.map(PlannedRoute::getRides,
+                                PlannedRouteResultDTO::setRides))
                 .implicitMappings();
 
         modelMapper.emptyTypeMap(Driver.class, DriverPublicDTO.class)
@@ -53,11 +54,11 @@ public class ModelMapperConfig {
                 .addMappings(mapper -> mapper.map(src -> src.getUser().getId(), DriverPublicDTO::setUser))
                 .implicitMappings();
 
-        modelMapper.emptyTypeMap(Ride.class, RideReturnDTO.class)
+        modelMapper.emptyTypeMap(Ride.class, RidePublicDTO.class)
                 .addMappings(mapper -> mapper
                         .map(Ride::getPlannedRoute,
-                                RideReturnDTO::setPlannedRoute))
-                .addMappings(mapper -> mapper.map(src -> src.getUser().getId(), RideReturnDTO::setUserId))
+                                RidePublicDTO::setPlannedRoute))
+                .addMappings(mapper -> mapper.map(src -> src.getUser().getId(), RidePublicDTO::setUserId))
                 .implicitMappings();
 
         modelMapper.emptyTypeMap(PlannedRoute.class, PlannedRoutePublicDTO.class)
@@ -77,12 +78,12 @@ public class ModelMapperConfig {
             }
         };
 
-        Converter<List<Ride>, List<RideReturnDTO>> convertRides
+        Converter<List<Ride>, List<RidePublicDTO>> convertRides
                 = new AbstractConverter<>() {
             @Override
-            protected List<RideReturnDTO> convert(List<Ride> rides) {
+            protected List<RidePublicDTO> convert(List<Ride> rides) {
                 return rides.stream().map(ride -> modelMapper.map(ride,
-                        RideReturnDTO.class)).collect(Collectors.toList());
+                        RidePublicDTO.class)).collect(Collectors.toList());
             }
         };
 

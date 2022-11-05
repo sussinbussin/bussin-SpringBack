@@ -8,7 +8,7 @@ import com.bussin.SpringBack.models.plannedRoute.PlannedRouteDTO;
 import com.bussin.SpringBack.models.ride.Ride;
 import com.bussin.SpringBack.models.ride.RideCreationDTO;
 import com.bussin.SpringBack.models.ride.RideDTO;
-import com.bussin.SpringBack.models.ride.RideReturnDTO;
+import com.bussin.SpringBack.models.ride.RidePublicDTO;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.services.DriverService;
@@ -126,9 +126,9 @@ public class RideCreateIntegrationTests {
         CloseableHttpResponse httpResponse =
                 HttpClientBuilder.create().build().execute(request);
 
-        RideReturnDTO rideResult =
+        RidePublicDTO rideResult =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        RideReturnDTO.class);
+                        RidePublicDTO.class);
 
         rideDTO.setId(rideResult.getId());
 

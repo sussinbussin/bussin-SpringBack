@@ -4,6 +4,7 @@ import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.ride.Ride;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,8 +45,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class PlannedRoute implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
@@ -94,6 +93,7 @@ public class PlannedRoute implements Serializable, Cloneable {
     @Column(scale = 6, precision = 9)
     private BigDecimal destLongitude;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "plannedRoute", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Ride> rides;
 
