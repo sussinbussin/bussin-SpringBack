@@ -28,7 +28,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
 public class UserPublicDTO implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -41,19 +40,6 @@ public class UserPublicDTO implements Serializable {
     @NotNull(message = "Mobile number should not be empty")
     @Pattern(regexp = "^[8-9][0-9]{7}$", message = "Mobile must be in this format: 86969696")
     private String mobile;
-
-    /**
-     * Check if there is any constraint violations during input
-     */
-    public void validate() {
-        Validator validator =
-                Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<UserPublicDTO>> violations =
-                validator.validate(this);
-        if (violations.size() > 0) {
-            throw new ConstraintViolationException(violations);
-        }
-    }
 
     @Override
     public boolean equals(Object o) {
