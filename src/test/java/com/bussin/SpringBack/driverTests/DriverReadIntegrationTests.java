@@ -36,8 +36,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
@@ -149,6 +147,33 @@ public class DriverReadIntegrationTests {
 
         assertEquals(dest, driverDTO);
         assertEquals(driver.getUser().getId(), user.getId());
+    }
+
+    /**
+     * Get another driver by car plate when car plate exist, 403
+     * @throws IOException If an input or output exception occurred
+     */
+    @Test
+    public void getDriverByCarPlate_anotherDriver_403() throws IOException {
+        DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
+        DriverDTO driverDTO1 = TestObjects.DRIVER_DTO.clone();
+        driverDTO1.setCarPlate("SXX5555X");
+
+        driverService.addNewDriver(user.getId(), driverDTO);
+
+        Driver driver1 =
+                driverService.addNewDriver(userService.createNewUser(
+                        TestObjects.USER_DTO.clone()).getId(), driverDTO1);
+
+        HttpUriRequest request = new HttpGet(baseUrl + port
+                + "/api/v1/driver/" + driver1.getCarPlate());
+
+        request.setHeader(AUTHORIZATION_HEADER, idToken);
+
+        CloseableHttpResponse httpResponse =
+                HttpClientBuilder.create().build().execute(request);
+
+        assertEquals(403, httpResponse.getCode());
     }
 
     /**
