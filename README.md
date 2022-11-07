@@ -12,7 +12,7 @@ SpringBack is the backend for Bussin written with Spring to handle application
 information in a secure and consistent way.
 
 It works in conjunction with the Route Recommender and Bussin Frontends to 
-make app, Bussin, possible.
+make our app, Bussin, possible.
 
 ## Requirements
  - MySQL
