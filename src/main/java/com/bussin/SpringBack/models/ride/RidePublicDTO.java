@@ -31,8 +31,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id")
-public class RidePublicDTO implements Serializable{
+        property = "id")
+public class RidePublicDTO implements Serializable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
@@ -50,7 +50,7 @@ public class RidePublicDTO implements Serializable{
     private Integer passengers;
 
     @DecimalMin("0")
-    @Digits(integer=6, fraction=2)
+    @Digits(integer = 6, fraction = 2)
     @Schema(description = "Cost of the ride", example = "3.00")
     private BigDecimal cost;
 

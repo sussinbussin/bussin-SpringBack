@@ -28,13 +28,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class RouteSecurityTests {
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
 
-    private final String baseUrl = "http://localhost:";
-
     /**
      * Get user by id when user is unauthorized throws 401 UNAUTHORIZED
+     *
      * @throws IOException
      */
     @Test
@@ -50,6 +50,7 @@ public class RouteSecurityTests {
 
     /**
      * Create user with cognito with invalid parameters throws 400 BAD REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -65,6 +66,7 @@ public class RouteSecurityTests {
 
     /**
      * Get driver by car plate when unauthorized throws 401 UNAUTHORIZED
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -80,6 +82,7 @@ public class RouteSecurityTests {
 
     /**
      * Get planned route by id when unauthorized throws 401 UNAUTHORIZED
+     *
      * @throws IOException
      */
     @Test
@@ -95,6 +98,7 @@ public class RouteSecurityTests {
 
     /**
      * Get ride by id when unauthorized throws 401 UNAUTHORIZED
+     *
      * @throws IOException
      */
     @Test

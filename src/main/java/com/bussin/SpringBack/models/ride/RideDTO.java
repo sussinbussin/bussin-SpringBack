@@ -54,7 +54,7 @@ public class RideDTO implements Serializable, Cloneable {
     private Integer passengers;
 
     @DecimalMin("0")
-    @Digits(integer=6, fraction=2)
+    @Digits(integer = 6, fraction = 2)
     @Schema(description = "Cost of the ride", example = "3.00")
     private BigDecimal cost;
 
@@ -70,6 +70,21 @@ public class RideDTO implements Serializable, Cloneable {
             "location", example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String rideTo;
 
+    @JsonCreator
+    public RideDTO(@JsonProperty("id") final UUID id,
+                   @JsonProperty("timestamp") final Timestamp timestamp,
+                   @JsonProperty("passengers") final Integer passengers,
+                   @JsonProperty("cost") final BigDecimal cost,
+                   @JsonProperty("rideFrom") final String rideFrom,
+                   @JsonProperty("rideTo") final String rideTo) {
+        this.id = id;
+        this.timestamp = timestamp;
+        this.passengers = passengers;
+        this.cost = cost;
+        this.rideFrom = rideFrom;
+        this.rideTo = rideTo;
+    }
+
     /**
      * Check if there is any constraint violations during input
      */
@@ -79,21 +94,6 @@ public class RideDTO implements Serializable, Cloneable {
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    @JsonCreator
-    public RideDTO(@JsonProperty("id") UUID id,
-                   @JsonProperty("timestamp") Timestamp timestamp,
-                   @JsonProperty("passengers") Integer passengers,
-                   @JsonProperty("cost") BigDecimal cost,
-                   @JsonProperty("rideFrom") String rideFrom,
-                   @JsonProperty("rideTo") String rideTo) {
-        this.id = id;
-        this.timestamp = timestamp;
-        this.passengers = passengers;
-        this.cost = cost;
-        this.rideFrom = rideFrom;
-        this.rideTo = rideTo;
     }
 
     @Override

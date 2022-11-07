@@ -21,26 +21,22 @@ import java.io.Serializable;
 
 @Service
 public class CognitoLogin {
+    static final String COGNITO_URL = "https://cognito-idp.ap-southeast-1" +
+            ".amazonaws.com/";
     private final ObjectMapper objectMapper;
+    @Value("${clientId}")
+    private String cognitoClientId;
+    @Value("${cognito.username}")
+    private String cognitoUsername;
+    @Value("${cognito.driverName}")
+    private String cognitoDriverName;
+    @Value("${cognito.password}")
+    private String cognitoPassword;
+
     @Autowired
     public CognitoLogin(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
-
-    static final String COGNITO_URL = "https://cognito-idp.ap-southeast-1" +
-            ".amazonaws.com/";
-
-    @Value("${clientId}")
-    private String cognitoClientId;
-
-    @Value("${cognito.username}")
-    private String cognitoUsername;
-
-    @Value("${cognito.driverName}")
-    private String cognitoDriverName;
-
-    @Value("${cognito.password}")
-    private String cognitoPassword;
 
     /**
      * Gets the authentication ID token of the authenticated user
@@ -49,8 +45,8 @@ public class CognitoLogin {
      * @return A string of authenticated ID token
      * @throws IOException If an input or output exception occurred
      */
-    public String getAuthToken(boolean isDriver) throws IOException {
-        AuthParameters authParameters = isDriver?
+    public String getAuthToken(final boolean isDriver) throws IOException {
+        AuthParameters authParameters = isDriver ?
                 new AuthParameters(cognitoDriverName, cognitoPassword) :
                 new AuthParameters(cognitoUsername, cognitoPassword);
 
@@ -76,7 +72,7 @@ public class CognitoLogin {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    class LoginRequestModel implements Serializable {
+    static class LoginRequestModel implements Serializable {
         @JsonProperty("AuthFlow")
         private String authFlow = "USER_PASSWORD_AUTH";
 

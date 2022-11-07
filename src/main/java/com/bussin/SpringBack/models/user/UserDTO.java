@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -82,6 +81,23 @@ public class UserDTO implements Serializable, Cloneable {
     @Schema(description = "Is this user a driver?", example = "true")
     private Boolean isDriver;
 
+    @JsonCreator
+    public UserDTO(@JsonProperty("id") final UUID id,
+                   @JsonProperty("nric") final String nric,
+                   @JsonProperty("name") final String name,
+                   @JsonProperty("dob") final Date dob,
+                   @JsonProperty("mobile") final String mobile,
+                   @JsonProperty("email") final String email,
+                   @JsonProperty("isDriver") final Boolean isDriver) {
+        this.id = id;
+        this.nric = nric;
+        this.name = name;
+        this.dob = dob;
+        this.mobile = mobile;
+        this.email = email;
+        this.isDriver = isDriver;
+    }
+
     /**
      * Check if there is any constraint violations during input
      */
@@ -93,23 +109,6 @@ public class UserDTO implements Serializable, Cloneable {
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    @JsonCreator
-    public UserDTO(@JsonProperty("id") UUID id,
-                   @JsonProperty("nric") String nric,
-                   @JsonProperty("name") String name,
-                   @JsonProperty("dob") Date dob,
-                   @JsonProperty("mobile") String mobile,
-                   @JsonProperty("email") String email,
-                   @JsonProperty("isDriver") Boolean isDriver) {
-        this.id = id;
-        this.nric = nric;
-        this.name = name;
-        this.dob = dob;
-        this.mobile = mobile;
-        this.email = email;
-        this.isDriver = isDriver;
     }
 
     @Override

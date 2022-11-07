@@ -3,7 +3,6 @@ package com.bussin.SpringBack.services;
 import com.bussin.SpringBack.exception.DriverNotFoundException;
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.bussin.SpringBack.models.user.UserDTO;
 import com.bussin.SpringBack.repositories.DriverRepository;
@@ -19,25 +18,24 @@ import java.util.stream.Collectors;
 @Service
 public class DriverService {
     private final ModelMapper modelMapper;
-
+    private final DriverRepository driverRepository;
     private UserService userService;
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    private final DriverRepository driverRepository;
-
-    @Autowired
-    public DriverService(DriverRepository driverRepository,
-                         ModelMapper modelMapper) {
+    public DriverService(final DriverRepository driverRepository,
+                         final ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
         this.driverRepository = driverRepository;
     }
 
+    @Autowired
+    public void setUserService(final UserService userService) {
+        this.userService = userService;
+    }
+
     /**
      * Get all drivers
+     *
      * @return List of all drivers
      */
     public List<Driver> getAllDrivers() {
@@ -46,12 +44,13 @@ public class DriverService {
 
     /**
      * Create a new driver
-     * @param uuid The UUID of User
+     *
+     * @param uuid      The UUID of User
      * @param driverDTO The driver DTO of car details
      * @return The driver if created
      */
     @Transactional
-    public Driver addNewDriver(UUID uuid, DriverDTO driverDTO) {
+    public Driver addNewDriver(final UUID uuid, final DriverDTO driverDTO) {
         driverDTO.validate();
         UserDTO foundUser = userService.getUserById(uuid);
 
@@ -64,33 +63,36 @@ public class DriverService {
 
     /**
      * Get a driver by car plate
+     *
      * @param carPlate The String of Driver's car plate
      * @return The driver, if found
      */
     public Driver getDriverByCarPlate(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate)
-                .orElseThrow(() ->
-                        new DriverNotFoundException(
-                                "No driver found with car plate " + carPlate));
+                               .orElseThrow(() ->
+                                       new DriverNotFoundException(
+                                               "No driver found with car plate " + carPlate));
     }
 
     /**
      * Get the set of planned routes created by a driver
+     *
      * @param carPlate The String of Driver's car plate
      * @return A set of planned routes, if found
      */
     public List<PlannedRouteResultDTO> getAllPlannedRoutesByDriver(String carPlate) {
         return driverRepository.findDriverByCarPlate(carPlate)
-                .map(driver -> driver.getPlannedRoutes().stream()
-                        .map(plannedRoute -> modelMapper
-                                .map(plannedRoute, PlannedRouteResultDTO.class))
-                        .collect(Collectors.toList())).orElseThrow(()
-                -> new DriverNotFoundException("No driver with car plate " + carPlate));
+                               .map(driver -> driver.getPlannedRoutes().stream()
+                                                    .map(plannedRoute -> modelMapper
+                                                            .map(plannedRoute, PlannedRouteResultDTO.class))
+                                                    .collect(Collectors.toList())).orElseThrow(()
+                        -> new DriverNotFoundException("No driver with car plate " + carPlate));
     }
 
     /**
      * Update a driver with driver DTO details
-     * @param carPlate The String of Driver's car plate
+     *
+     * @param carPlate  The String of Driver's car plate
      * @param driverDTO The Driver DTO of new details
      * @return Updated driver
      */

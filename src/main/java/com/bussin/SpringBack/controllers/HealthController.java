@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
     /**
      * Check if backend service is reachable
+     *
      * @return 200 HTTPStatus.OK
      */
     @GetMapping

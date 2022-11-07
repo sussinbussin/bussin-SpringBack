@@ -54,12 +54,12 @@ public class DriverPublicDTO implements Serializable {
     private List<PlannedRoutePublicDTO> plannedRoutes;
 
     @JsonCreator
-    public DriverPublicDTO(@JsonProperty("carPlate") String carPlate,
-                     @JsonProperty("modelAndColour") String modelAndColour,
-                     @JsonProperty("capacity") Integer capacity,
-                     @JsonProperty("fuelType") String fuelType,
-                     @JsonProperty("user") UUID user,
-                     @JsonProperty("rides") List<PlannedRoutePublicDTO> plannedRoutes) {
+    public DriverPublicDTO(@JsonProperty("carPlate") final String carPlate,
+                           @JsonProperty("modelAndColour") final String modelAndColour,
+                           @JsonProperty("capacity") final Integer capacity,
+                           @JsonProperty("fuelType") final String fuelType,
+                           @JsonProperty("user") final UUID user,
+                           @JsonProperty("rides") final List<PlannedRoutePublicDTO> plannedRoutes) {
         this.carPlate = carPlate;
         this.modelAndColour = modelAndColour;
         this.capacity = capacity;
@@ -69,7 +69,7 @@ public class DriverPublicDTO implements Serializable {
     }
 
     @JsonSetter
-    public void setUser(UUID user) {
+    public void setUser(final UUID user) {
         this.user = user;
     }
 }

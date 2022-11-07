@@ -37,28 +37,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class DriverUpdateIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
     private User user;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -71,6 +63,7 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver with new valid credentials success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -109,6 +102,7 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver when car plate is not found throws 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -133,6 +127,7 @@ public class DriverUpdateIntegrationTests {
 
     /**
      * Update a driver with invalid parameters throws 400 BAD_REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

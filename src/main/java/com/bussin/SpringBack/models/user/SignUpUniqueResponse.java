@@ -26,8 +26,12 @@ public class SignUpUniqueResponse implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SignUpUniqueResponse that = (SignUpUniqueResponse) o;
         return isNricUnique() == that.isNricUnique() && isMobileUnique() == that.isMobileUnique() && isEmailUnique() == that.isEmailUnique();
     }

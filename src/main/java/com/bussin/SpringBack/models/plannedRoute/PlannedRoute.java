@@ -2,10 +2,8 @@ package com.bussin.SpringBack.models.plannedRoute;
 
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.ride.Ride;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -56,7 +54,7 @@ public class PlannedRoute implements Serializable, Cloneable {
     @NotNull
     @Size(max = 512)
     @Schema(description = "Place ID of the starting location",
-        example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
+            example = "place_id:ChIJ483Qk9YX2jERA0VOQV7d1tY")
     private String plannedFrom;
 
     @NotNull
@@ -113,8 +111,12 @@ public class PlannedRoute implements Serializable, Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PlannedRoute that = (PlannedRoute) o;
         return Objects.equals(getId(), that.getId()) && Objects.equals(getPlannedFrom(), that.getPlannedFrom()) && Objects.equals(getPlannedTo(), that.getPlannedTo()) && Objects.equals(getDateTime(), that.getDateTime()) && Objects.equals(getCapacity(), that.getCapacity());
     }

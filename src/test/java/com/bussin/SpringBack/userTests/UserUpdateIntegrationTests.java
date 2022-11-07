@@ -37,26 +37,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class UserUpdateIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
     private User user;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -69,6 +61,7 @@ public class UserUpdateIntegrationTests {
 
     /**
      * Update a user by ID when ID exist success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -99,17 +92,18 @@ public class UserUpdateIntegrationTests {
 
     /**
      * Update a user when user is invalid throws 400 BAD_REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
     public void updateUser_invalidUser_400() throws IOException {
         UserDTO userDTOInvalidUpdate = UserDTO.builder()
-                .nric("S9999999Z22")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .email("Robert@gmail.com")
-                .mobile("900090000")
-                .isDriver(false).build();
+                                              .nric("S9999999Z22")
+                                              .name("Robert")
+                                              .dob(new Date(90000000))
+                                              .email("Robert@gmail.com")
+                                              .mobile("900090000")
+                                              .isDriver(false).build();
 
         HttpUriRequest request = new HttpPut(baseUrl + port
                 + "/api/v1/users/" + user.getId());
@@ -130,6 +124,7 @@ public class UserUpdateIntegrationTests {
 
     /**
      * Update user when user does not exist throws 403 FORBIDDEN
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

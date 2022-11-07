@@ -42,36 +42,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class PlannedRouteDeleteIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private RideService rideService;
-
     @Autowired
     private PlannedRouteService plannedRouteService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -84,6 +73,7 @@ public class PlannedRouteDeleteIntegrationTests {
 
     /**
      * Delete a planned route with planned route found success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -122,6 +112,7 @@ public class PlannedRouteDeleteIntegrationTests {
 
     /**
      * Delete a planned route with no route found throws 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

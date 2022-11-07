@@ -1,6 +1,5 @@
 package com.bussin.SpringBack.security;
 
-import com.amazonaws.services.xray.model.Http;
 import com.bussin.SpringBack.models.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +35,12 @@ public class SecurityConfiguration {
     private boolean debugMode = false;
 
     private TokenValidator tokenValidator;
+    private FilterChainExceptionHandler filterChainExceptionHandler;
 
     @Autowired
     private void setTokenValidator(TokenValidator tokenValidator) {
         this.tokenValidator = tokenValidator;
     }
-
-    private FilterChainExceptionHandler filterChainExceptionHandler;
 
     @Autowired
     private void setFilterChainExceptionHandler(FilterChainExceptionHandler filterChainExceptionHandler) {
@@ -51,17 +49,17 @@ public class SecurityConfiguration {
 
     /**
      * Configures the filter chain based on whether debugMode is enabled
+     *
      * @param http HttpSecurity instance to configure
      * @return The configured HttpSecurity instance
-     * @throws Exception
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            return (debugMode ? configureFilterChain(http) :
-                    configureFilterChain(debugRestrictions(http))).build();
+    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+        return (debugMode ? configureFilterChain(http) :
+                configureFilterChain(debugRestrictions(http))).build();
     }
 
-    private HttpSecurity configureFilterChain(HttpSecurity http) throws Exception {
+    private HttpSecurity configureFilterChain(final HttpSecurity http) throws Exception {
         return http.
                 mvcMatcher("/**")
                 .csrf()
@@ -76,48 +74,48 @@ public class SecurityConfiguration {
                 .authorizeRequests()
 
                 .mvcMatchers(HttpMethod.GET, "/users/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.PUT, "/users/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.DELETE, "/users/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.GET, "/users/full/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.GET, "/users/byEmail/*")
-                    .authenticated()
+                .authenticated()
 
                 .mvcMatchers(HttpMethod.GET, "/driver/*")
-                    .hasAuthority("Driver")
+                .hasAuthority("Driver")
                 .mvcMatchers(HttpMethod.POST, "/driver/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.PUT, "/driver/*")
-                    .hasAuthority("Driver")
+                .hasAuthority("Driver")
                 .mvcMatchers(HttpMethod.DELETE, "/driver/*")
-                    .hasAuthority("Driver")
+                .hasAuthority("Driver")
                 .mvcMatchers(HttpMethod.GET, "/driver/*/plannedRoutes")
-                    .hasAuthority("Driver")
+                .hasAuthority("Driver")
 
                 .mvcMatchers(HttpMethod.GET, "/planned/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.GET, "/planned/*/passengers")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.GET, "/planned/after/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.PUT, "/planned/*")
-                    .hasAuthority("Driver")
+                .hasAuthority("Driver")
                 .mvcMatchers(HttpMethod.POST, "/planned/*")
-                    .hasAuthority("Driver")
+                .hasAuthority("Driver")
                 .mvcMatchers(HttpMethod.DELETE, "/planned/*")
-                    .hasAuthority("Driver")
+                .hasAuthority("Driver")
 
                 .mvcMatchers(HttpMethod.GET, "/ride/*")
-                    .authenticated()
-                .mvcMatchers(HttpMethod.POST,"/ride")
-                    .authenticated()
+                .authenticated()
+                .mvcMatchers(HttpMethod.POST, "/ride")
+                .authenticated()
                 .mvcMatchers(HttpMethod.PUT, "/ride/*")
-                    .authenticated()
+                .authenticated()
                 .mvcMatchers(HttpMethod.DELETE, "/ride/*")
-                    .authenticated()
+                .authenticated()
 
                 .and()
                 .exceptionHandling()
@@ -125,17 +123,17 @@ public class SecurityConfiguration {
                 .and();
     }
 
-    private HttpSecurity debugRestrictions(HttpSecurity http) throws Exception {
+    private HttpSecurity debugRestrictions(final HttpSecurity http) throws Exception {
         return http.authorizeRequests()
-                .mvcMatchers(HttpMethod.GET,
-                        "/users",
-                        "/driver",
-                        "/planned",
-                        "/ride")
-                    .denyAll()
-                .mvcMatchers(HttpMethod.POST, "/users")
-                    .denyAll()
-                .and();
+                   .mvcMatchers(HttpMethod.GET,
+                           "/users",
+                           "/driver",
+                           "/planned",
+                           "/ride")
+                   .denyAll()
+                   .mvcMatchers(HttpMethod.POST, "/users")
+                   .denyAll()
+                   .and();
     }
 
     @Bean
@@ -148,7 +146,7 @@ public class SecurityConfiguration {
                     new ArrayList<>(List.of(new SimpleGrantedAuthority("User")));
             User user =
                     tokenValidator.userFromToken((String) incoming.getCredentials());
-            if(user.getIsDriver()){
+            if (user.getIsDriver()) {
                 authorities.add(new SimpleGrantedAuthority("Driver"));
             }
 
@@ -165,7 +163,7 @@ public class SecurityConfiguration {
         ArrayList<RequestMatcher> matchers = new ArrayList<>();
         matchers.add(new AntPathRequestMatcher("/users"));
         matchers.add(new AntPathRequestMatcher("/users/*"));
-        matchers.add(new AntPathRequestMatcher( "/users/full/*"));
+        matchers.add(new AntPathRequestMatcher("/users/full/*"));
         matchers.add(new AntPathRequestMatcher("/users/byEmail/*"));
         matchers.add(new AntPathRequestMatcher("/driver/**"));
         matchers.add(new AntPathRequestMatcher("/planned/**"));

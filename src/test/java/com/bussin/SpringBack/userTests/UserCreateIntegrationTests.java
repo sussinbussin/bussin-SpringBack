@@ -37,24 +37,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class UserCreateIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -67,6 +60,7 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with valid credentials success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -96,17 +90,18 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with invalid credentials throws 400 BAD_REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewUser_invalidUser_400() throws IOException {
         UserDTO userDTO = UserDTO.builder()
-                .nric("S9999999Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .email("Robert@gmail.com")
-                .mobile("6969696969")
-                .isDriver(false).build();
+                                 .nric("S9999999Z")
+                                 .name("Robert")
+                                 .dob(new Date(90000000))
+                                 .email("Robert@gmail.com")
+                                 .mobile("6969696969")
+                                 .isDriver(false).build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/users");
@@ -126,18 +121,19 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with invalid password throws 400 BAD REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewUser_invalidPassword_400() throws IOException {
         UserDTO userDTO = UserDTO.builder()
-                .nric("S1231233Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .email("uchawuhfa@gmail.com")
-                .mobile("81729365")
-                .isDriver(false)
-                .build();
+                                 .nric("S1231233Z")
+                                 .name("Robert")
+                                 .dob(new Date(90000000))
+                                 .email("uchawuhfa@gmail.com")
+                                 .mobile("81729365")
+                                 .isDriver(false)
+                                 .build();
 
         UserCreationDTO userCreationDTO =
                 new UserCreationDTO("simple", "sdsdhfics", userDTO);
@@ -159,18 +155,19 @@ public class UserCreateIntegrationTests {
 
     /**
      * Create a new user with duplicated username throws 400 BAD REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
     public void createNewUser_duplicatedUsername_400() throws IOException {
         UserDTO userDTO = UserDTO.builder()
-                .nric("S1231233Z")
-                .name("Robert")
-                .dob(new Date(90000000))
-                .email("uchawuhfa@gmail.com")
-                .mobile("81729365")
-                .isDriver(false)
-                .build();
+                                 .nric("S1231233Z")
+                                 .name("Robert")
+                                 .dob(new Date(90000000))
+                                 .email("uchawuhfa@gmail.com")
+                                 .mobile("81729365")
+                                 .isDriver(false)
+                                 .build();
 
         UserCreationDTO userCreationDTO =
                 new UserCreationDTO("P@ssw0rd", "SpringBackTest", userDTO);

@@ -4,6 +4,7 @@ import com.bussin.SpringBack.TestObjects;
 import com.bussin.SpringBack.integrationTestAuth.CognitoLogin;
 import com.bussin.SpringBack.models.user.User;
 import com.bussin.SpringBack.models.user.UserDTO;
+import com.bussin.SpringBack.services.UserService;
 import com.bussin.SpringBack.testConfig.H2JpaConfig;
 import com.bussin.SpringBack.testConfig.TestContextConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -24,8 +25,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.bussin.SpringBack.services.UserService;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -39,26 +38,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class UserReadIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
     private User user;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
 
     /**
      * Authenticate JWTToken and create a new TestObject user
@@ -71,6 +62,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get no users when there are no users success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -86,6 +78,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get all users when there are users success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -112,6 +105,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get all details of a specific user if user exists success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -132,6 +126,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get details of a specific user if user exists success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -151,6 +146,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by ID when user doesn't exist throws 403 FORBIDDEN
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -168,6 +164,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by ID when bad UUID is provided throws 400 BAD_REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -184,6 +181,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by email when user exist success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -204,6 +202,7 @@ public class UserReadIntegrationTests {
 
     /**
      * Get user by email when user doesn't exist throws 403 FORBIDDEN
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

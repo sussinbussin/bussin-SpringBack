@@ -1,8 +1,5 @@
 package com.bussin.SpringBack.models.user;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,15 +8,10 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -56,14 +48,5 @@ public class UserPublicDTO implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    @JsonCreator
-    public UserPublicDTO(@JsonProperty("id") UUID id,
-                         @JsonProperty("name") String name,
-                         @JsonProperty("mobile") String mobile) {
-        this.id = id;
-        this.name = name;
-        this.mobile = mobile;
     }
 }

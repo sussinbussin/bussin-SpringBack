@@ -36,6 +36,7 @@ public class PlannedRouteService {
 
     /**
      * Get all planned routes
+     *
      * @return List of planned routes
      */
     public List<PlannedRoute> getAllPlannedRoutes() {
@@ -44,27 +45,29 @@ public class PlannedRouteService {
 
     /**
      * Get a planned route by ID
+     *
      * @param uuid The UUID of planned route
      * @return Planned route if found
      */
-    public PlannedRoutePublicDTO getPlannedRouteById(UUID uuid) {
+    public PlannedRoutePublicDTO getPlannedRouteById(final UUID uuid) {
         PlannedRoute plannedRoute = plannedRoutesRepository.findById(uuid)
-                .orElseThrow(() -> new PlannedRouteNotFoundException("No " +
-                        "planned route with ID " + uuid));
+                                                           .orElseThrow(() -> new PlannedRouteNotFoundException("No " +
+                                                                   "planned route with ID " + uuid));
         return modelMapper.map(plannedRoute,
-                        PlannedRoutePublicDTO.class);
+                PlannedRoutePublicDTO.class);
     }
 
     /**
      * Get all passengers on a particular route
+     *
      * @param plannedRouteUUID The UUID of planned route
      * @return List of user public DTO if planned route is found
      */
-    public List<UserPublicDTO> getPassengersOnRoute(UUID plannedRouteUUID) {
+    public List<UserPublicDTO> getPassengersOnRoute(final UUID plannedRouteUUID) {
         return plannedRoutesRepository.findById(plannedRouteUUID).map(found -> {
             List<UserPublicDTO> users = new ArrayList<>();
             found.getRides().forEach(ride -> users.add(modelMapper
-                    .map(ride.getUser(),UserPublicDTO.class)));
+                    .map(ride.getUser(), UserPublicDTO.class)));
             return users;
         }).orElseThrow(() -> new PlannedRouteNotFoundException("No " +
                 "planned route with ID " + plannedRouteUUID));
@@ -72,24 +75,26 @@ public class PlannedRouteService {
 
     /**
      * Get a planned route after specific time
+     *
      * @param dateTime The LocalDateTime
      * @return List of planned routes after datetime
      */
-    public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(LocalDateTime dateTime) {
+    public List<PlannedRoutePublicDTO> getPlannedRouteAfterTime(final LocalDateTime dateTime) {
         return plannedRoutesRepository.findPlannedRouteByDateTimeAfter(dateTime)
-                .stream().map(plannedRoute -> modelMapper.map(plannedRoute, PlannedRoutePublicDTO.class))
-                .collect(Collectors.toList());
+                                      .stream().map(plannedRoute -> modelMapper.map(plannedRoute, PlannedRoutePublicDTO.class))
+                                      .collect(Collectors.toList());
     }
 
     /**
      * Create a new planned route for a driver
+     *
      * @param plannedRouteDTO The PlannedRouteDTO with details to create
-     * @param carPlate The String of driver that created the planned route
+     * @param carPlate        The String of driver that created the planned route
      * @return Created PlannedRoute if driver is found
      */
     @Transactional
-    public PlannedRoute createNewPlannedRoute(PlannedRouteDTO plannedRouteDTO,
-                                              String carPlate) {
+    public PlannedRoute createNewPlannedRoute(final PlannedRouteDTO plannedRouteDTO,
+                                              final String carPlate) {
         plannedRouteDTO.validate();
         plannedRouteDTO.setId(null);
         return driverRepository.findDriverByCarPlate(carPlate).map(found -> {
@@ -103,13 +108,14 @@ public class PlannedRouteService {
 
     /**
      * Update a planned route by ID
-     * @param uuid The UUID of Planned Route to be updated
+     *
+     * @param uuid            The UUID of Planned Route to be updated
      * @param plannedRouteDTO The PlannedRouteDTO details to update
      * @return Updated Planned Route if found
      */
     @Transactional
-    public PlannedRoutePublicDTO updatePlannedRouteById(UUID uuid,
-                                               PlannedRouteDTO plannedRouteDTO) {
+    public PlannedRoutePublicDTO updatePlannedRouteById(final UUID uuid,
+                                                        final PlannedRouteDTO plannedRouteDTO) {
         plannedRouteDTO.setId(uuid);
         plannedRouteDTO.validate();
         return modelMapper.map(plannedRoutesRepository.findById(uuid).map(found -> {
@@ -121,11 +127,12 @@ public class PlannedRouteService {
 
     /**
      * Delete a planned route by ID
+     *
      * @param uuid The UUID of planned route
      * @return Deleted Planned Route if found
      */
     @Transactional
-    public PlannedRoutePublicDTO deletePlannedRouteByID(UUID uuid) {
+    public PlannedRoutePublicDTO deletePlannedRouteByID(final UUID uuid) {
         return modelMapper.map(plannedRoutesRepository.findById(uuid).map(found -> {
             plannedRoutesRepository.deleteById(uuid);
             return found;

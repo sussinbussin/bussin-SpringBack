@@ -24,8 +24,12 @@ public class SignUpUniqueRequest implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SignUpUniqueRequest that = (SignUpUniqueRequest) o;
         return Objects.equals(this.getNric(), that.getNric()) && Objects.equals(this.getMobile(), that.getMobile()) && Objects.equals(this.getEmail(), that.getEmail());
     }

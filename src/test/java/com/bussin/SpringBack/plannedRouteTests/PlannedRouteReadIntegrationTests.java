@@ -48,36 +48,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class PlannedRouteReadIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private RideService rideService;
-
     @Autowired
     private PlannedRouteService plannedRouteService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -90,6 +79,7 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      * Get all routes when no routes exist success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -106,6 +96,7 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      * Get all planned routes success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -132,7 +123,8 @@ public class PlannedRouteReadIntegrationTests {
 
         List<PlannedRoute> plannedRoutes =
                 objectMapper.readValue(httpResponse.getEntity().getContent(),
-                        new TypeReference<>() {});
+                        new TypeReference<>() {
+                        });
 
         plannedRouteDTO.setId(plannedRoute.getId());
 
@@ -143,6 +135,7 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      * Get a planned route by id success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -181,6 +174,7 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      * Get a planned route by id when planned route doesn't exist throws 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -197,6 +191,7 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      * Get all passengers on a planned route success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -247,6 +242,7 @@ public class PlannedRouteReadIntegrationTests {
 
     /**
      * Get passengers on a planned route when planned route doesn't exist throws 404 NOT_FOUND
+     *
      * @throws IOException
      */
     @Test

@@ -25,11 +25,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.validation.ConstraintViolationException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
@@ -64,11 +71,11 @@ public class UserServiceTests {
                 new ClasspathPropertiesFileCredentialsProvider("application" +
                         ".properties");
 
-       AWSCognitoIdentityProvider cognitoIdentityProvider =
-               AWSCognitoIdentityProviderClientBuilder.standard()
-                .withCredentials(propertiesFileCredentialsProvider)
-                .withRegion("ap-southeast-1")
-                .build();
+        AWSCognitoIdentityProvider cognitoIdentityProvider =
+                AWSCognitoIdentityProviderClientBuilder.standard()
+                                                       .withCredentials(propertiesFileCredentialsProvider)
+                                                       .withRegion("ap-southeast-1")
+                                                       .build();
 
         userService = new UserService(userRepository, modelMapper);
         userService.setAmazonCognitoClient(cognitoIdentityProvider);
@@ -325,15 +332,15 @@ public class UserServiceTests {
         when(userRepository.existsByMobile(userDTO.getMobile())).thenReturn(false);
 
         assertEquals(SignUpUniqueResponse.builder()
-                        .nricUnique(true)
-                        .emailUnique(true)
-                        .mobileUnique(true)
-                        .build(),
+                                         .nricUnique(true)
+                                         .emailUnique(true)
+                                         .mobileUnique(true)
+                                         .build(),
                 userService.isUniqueCheck(SignUpUniqueRequest.builder()
-                        .nric(userDTO.getNric())
-                        .email(userDTO.getEmail())
-                        .mobile(userDTO.getMobile())
-                        .build()));
+                                                             .nric(userDTO.getNric())
+                                                             .email(userDTO.getEmail())
+                                                             .mobile(userDTO.getMobile())
+                                                             .build()));
 
         verify(userRepository, times(1)).existsByNric(userDTO.getNric());
         verify(userRepository, times(1)).existsByEmail(userDTO.getEmail());
@@ -351,15 +358,15 @@ public class UserServiceTests {
         when(userRepository.existsByMobile(userDTO.getMobile())).thenReturn(true);
 
         assertEquals(SignUpUniqueResponse.builder()
-                        .nricUnique(true)
-                        .emailUnique(true)
-                        .mobileUnique(false)
-                        .build(),
+                                         .nricUnique(true)
+                                         .emailUnique(true)
+                                         .mobileUnique(false)
+                                         .build(),
                 userService.isUniqueCheck(SignUpUniqueRequest.builder()
-                        .nric(userDTO.getNric())
-                        .email(userDTO.getEmail())
-                        .mobile(userDTO.getMobile())
-                        .build()));
+                                                             .nric(userDTO.getNric())
+                                                             .email(userDTO.getEmail())
+                                                             .mobile(userDTO.getMobile())
+                                                             .build()));
 
         verify(userRepository, times(1)).existsByNric(userDTO.getNric());
         verify(userRepository, times(1)).existsByEmail(userDTO.getEmail());
@@ -375,13 +382,13 @@ public class UserServiceTests {
         when(userRepository.existsByMobile(userDTO.getMobile())).thenReturn(true);
 
         assertEquals(SignUpUniqueResponse.builder()
-                        .nricUnique(true)
-                        .emailUnique(true)
-                        .mobileUnique(false)
-                        .build(),
+                                         .nricUnique(true)
+                                         .emailUnique(true)
+                                         .mobileUnique(false)
+                                         .build(),
                 userService.isUniqueCheck(SignUpUniqueRequest.builder()
-                        .mobile(userDTO.getMobile())
-                        .build()));
+                                                             .mobile(userDTO.getMobile())
+                                                             .build()));
 
         verify(userRepository, never()).existsByNric(userDTO.getNric());
         verify(userRepository, never()).existsByEmail(userDTO.getEmail());

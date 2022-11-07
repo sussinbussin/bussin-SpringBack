@@ -34,26 +34,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class UserDeleteIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
     private User user;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -66,6 +58,7 @@ public class UserDeleteIntegrationTests {
 
     /**
      * Delete a user when user exist success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -85,6 +78,7 @@ public class UserDeleteIntegrationTests {
 
     /**
      * Delete a user when user does not exist throws 403 FORBIDDEN
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

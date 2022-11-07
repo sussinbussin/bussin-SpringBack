@@ -30,6 +30,7 @@ public class UserCognitoTests {
 
     @InjectMocks
     private UserService userService;
+
     /**
      * Create a new user with valid credentials success
      */

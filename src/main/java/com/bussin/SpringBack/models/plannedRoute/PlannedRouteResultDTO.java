@@ -1,6 +1,5 @@
 package com.bussin.SpringBack.models.plannedRoute;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

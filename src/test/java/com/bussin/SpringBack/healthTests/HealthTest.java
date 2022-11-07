@@ -25,13 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class HealthTest {
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
 
-    private final String baseUrl = "http://localhost:";
-
     /**
      * Checks if the backend service port is reachable and working
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

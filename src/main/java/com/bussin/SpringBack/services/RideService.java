@@ -37,6 +37,7 @@ public class RideService {
 
     /**
      * Get all rides
+     *
      * @return List of all rides
      */
     public List<Ride> getAllRides() {
@@ -45,25 +46,27 @@ public class RideService {
 
     /**
      * Get a ride by ID
+     *
      * @param uuid The UUID of Ride
      * @return Ride details
      */
-    public RidePublicDTO getRideById(UUID uuid) {
+    public RidePublicDTO getRideById(final UUID uuid) {
         return modelMapper.map(rideRepository.findById(uuid)
-                .orElseThrow(() -> new RideNotFoundException("No ride with id "
-                        + uuid)), RidePublicDTO.class);
+                                             .orElseThrow(() -> new RideNotFoundException("No ride with id "
+                                                     + uuid)), RidePublicDTO.class);
     }
 
     /**
      * Create a new ride
-     * @param rideDTO The ride DTO details to create
-     * @param userId The UUID of user
+     *
+     * @param rideDTO        The ride DTO details to create
+     * @param userId         The UUID of user
      * @param plannedRouteId The UUID of planned route
      * @return Ride details created
      */
     @Transactional
-    public RidePublicDTO createNewRide(RideDTO rideDTO, UUID userId,
-                                       UUID plannedRouteId) {
+    public RidePublicDTO createNewRide(final RideDTO rideDTO, final UUID userId,
+                                       final UUID plannedRouteId) {
         rideDTO.validate();
         rideDTO.setId(null);
 
@@ -85,12 +88,13 @@ public class RideService {
 
     /**
      * Update a ride by ID
-     * @param rideId The UUID of ride to be updated
+     *
+     * @param rideId  The UUID of ride to be updated
      * @param rideDTO The ride DTO to update
      * @return Updated Ride
      */
     @Transactional
-    public RidePublicDTO updateRideById(UUID rideId, RideDTO rideDTO) {
+    public RidePublicDTO updateRideById(final UUID rideId, final RideDTO rideDTO) {
         rideDTO.setId(rideId);
         rideDTO.validate();
         return modelMapper.map(rideRepository.findById(rideId).map(found -> {
@@ -101,11 +105,12 @@ public class RideService {
 
     /**
      * Delete a ride by ID
+     *
      * @param rideId The UUID of ride
      * @return Deleted Ride
      */
     @Transactional
-    public RidePublicDTO deleteRideById(UUID rideId) {
+    public RidePublicDTO deleteRideById(final UUID rideId) {
         return modelMapper.map(rideRepository.findById(rideId).map(found -> {
             rideRepository.deleteById(rideId);
             return found;
