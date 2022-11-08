@@ -18,7 +18,6 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class SignUpUniqueResponse implements Serializable {
     private boolean nricUnique;
     private boolean mobileUnique;

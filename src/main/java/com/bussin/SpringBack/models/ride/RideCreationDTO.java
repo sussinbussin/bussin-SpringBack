@@ -15,7 +15,6 @@ import java.util.UUID;
  * A model for creating a new Ride record
  */
 @Getter
-@Setter
 @Builder
 public class RideCreationDTO implements Serializable {
     @Schema(description = "UUID of the user booking the ride",
