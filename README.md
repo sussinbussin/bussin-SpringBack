@@ -1,4 +1,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/sussinbussin/bussin-SpringBack/badge.svg?branch=main)](https://coveralls.io/github/sussinbussin/bussin-SpringBack?branch=main)
+
+[![Java CI with Maven](https://github.com/sussinbussin/bussin-SpringBack/actions/workflows/maven.yml/badge.svg)](https://github.com/sussinbussin/bussin-SpringBack/actions/workflows/maven.yml)
 </br>
 ## Bussin
 Bussin is a carpooling service that serves to bridge the gap between public transport and ride-hailing services
