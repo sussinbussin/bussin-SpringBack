@@ -274,7 +274,7 @@ public class RideServiceTests {
 
         assertThrows((ConstraintViolationException.class),
                 () -> rideService.updateRideById
-                        (ride.getId(), rideDTO));
+                                         (ride.getId(), rideDTO));
 
         verify(rideRepository, times(1))
                 .findById(any(UUID.class));

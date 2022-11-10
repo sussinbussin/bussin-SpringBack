@@ -15,10 +15,8 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class UserCreationDTO implements Serializable {
     @NotNull
     private String password;
@@ -28,13 +26,4 @@ public class UserCreationDTO implements Serializable {
 
     @NotNull
     private UserDTO userDTO;
-
-    @Override
-    public String toString() {
-        return "UserCreationDTO{" +
-                "password='" + password + '\'' +
-                ", username='" + username + '\'' +
-                ", userDTO=" + userDTO +
-                '}';
-    }
 }

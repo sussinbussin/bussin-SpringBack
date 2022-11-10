@@ -46,35 +46,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class RideReadIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private PlannedRouteService plannedRouteService;
-
     @Autowired
     private RideService rideService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -87,6 +77,7 @@ public class RideReadIntegrationTests {
 
     /**
      * Get all rides when no rides are found success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -103,6 +94,7 @@ public class RideReadIntegrationTests {
 
     /**
      * Get all rides when rides exist are found success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -147,6 +139,7 @@ public class RideReadIntegrationTests {
 
     /**
      * Get a ride by ID success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -191,6 +184,7 @@ public class RideReadIntegrationTests {
 
     /**
      * Get a ride by ID when no ride is found throws 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

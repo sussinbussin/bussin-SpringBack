@@ -5,7 +5,8 @@ import com.bussin.SpringBack.models.ride.RideDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface RideRepository extends JpaRepository<Ride, UUID> {

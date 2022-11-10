@@ -3,7 +3,9 @@ package com.bussin.SpringBack.models.ride;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -13,11 +15,10 @@ import java.util.UUID;
  * A model for creating a new Ride record
  */
 @Getter
-@Setter
 @Builder
 public class RideCreationDTO implements Serializable {
     @Schema(description = "UUID of the user booking the ride",
-        example = "844b8d14-ef82-4b27-b9b5-a5e765c1254f")
+            example = "844b8d14-ef82-4b27-b9b5-a5e765c1254f")
     @NotNull
     private UUID userUUID;
 
@@ -31,9 +32,9 @@ public class RideCreationDTO implements Serializable {
     private RideDTO rideDTO;
 
     @JsonCreator
-    public RideCreationDTO(@JsonProperty("userUUID") UUID userUUID,
-                           @JsonProperty("plannedRouteUUID") UUID plannedRouteUUID,
-                           @JsonProperty("rideDTO") RideDTO rideDTO) {
+    public RideCreationDTO(@JsonProperty("userUUID") final UUID userUUID,
+                           @JsonProperty("plannedRouteUUID") final UUID plannedRouteUUID,
+                           @JsonProperty("rideDTO") final RideDTO rideDTO) {
         this.userUUID = userUUID;
         this.plannedRouteUUID = plannedRouteUUID;
         this.rideDTO = rideDTO;

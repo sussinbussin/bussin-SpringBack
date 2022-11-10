@@ -32,6 +32,12 @@ public class UserService {
     private AWSCognitoIdentityProvider client;
 
     @Autowired
+    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    @Autowired
     public void setAmazonCognitoClient(AWSCognitoIdentityProvider client) {
         this.client = client;
     }
@@ -40,14 +46,9 @@ public class UserService {
         this.clientID = clientID;
     }
 
-    @Autowired
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
-
     /**
      * Get all user
+     *
      * @return List of users
      */
     public List<User> getAllUsers() {
@@ -56,6 +57,7 @@ public class UserService {
 
     /**
      * Create a new user
+     *
      * @param userDTO The UserDTO
      * @return The user, if created successfully
      */
@@ -68,6 +70,7 @@ public class UserService {
 
     /**
      * Create a new user with cognito
+     *
      * @param userCreationDTO The UserCreationDTO
      * @return The user, if created successfully
      */
@@ -96,52 +99,57 @@ public class UserService {
 
     /**
      * Get all the details of a user by ID
+     *
      * @param uuid The UUID of user
      * @return The full user, if found
      */
-    public User getFullUserById(UUID uuid) {
+    public User getFullUserById(final UUID uuid) {
         return userRepository.findById(uuid).orElseThrow(()
                 -> new UserNotFoundException("No user with id " + uuid));
     }
 
     /**
      * Get a user by ID
+     *
      * @param uuid The UUID of user
      * @return The user DTO, if found
      */
-    public UserDTO getUserById(UUID uuid) {
+    public UserDTO getUserById(final UUID uuid) {
         return userRepository.findUserById(uuid).orElseThrow(()
                 -> new UserNotFoundException("No user with id " + uuid));
     }
 
     /**
      * Get a user by email
+     *
      * @param email The email of user to return
      * @return The user DTO, if found
      */
-    public UserDTO getUserByEmail(String email) {
+    public UserDTO getUserByEmail(final String email) {
         return userRepository.findUserByEmail(email).orElseThrow(()
                 -> new UserNotFoundException("No user with email " + email));
     }
 
     /**
      * Get all the details of a user by email
+     *
      * @param email The email of user to return
      * @return The full user, if found
      */
-    public User getFullUserByEmail(String email) {
+    public User getFullUserByEmail(final String email) {
         return userRepository.findByEmail(email).orElseThrow(()
                 -> new UserNotFoundException("No user with email " + email));
     }
 
     /**
      * Update a user with new details using ID
-     * @param uuid The UUID of user
+     *
+     * @param uuid    The UUID of user
      * @param userDTO The new user DTO details to update
      * @return The full details of user, if found
      */
     @Transactional
-    public User updateUser(UUID uuid, UserDTO userDTO) {
+    public User updateUser(final UUID uuid, final UserDTO userDTO) {
         userDTO.setId(uuid);
         userDTO.validate();
         return userRepository.findById(uuid).map(found -> {
@@ -152,11 +160,12 @@ public class UserService {
 
     /**
      * Delete a user by ID
+     *
      * @param uuid The UUID of user
      * @return The user DTO, if found
      */
     @Transactional
-    public UserDTO deleteUser(UUID uuid) {
+    public UserDTO deleteUser(final UUID uuid) {
         return userRepository.findUserById(uuid).map(found -> {
             userRepository.deleteById(uuid);
             return found;
@@ -165,14 +174,15 @@ public class UserService {
 
     /**
      * Checks if the provided credentials are unique
+     *
      * @param request The credentials to check
-     * @return
+     * @return A response specifcying which credentials are unique
      */
-    public SignUpUniqueResponse isUniqueCheck(SignUpUniqueRequest request) {
+    public SignUpUniqueResponse isUniqueCheck(final SignUpUniqueRequest request) {
         return SignUpUniqueResponse.builder()
-                .nricUnique(request.getNric() == null || !userRepository.existsByNric(request.getNric()))
-                .emailUnique(request.getEmail() == null || !userRepository.existsByEmail(request.getEmail()))
-                .mobileUnique(request.getMobile() == null || !userRepository.existsByMobile(request.getMobile()))
-                .build();
+                                   .nricUnique(request.getNric() == null || ! userRepository.existsByNric(request.getNric()))
+                                   .emailUnique(request.getEmail() == null || ! userRepository.existsByEmail(request.getEmail()))
+                                   .mobileUnique(request.getMobile() == null || ! userRepository.existsByMobile(request.getMobile()))
+                                   .build();
     }
 }

@@ -33,16 +33,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class SignUpIntegrationTests {
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private UserService userService;
 
     /**
      * Check user with a valid and unique parameters when creating account success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -50,10 +49,10 @@ public class SignUpIntegrationTests {
         UserDTO userDTO = TestObjects.USER_DTO.clone();
 
         SignUpUniqueRequest signUpUniqueRequest = SignUpUniqueRequest.builder()
-                .nric(userDTO.getNric())
-                .email(userDTO.getEmail())
-                .mobile(userDTO.getMobile())
-                .build();
+                                                                     .nric(userDTO.getNric())
+                                                                     .email(userDTO.getEmail())
+                                                                     .mobile(userDTO.getMobile())
+                                                                     .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/unique");
@@ -69,16 +68,17 @@ public class SignUpIntegrationTests {
 
         assertEquals(200, httpResponse.getCode());
         assertEquals(SignUpUniqueResponse.builder()
-                .emailUnique(true)
-                .nricUnique(true)
-                .mobileUnique(true)
-                .build(),
+                                         .emailUnique(true)
+                                         .nricUnique(true)
+                                         .mobileUnique(true)
+                                         .build(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), SignUpUniqueResponse.class));
     }
 
     /**
      * Check user with duplicated parameters when creating account returns all false
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -87,10 +87,10 @@ public class SignUpIntegrationTests {
         userService.createNewUser(userDTO);
 
         SignUpUniqueRequest signUpUniqueRequest = SignUpUniqueRequest.builder()
-                .nric(userDTO.getNric())
-                .email(userDTO.getEmail())
-                .mobile(userDTO.getMobile())
-                .build();
+                                                                     .nric(userDTO.getNric())
+                                                                     .email(userDTO.getEmail())
+                                                                     .mobile(userDTO.getMobile())
+                                                                     .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/unique");
@@ -106,16 +106,17 @@ public class SignUpIntegrationTests {
 
         assertEquals(200, httpResponse.getCode());
         assertEquals(SignUpUniqueResponse.builder()
-                        .emailUnique(false)
-                        .nricUnique(false)
-                        .mobileUnique(false)
-                        .build(),
+                                         .emailUnique(false)
+                                         .nricUnique(false)
+                                         .mobileUnique(false)
+                                         .build(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), SignUpUniqueResponse.class));
     }
 
     /**
      * Check user with any parameters that is duplicated when creating account will return false
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -124,8 +125,8 @@ public class SignUpIntegrationTests {
         userService.createNewUser(userDTO);
 
         SignUpUniqueRequest signUpUniqueRequest = SignUpUniqueRequest.builder()
-                .mobile(userDTO.getMobile())
-                .build();
+                                                                     .mobile(userDTO.getMobile())
+                                                                     .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port
                 + "/api/v1/unique");
@@ -141,10 +142,10 @@ public class SignUpIntegrationTests {
 
         assertEquals(200, httpResponse.getCode());
         assertEquals(SignUpUniqueResponse.builder()
-                        .emailUnique(true)
-                        .nricUnique(true)
-                        .mobileUnique(false)
-                        .build(),
+                                         .emailUnique(true)
+                                         .nricUnique(true)
+                                         .mobileUnique(false)
+                                         .build(),
                 new ObjectMapper().readValue(
                         httpResponse.getEntity().getContent(), SignUpUniqueResponse.class));
     }

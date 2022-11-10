@@ -15,34 +15,37 @@ import java.util.UUID;
 public class NotAuthorizedUtil {
     /**
      * Check if the User querying for the method is the same user using UserID
+     *
      * @param userID The UUID of the User to be accessed
      */
-    public static void isSameUserId(UUID userID) {
+    public static void isSameUserId(final UUID userID) {
         User loggedIn =
-                (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!loggedIn.getId().toString().equals(userID.toString())){
+                (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (! loggedIn.getId().toString().equals(userID.toString())) {
             wrongUserResponse(loggedIn.getId().toString(), userID.toString());
         }
     }
 
     /**
      * Check if the User querying for the method is the same user using Email
+     *
      * @param email The email of the User to be accessed
      */
-    public static void isSameUserEmail(String email) {
+    public static void isSameUserEmail(final String email) {
         User loggedIn =
                 (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!loggedIn.getEmail().equals(email)){
+        if (! loggedIn.getEmail().equals(email)) {
             wrongUserResponse(loggedIn.getEmail(), email);
         }
     }
 
     /**
      * Throw new WrongUserException when User is not the same
-     * @param loggedIn The UUID of User
+     *
+     * @param loggedIn  The UUID of User
      * @param attempted The UUID of the User to be accessed
      */
-    private static void wrongUserResponse(String loggedIn, String attempted) {
+    private static void wrongUserResponse(final String loggedIn, final String attempted) {
         String response = String.format("Attempted modification of another user! " +
                 "%s tried to modify %s", loggedIn, attempted);
         log.warn(response);
@@ -51,24 +54,26 @@ public class NotAuthorizedUtil {
 
     /**
      * Check if the Driver querying for the method is the same Driver using car plate
+     *
      * @param carPlate Car plate of the Driver to be accessed
      */
-    public static void isSameDriver(String carPlate) {
+    public static void isSameDriver(final String carPlate) {
         User loggedIn =
-                (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (loggedIn.getDriver() == null) {
             throw new DriverNotFoundException("No car plate found with " + carPlate);
-        } else if(!loggedIn.getDriver().getCarPlate().equals(carPlate)) {
+        } else if (! loggedIn.getDriver().getCarPlate().equals(carPlate)) {
             wrongDriverResponse(loggedIn.getDriver().getCarPlate(), carPlate);
         }
     }
 
     /**
      * Throw new WrongDriverException when Driver is not the same
-     * @param loggedIn Car plate of the Driver
+     *
+     * @param loggedIn  Car plate of the Driver
      * @param attempted Car plate of the Driver to be accessed
      */
-    private static void wrongDriverResponse(String loggedIn, String attempted) {
+    private static void wrongDriverResponse(final String loggedIn, final String attempted) {
         String response = String.format("Attempted modification of another driver! " +
                 "%s tried to modify %s", loggedIn, attempted);
         log.warn(response);

@@ -7,21 +7,31 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -72,8 +82,8 @@ public class User implements Serializable, Cloneable {
     private String mobile;
 
     @NotNull(message = "Email should not be empty")
-    @Email(regexp = "^[A-Z0-9._-]+@[A-Z0-9]+.[A-Z]{2,6}$", 
-            flags = Pattern.Flag.CASE_INSENSITIVE, 
+    @Email(regexp = "^[A-Z0-9._-]+@[A-Z0-9]+.[A-Z]{2,6}$",
+            flags = Pattern.Flag.CASE_INSENSITIVE,
             message = "Email should be valid format: johnsus@email.xyz")
     @Schema(description = "User's email", example = "robert@gmail.com")
     private String email;
@@ -89,9 +99,12 @@ public class User implements Serializable, Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
+        }
         User user = (User) o;
         return id != null && Objects.equals(id, user.id);
     }

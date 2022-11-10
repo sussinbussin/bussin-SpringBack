@@ -6,7 +6,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -82,6 +85,27 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
     @Column(scale = 6, precision = 9)
     private BigDecimal destLongitude;
 
+    @JsonCreator
+    public PlannedRouteDTO(@JsonProperty("id") final UUID id,
+                           @JsonProperty("plannedFrom") final String plannedFrom,
+                           @JsonProperty("plannedTo") final String plannedTo,
+                           @JsonProperty("dateTime") final LocalDateTime dateTime,
+                           @JsonProperty("capacity") final Integer capacity,
+                           @JsonProperty("originLatitude") final BigDecimal originLatitude,
+                           @JsonProperty("originLongitude") final BigDecimal originLongitude,
+                           @JsonProperty("destLatitude") final BigDecimal destLatitude,
+                           @JsonProperty("destLongitude") final BigDecimal destLongitude) {
+        this.id = id;
+        this.plannedFrom = plannedFrom;
+        this.plannedTo = plannedTo;
+        this.dateTime = dateTime;
+        this.capacity = capacity;
+        this.originLatitude = originLatitude;
+        this.originLongitude = originLongitude;
+        this.destLatitude = destLatitude;
+        this.destLongitude = destLongitude;
+    }
+
     /**
      * Check if there is any constraint violations during input
      */
@@ -93,28 +117,6 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    @JsonCreator
-    public PlannedRouteDTO(@JsonProperty("id") UUID id,
-                           @JsonProperty("plannedFrom") String plannedFrom,
-                           @JsonProperty("plannedTo") String plannedTo,
-                           @JsonProperty("dateTime") LocalDateTime dateTime,
-                           @JsonProperty("capacity") Integer capacity,
-                           @JsonProperty("originLatitude") BigDecimal originLatitude,
-                           @JsonProperty("originLongitude") BigDecimal originLongitude,
-                           @JsonProperty("destLatitude") BigDecimal destLatitude,
-                           @JsonProperty("destLongitude") BigDecimal destLongitude)
-    {
-        this.id = id;
-        this.plannedFrom = plannedFrom;
-        this.plannedTo = plannedTo;
-        this.dateTime = dateTime;
-        this.capacity = capacity;
-        this.originLatitude = originLatitude;
-        this.originLongitude = originLongitude;
-        this.destLatitude = destLatitude;
-        this.destLongitude = destLongitude;
     }
 
     @Override
@@ -132,8 +134,12 @@ public class PlannedRouteDTO implements Serializable, Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PlannedRouteDTO that = (PlannedRouteDTO) o;
         return Objects.equals(getId(), that.getId()) && Objects.equals(getPlannedFrom(), that.getPlannedFrom()) && Objects.equals(getPlannedTo(), that.getPlannedTo()) && Objects.equals(getDateTime(), that.getDateTime()) && Objects.equals(getCapacity(), that.getCapacity());
     }

@@ -20,9 +20,9 @@ public class CognitoConfig {
                         ".properties");
 
         return AWSCognitoIdentityProviderClientBuilder.standard()
-                .withCredentials(propertiesFileCredentialsProvider)
-                .withRegion("ap-southeast-1")
-                .build();
+                                                      .withCredentials(propertiesFileCredentialsProvider)
+                                                      .withRegion("ap-southeast-1")
+                                                      .build();
 
     }
 }

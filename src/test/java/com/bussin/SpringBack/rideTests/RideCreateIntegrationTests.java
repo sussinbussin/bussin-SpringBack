@@ -47,32 +47,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class RideCreateIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private PlannedRouteService plannedRouteService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -85,6 +76,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with valid credentials and parameters success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -107,10 +99,10 @@ public class RideCreateIntegrationTests {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
-                .rideDTO(rideDTO)
-                .plannedRouteUUID(plannedRoute.getId())
-                .userUUID(user.getId())
-                .build();
+                                                         .rideDTO(rideDTO)
+                                                         .plannedRouteUUID(plannedRoute.getId())
+                                                         .userUUID(user.getId())
+                                                         .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
@@ -139,6 +131,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with invalid parameter throws 400 BAD_REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -162,10 +155,10 @@ public class RideCreateIntegrationTests {
         rideDTO.setPassengers(1000);
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
-                .rideDTO(rideDTO)
-                .plannedRouteUUID(plannedRoute.getId())
-                .userUUID(user.getId())
-                .build();
+                                                         .rideDTO(rideDTO)
+                                                         .plannedRouteUUID(plannedRoute.getId())
+                                                         .userUUID(user.getId())
+                                                         .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
@@ -186,6 +179,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with passengers over capacity throws 400 BAD_REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -209,10 +203,10 @@ public class RideCreateIntegrationTests {
         rideDTO.setPassengers(5);
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
-                .rideDTO(rideDTO)
-                .plannedRouteUUID(plannedRoute.getId())
-                .userUUID(user.getId())
-                .build();
+                                                         .rideDTO(rideDTO)
+                                                         .plannedRouteUUID(plannedRoute.getId())
+                                                         .userUUID(user.getId())
+                                                         .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
@@ -234,6 +228,7 @@ public class RideCreateIntegrationTests {
     /**
      * Create a new ride on top of the current rides,
      * when added capacity more than the capacity will throw 400 BAD_REQUEST
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -264,10 +259,10 @@ public class RideCreateIntegrationTests {
         rideDTO.setPassengers(4);
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
-                .rideDTO(rideDTO)
-                .plannedRouteUUID(plannedRoute.getId())
-                .userUUID(user.getId())
-                .build();
+                                                         .rideDTO(rideDTO)
+                                                         .plannedRouteUUID(plannedRoute.getId())
+                                                         .userUUID(user.getId())
+                                                         .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
@@ -288,6 +283,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with no user found throws 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -310,10 +306,10 @@ public class RideCreateIntegrationTests {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
-                .rideDTO(rideDTO)
-                .plannedRouteUUID(plannedRoute.getId())
-                .userUUID(UUID.randomUUID())
-                .build();
+                                                         .rideDTO(rideDTO)
+                                                         .plannedRouteUUID(plannedRoute.getId())
+                                                         .userUUID(UUID.randomUUID())
+                                                         .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");
@@ -334,6 +330,7 @@ public class RideCreateIntegrationTests {
 
     /**
      * Create a new ride with no route found throws 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -355,10 +352,10 @@ public class RideCreateIntegrationTests {
         RideDTO rideDTO = TestObjects.RIDE_DTO.clone();
 
         RideCreationDTO rideCreationDTO = RideCreationDTO.builder()
-                .rideDTO(rideDTO)
-                .plannedRouteUUID(UUID.randomUUID())
-                .userUUID(user.getId())
-                .build();
+                                                         .rideDTO(rideDTO)
+                                                         .plannedRouteUUID(UUID.randomUUID())
+                                                         .userUUID(user.getId())
+                                                         .build();
 
         HttpUriRequest request = new HttpPost(baseUrl + port + "/api/v1" +
                 "/ride/");

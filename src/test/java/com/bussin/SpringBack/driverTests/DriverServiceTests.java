@@ -89,9 +89,9 @@ public class DriverServiceTests {
 
         when(userService.updateUser(any(UUID.class), any(UserDTO.class)))
                 .thenAnswer(invocationOnMock ->
-                    ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
-                            //Will end test if bad
-                            userResult:null);
+                        ((UserDTO) invocationOnMock.getArgument(1)).getIsDriver() ?
+                                //Will end test if bad
+                                userResult : null);
         when(driverRepository.save(any(Driver.class)))
                 .thenReturn(driverResult);
 
@@ -124,7 +124,7 @@ public class DriverServiceTests {
      * Add new driver when user is not found
      */
     @Test
-    public void addNewDriver_userNotFound_exception(){
+    public void addNewDriver_userNotFound_exception() {
         UUID uuid = UUID.randomUUID();
 
         DriverDTO driverDTO = TestObjects.DRIVER_DTO.clone();
@@ -168,37 +168,37 @@ public class DriverServiceTests {
     /**
      * Get all planned routes by a driver
      */
-     @Test
-     public void getAllPlannedRoutesByDriver_success() {
-         Driver driver = TestObjects.DRIVER.clone();
+    @Test
+    public void getAllPlannedRoutesByDriver_success() {
+        Driver driver = TestObjects.DRIVER.clone();
 
-         List<PlannedRouteResultDTO> plannedRoutePublicResult = new ArrayList<>();
-         Set<PlannedRoute> plannedRouteResult = new HashSet<>();
+        List<PlannedRouteResultDTO> plannedRoutePublicResult = new ArrayList<>();
+        Set<PlannedRoute> plannedRouteResult = new HashSet<>();
 
-         ModelMapper modelMapper
-                 = new ModelMapper();
-         modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRouteResultDTO>() {
-             @Override
-             protected void configure() {
-                 map().setCarPlate(source.getDriver().getCarPlate());
-             }
-         });
+        ModelMapper modelMapper
+                = new ModelMapper();
+        modelMapper.addMappings(new PropertyMap<PlannedRoute, PlannedRouteResultDTO>() {
+            @Override
+            protected void configure() {
+                map().setCarPlate(source.getDriver().getCarPlate());
+            }
+        });
 
-         PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
-         plannedRoutePublicResult.add(modelMapper.map(plannedRoute,
-                 PlannedRouteResultDTO.class));
+        PlannedRoute plannedRoute = TestObjects.PLANNED_ROUTE.clone();
+        plannedRoutePublicResult.add(modelMapper.map(plannedRoute,
+                PlannedRouteResultDTO.class));
 
-         plannedRouteResult.add(plannedRoute);
-         driver.setPlannedRoutes(plannedRouteResult);
-         plannedRoute.setDriver(driver);
+        plannedRouteResult.add(plannedRoute);
+        driver.setPlannedRoutes(plannedRouteResult);
+        plannedRoute.setDriver(driver);
 
-         when(driverRepository.findDriverByCarPlate(driver.getCarPlate())).thenReturn(Optional.of(driver));
+        when(driverRepository.findDriverByCarPlate(driver.getCarPlate())).thenReturn(Optional.of(driver));
 
-         assertEquals(plannedRoutePublicResult.get(0).getId(),
-                 driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()).get(0).getId());
+        assertEquals(plannedRoutePublicResult.get(0).getId(),
+                driverService.getAllPlannedRoutesByDriver(driver.getCarPlate()).get(0).getId());
 
-         verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
-     }
+        verify(driverRepository, times(1)).findDriverByCarPlate(driver.getCarPlate());
+    }
 
     /**
      * Update a driver with valid parameters
@@ -258,7 +258,7 @@ public class DriverServiceTests {
                 .thenThrow(ConstraintViolationException.class);
 
         assertThrows(ConstraintViolationException.class,
-                        () -> driverService.updateDriver(driver.getCarPlate(), driverDTO));
+                () -> driverService.updateDriver(driver.getCarPlate(), driverDTO));
 
         verify(driverRepository, times(1)).findDriverByCarPlate(any(String.class));
         verify(driverRepository, times(1)).save(any(Driver.class));
@@ -292,9 +292,9 @@ public class DriverServiceTests {
 
         when(userService.updateUser(any(UUID.class), any(UserDTO.class)))
                 .thenAnswer(invocationOnMock ->
-                        ((UserDTO)invocationOnMock.getArgument(1)).getIsDriver()?
+                        ((UserDTO) invocationOnMock.getArgument(1)).getIsDriver() ?
                                 //Will end test if bad
-                                userResultGood:null);
+                                userResultGood : null);
 
         assertEquals(driverService
                 .deleteDriver(driverResult.getCarPlate()), driverResult);
@@ -308,8 +308,8 @@ public class DriverServiceTests {
     /**
      * Delete a driver that does not exist
      */
-     @Test
-     public void deleteDriver_doesntExist_exception() {
+    @Test
+    public void deleteDriver_doesntExist_exception() {
         String carPlate = "SAA1234B";
         when(driverRepository.findDriverByCarPlate(any(String.class)))
                 .thenReturn(Optional.empty());
@@ -319,5 +319,5 @@ public class DriverServiceTests {
 
         verify(driverRepository, times(1)).findDriverByCarPlate(carPlate);
         verify(driverRepository, never()).deleteByCarPlate(carPlate);
-     }
+    }
 }

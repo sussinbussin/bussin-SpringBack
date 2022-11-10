@@ -44,34 +44,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class DriverReadIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private PlannedRouteService plannedRouteService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
     private User user;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -84,6 +74,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get no drivers when there are no drivers success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -99,6 +90,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get all drivers when there are drivers success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -125,6 +117,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get driver by car plate when car plate exist success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -151,6 +144,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get another driver by car plate when car plate exist, 403
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -178,6 +172,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get driver by car plate when no car plate exist throws 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -194,6 +189,7 @@ public class DriverReadIntegrationTests {
 
     /**
      * Get all planned routes from a driver success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -217,10 +213,10 @@ public class DriverReadIntegrationTests {
         driverService.addNewDriver(user.getId(), driverDTO);
         PlannedRoute plannedRoute =
                 plannedRouteService.createNewPlannedRoute(plannedRouteDTO1,
-                driverDTO.getCarPlate());
+                        driverDTO.getCarPlate());
 
         HttpUriRequest request = new HttpGet(baseUrl + port + "/api/v1/driver" +
-                "/"+driverDTO.getCarPlate()+"/plannedRoutes");
+                "/" + driverDTO.getCarPlate() + "/plannedRoutes");
         request.setHeader(AUTHORIZATION_HEADER, idToken);
 
         CloseableHttpResponse httpResponse =
@@ -232,8 +228,8 @@ public class DriverReadIntegrationTests {
                         });
 
         assertEquals(
-                        modelMapper.map(plannedRoute,
-                                PlannedRouteResultDTO.class).getId(),
+                modelMapper.map(plannedRoute,
+                        PlannedRouteResultDTO.class).getId(),
                 publicDTOS.get(0).getId());
     }
 }

@@ -2,7 +2,6 @@ package com.bussin.SpringBack.controllers;
 
 import com.bussin.SpringBack.models.driver.Driver;
 import com.bussin.SpringBack.models.driver.DriverDTO;
-import com.bussin.SpringBack.models.plannedRoute.PlannedRoutePublicDTO;
 import com.bussin.SpringBack.models.plannedRoute.PlannedRouteResultDTO;
 import com.bussin.SpringBack.services.DriverService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +30,7 @@ public class DriverController {
     private final DriverService driverService;
 
     @Autowired
-    public DriverController(DriverService driverService) {
+    public DriverController(final DriverService driverService) {
         this.driverService = driverService;
     }
 
@@ -43,7 +42,7 @@ public class DriverController {
     @Operation(summary = "Gets all drivers")
     @GetMapping
     public List<Driver> getAllDrivers() {
-        log.info(String.format("Retrieving all drivers"));
+        log.info("Retrieving all drivers");
         return driverService.getAllDrivers();
     }
 
@@ -55,7 +54,7 @@ public class DriverController {
      */
     @Operation(summary = "Gets a Driver by their Car Plate")
     @GetMapping("/{carPlate}")
-    public Driver getDriverByCarPlate(@Valid @PathVariable String carPlate) {
+    public Driver getDriverByCarPlate(@Valid @PathVariable final String carPlate) {
         isSameDriver(carPlate);
         log.info(String.format("Retrieving driver %s", carPlate));
         return driverService.getDriverByCarPlate(carPlate);
@@ -69,7 +68,7 @@ public class DriverController {
      */
     @Operation
     @GetMapping("/{carPlate}/plannedRoutes")
-    public List<PlannedRouteResultDTO> getAllPlannedRoutesByDriver(@Valid @PathVariable String carPlate){
+    public List<PlannedRouteResultDTO> getAllPlannedRoutesByDriver(@Valid @PathVariable final String carPlate) {
         isSameDriver(carPlate);
         log.info(String.format("Retrieving planned routes from driver %s",
                 carPlate));
@@ -79,14 +78,14 @@ public class DriverController {
     /**
      * Create a new driver by converting user to driver
      *
-     * @param userUUID The UUID of user that is going to be a driver
+     * @param userUUID  The UUID of user that is going to be a driver
      * @param driverDTO The driver DTO to be created
      * @return The Driver that is created
      */
     @Operation(summary = "Converts a User to Driver")
     @PostMapping("/{userUUID}")
-    public Driver addNewDriver(@Valid @PathVariable UUID userUUID,
-                               @Valid @RequestBody DriverDTO driverDTO) {
+    public Driver addNewDriver(@Valid @PathVariable final UUID userUUID,
+                               @Valid @RequestBody final DriverDTO driverDTO) {
         isSameUserId(userUUID);
         log.info(String.format("Creating new driver for %s: %s", userUUID, driverDTO));
         return driverService.addNewDriver(userUUID, driverDTO);
@@ -101,8 +100,8 @@ public class DriverController {
      */
     @Operation(summary = "Updates a Driver")
     @PutMapping("/{carPlate}")
-    public Driver updateDriverByCarPlate(@Valid @PathVariable String carPlate,
-                                         @Valid @RequestBody DriverDTO driverDTO) {
+    public Driver updateDriverByCarPlate(@Valid @PathVariable final String carPlate,
+                                         @Valid @RequestBody final DriverDTO driverDTO) {
         isSameDriver(carPlate);
         log.info(String.format("Updating driver for %s: %s", carPlate,
                 driverDTO));
@@ -117,7 +116,7 @@ public class DriverController {
      */
     @Operation(summary = "Converts a Driver into User")
     @DeleteMapping("/{carPlate}")
-    public Driver deleteDriverByCarPlate(@Valid @PathVariable String carPlate) {
+    public Driver deleteDriverByCarPlate(@Valid @PathVariable final String carPlate) {
         isSameDriver(carPlate);
         log.info(String.format("Deleting driver %s", carPlate));
         return driverService.deleteDriver(carPlate);

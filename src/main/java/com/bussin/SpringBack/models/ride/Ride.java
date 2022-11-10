@@ -41,7 +41,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Ride implements Serializable, Cloneable{
+public class Ride implements Serializable, Cloneable {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(generator = "uuid2")
@@ -59,7 +59,7 @@ public class Ride implements Serializable, Cloneable{
     private Integer passengers;
 
     @DecimalMin("0")
-    @Digits(integer=6, fraction=2)
+    @Digits(integer = 6, fraction = 2)
     @Schema(description = "Cost of the ride", example = "3.00")
     private BigDecimal cost;
 
@@ -86,9 +86,12 @@ public class Ride implements Serializable, Cloneable{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
+        }
         Ride ride = (Ride) o;
         return id != null && Objects.equals(id, ride.id);
     }

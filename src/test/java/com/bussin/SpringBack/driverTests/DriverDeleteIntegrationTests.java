@@ -36,28 +36,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class DriverDeleteIntegrationTests {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private final String baseUrl = "http://localhost:";
     @LocalServerPort
     private int port;
-
-    private final String baseUrl = "http://localhost:";
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private DriverService driverService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CognitoLogin cognitoLogin;
-
     private String idToken;
-
     private User user;
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * Authenticate JWTToken and create a new TestObject user before each tests
@@ -70,6 +62,7 @@ public class DriverDeleteIntegrationTests {
 
     /**
      * Delete a driver when car plate exist success
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test
@@ -93,11 +86,12 @@ public class DriverDeleteIntegrationTests {
 
         assertEquals(dest, driverDTO);
         assertEquals(driver.getUser().getId(), user.getId());
-        assert (!userService.getUserById(user.getId()).getIsDriver());
+        assert (! userService.getUserById(user.getId()).getIsDriver());
     }
 
     /**
      * Delete a driver when car plate is not found throw 404 NOT_FOUND
+     *
      * @throws IOException If an input or output exception occurred
      */
     @Test

@@ -32,7 +32,11 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PlannedRouteServiceTests {
@@ -101,7 +105,7 @@ public class PlannedRouteServiceTests {
     public void createNewPlannedRoute_invalidParams_exception() {
         //No capacity
         PlannedRouteDTO plannedRouteDTO = TestObjects.PLANNED_ROUTE_DTO.clone();
-        plannedRouteDTO.setCapacity(-1);
+        plannedRouteDTO.setCapacity(- 1);
 
         Driver driver = TestObjects.DRIVER.clone();
 
@@ -202,13 +206,13 @@ public class PlannedRouteServiceTests {
         plannedRouteResult.add(plannedRoute);
 
         when(plannedRoutesRepository.findPlannedRouteByDateTimeAfter(
-                        plannedRoute.getDateTime()))
-                        .thenReturn(plannedRouteResult);
+                plannedRoute.getDateTime()))
+                .thenReturn(plannedRouteResult);
 
         assertEquals(plannedRouteResult.get(0).getId(),
                 plannedRouteService.getPlannedRouteAfterTime(
                         plannedRoute.getDateTime()).get(0).getId());
-                        
+
         verify(plannedRoutesRepository, times(1))
                 .findPlannedRouteByDateTimeAfter(plannedRoute.getDateTime());
     }
@@ -259,7 +263,7 @@ public class PlannedRouteServiceTests {
 
         assertThrows(PlannedRouteNotFoundException.class,
                 () -> plannedRouteService.updatePlannedRouteById(
-                                TestObjects.PLANNED_ROUTE.getId(),
+                        TestObjects.PLANNED_ROUTE.getId(),
                         plannedRouteDTO));
 
         verify(plannedRoutesRepository, times(1))
@@ -285,7 +289,7 @@ public class PlannedRouteServiceTests {
 
         assertThrows(ConstraintViolationException.class,
                 () -> plannedRouteService.updatePlannedRouteById
-                        (plannedRoute.getId(), plannedRouteDTO));
+                                                 (plannedRoute.getId(), plannedRouteDTO));
 
         verify(plannedRoutesRepository, times(1))
                 .findById(any(UUID.class));

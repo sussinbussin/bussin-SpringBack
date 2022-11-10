@@ -1,19 +1,18 @@
 package com.bussin.SpringBack.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.bussin.SpringBack.models.plannedRoute.PlannedRoute;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-import java.util.UUID;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface PlannedRoutesRepository
         extends JpaRepository<PlannedRoute, UUID> {
-        Optional<PlannedRoute> findPlannedRouteById(UUID uuid);
-        Optional<PlannedRoute> findPlannedRouteByCapacity(Integer capacity);
-        List<PlannedRoute> findPlannedRouteByDateTimeAfter(LocalDateTime localDateTime);
+    Optional<PlannedRoute> findPlannedRouteById(UUID uuid);
+
+    List<PlannedRoute> findPlannedRouteByDateTimeAfter(LocalDateTime localDateTime);
 }

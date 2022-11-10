@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Id;
 import javax.validation.ConstraintViolation;
@@ -50,6 +53,17 @@ public class DriverDTO implements Serializable, Cloneable {
     @NotNull
     private String fuelType;
 
+    @JsonCreator
+    public DriverDTO(@JsonProperty("carPlate") final String carPlate,
+                     @JsonProperty("modelAndColour") final String modelAndColour,
+                     @JsonProperty("capacity") final Integer capacity,
+                     @JsonProperty("fuelType") final String fuelType) {
+        this.carPlate = carPlate;
+        this.modelAndColour = modelAndColour;
+        this.capacity = capacity;
+        this.fuelType = fuelType;
+    }
+
     /**
      * Check if there is any constraint violations during input
      */
@@ -61,17 +75,6 @@ public class DriverDTO implements Serializable, Cloneable {
         if (violations.size() > 0) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    @JsonCreator
-    public DriverDTO(@JsonProperty("carPlate") String carPlate,
-                     @JsonProperty("modelAndColour") String modelAndColour,
-                     @JsonProperty("capacity") Integer capacity,
-                     @JsonProperty("fuelType") String fuelType) {
-        this.carPlate = carPlate;
-        this.modelAndColour = modelAndColour;
-        this.capacity = capacity;
-        this.fuelType = fuelType;
     }
 
     @Override

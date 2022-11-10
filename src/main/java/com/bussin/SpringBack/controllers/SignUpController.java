@@ -24,6 +24,7 @@ public class SignUpController {
 
     /**
      * Checks if a set of credentials can be used to create a unique user.
+     *
      * @param request The set of credentials to check
      * @return Whether the credentials can be used to create a unique user
      */

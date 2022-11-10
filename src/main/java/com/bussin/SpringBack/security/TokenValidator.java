@@ -34,10 +34,11 @@ public class TokenValidator {
 
     /**
      * Retrieves the related user from the token.
+     *
      * @param token The token to get the user from
      * @return The user associated with the token
      */
-    public User userFromToken(String token) {
+    public User userFromToken(final String token) {
         try {
             return userService.getFullUserByEmail(validateToken(token));
         } catch (UsernameNotFoundException | JsonProcessingException e) {
@@ -47,17 +48,17 @@ public class TokenValidator {
 
     /**
      * Validates a token.
+     *
      * @param token The token to validate
      * @return The email address from the validated token
-     * @throws JsonProcessingException
      */
-    public String validateToken(String token) throws JsonProcessingException {
+    public String validateToken(final String token) throws JsonProcessingException {
         RSAKeyProvider keyProvider =
                 new AwsCognitoRSAKeyProvider(aws_cognito_region, aws_user_pools_id);
         Algorithm algorithm = Algorithm.RSA256(keyProvider);
         JWTVerifier jwtVerifier = JWT.require(algorithm)
-                .acceptNotBefore(10)
-                .build();
+                                     .acceptNotBefore(10)
+                                     .build();
 
         DecodedJWT decodedJWT = jwtVerifier.verify(getTrimmedToken(token));
 
@@ -68,10 +69,11 @@ public class TokenValidator {
 
     /**
      * Gets a trimmed, formatted token.
+     *
      * @param token The token to trim
      * @return The trimmed token
      */
-    public String getTrimmedToken(String token) {
+    public String getTrimmedToken(final String token) {
         if (token != null && token.startsWith("Bearer ")) {
             return token.substring(7).trim();
         }
